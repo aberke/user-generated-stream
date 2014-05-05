@@ -1,0 +1,113 @@
+/* Necessary SwipeJS styles */
+
+.huffpostlabs-opp .swipe {
+  overflow: hidden;
+  visibility: hidden;
+  position: relative;
+}
+.huffpostlabs-opp .swipe-wrap {
+  overflow: hidden;
+  position: relative;
+}
+.huffpostlabs-opp .swipe-wrap > div {
+  float:left;
+  width:100%;
+  position: relative;
+}
+
+
+/* non-mobile version -- shrink with media queries */
+.huffpostlabs-opp{
+	margin: 20px auto;
+	padding: 10px;
+	width: auto;
+	max-width: 600px;
+	background-color: lavender;
+	border: 3px solid lightgray;
+	font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}
+.huffpostlabs-opp .opp-frame{
+	display: inline-block;
+	border: 2px solid gray;
+	text-align: center;
+	padding: 8px;
+	background-color: white;
+}
+.huffpostlabs-opp .slide-info .campaign-name,
+.huffpostlabs-opp .slide-info .slide-count {
+	display: inline-block;
+	width: 49%;
+} 
+.huffpostlabs-opp .slide-info .campaign-name{
+	text-align: left;
+}
+.huffpostlabs-opp .slide-info .slide-count {
+	text-align: right;
+}
+.huffpostlabs-opp .picture-frame{
+	border: 2px solid gray;
+}
+.huffpostlabs-opp .picture{
+	background-color: ghostwhite;
+	width: 290px;
+	height: 240px;
+	text-align: center;
+}
+.huffpostlabs-opp .picture img{
+	max-width: 290px;
+	display: inline-block;
+}
+.huffpostlabs-opp .picture-caption {
+	width: 280px;
+	padding: 4px;
+	text-align: left;
+}
+.huffpostlabs-opp .picture-caption .tweet-body {
+	margin: 0;
+}
+.huffpostlabs-opp .picture-caption .tweet-body em{
+	text-decoration: none;
+	font-weight: bold;
+}
+.huffpostlabs-opp .share-container {
+	color: gray;
+	margin-top: 10px;
+}
+.huffpostlabs-opp .share-container p,
+.huffpostlabs-opp .share-container .share{
+	display: inline-block;
+	vertical-align: middle;
+}
+.huffpostlabs-opp .share-container .fb-share,
+.huffpostlabs-opp .share-container .twitter-share,
+.huffpostlabs-opp .share-container .email-share{
+	background-color: gray;
+}
+.huffpostlabs-opp .share-container .share-btn-swap{
+	display: none;
+}
+.huffpostlabs-opp .share-container .share:hover .share-btn-swap{
+	display: inline-block;
+}
+.huffpostlabs-opp .share-container .share:hover .share-btn{
+	display: none;
+}
+.huffpostlabs-opp .share-container .share{
+	cursor: pointer;
+}
+.huffpostlabs-opp .share-container .email-share-btn:hover{
+	opacity: 0.8;
+}
+
+
+.huffpostlabs-opp .touch {
+	cursor: pointer;
+}.huffpostlabs-opp .touch:hover {
+	opacity: 0.7;
+}
+
+
+
+
+
+

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="OPPapp">
+<head>
+    <base href="/">
+    <meta charset="utf-8">
+    <title>HuffpostLabs presents Other People's Photos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="User Generated Stream: Create a slide show with OTHER PEOPLE'S PHOTOS.">
+    <meta name="author" content="Alex Berke at Huffpost Labs">
+    <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon">
+    <!-- stylesheets -->
+    <link href="/static/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/styles.css" rel="stylesheet">
+
+
+    <!-- javascript -->
+<!-- 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+ -->
+<!-- 
+     <script src="/static/lib/jquery.min.js"></script>
+     -->
+    <!-- angular 1.2 has route as its own module -->
+<!--     
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular-route.js"></script>
+     -->
+     
+     <script src="/static/lib/angular/angular.min.js"></script>
+     <script src="/static/lib/angular/angular-route.min.js"></script>
+
+
+    <script src="/static/js/app.js"></script>
+	<script src="/static/js/controllers.js"></script>
+    <script src="/static/js/services.js"></script>
+    <script src="/static/js/factories.js"></script>
+    <script src="/static/js/routes.js"></script>
+
+</head>
+<body ng-controller="MainCntl">
+
+    <!-- header -->
+    <ng-include src="'/static/html/partials/header.html'"></ng-include>
+    
+    <div ng-include class='widget-container' src="'/static/widget/widget.html'"></div>
+
+    <!-- main view -- decided by routes.js -->
+    <div class='container' id='view' ng-view></div>
+
+    <footer>
+        <img src="/static/img/labs.png"></img>
+    </footer>
+<!-- 
+    <script src="/static/lib/bootstrap/js/tooltip.js"></script>
+    <script src="/static/lib/bootstrap/js/popover.js"></script>
+    <script src="/static/lib/bootstrap/js/bootstrap.min.js"></script>
+ -->
+</body>
+</html>
