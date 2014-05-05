@@ -1,6 +1,6 @@
 user-generated-stream
 =====================
-<img width='200px' src="http://pool.hesperian.org/w/images/thumb/d/d5/EHB_Ch11_Page_214-2.png/550px-EHB_Ch11_Page_214-2.png"
+<img width='270px' src="http://pool.hesperian.org/w/images/thumb/d/d5/EHB_Ch11_Page_214-2.png/550px-EHB_Ch11_Page_214-2.png"
  alt="stream-drawing" align="right" />
 
 Other People's Photos (OPP), posted to us through twitter, consumed like a slideshow
