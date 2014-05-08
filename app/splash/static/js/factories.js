@@ -1,8 +1,9 @@
 
 
-var UserFactory = function($http, $q) { // it's a factory
-	/* consumers call UserFactory.then(function(userData) {
-							// check userData isn't null
+var UserFactory = function($http, $q) {
+	/* consumers call 
+						UserFactory.then(function(userData) {
+							check userData isn't null
 						})
 	*/
 	

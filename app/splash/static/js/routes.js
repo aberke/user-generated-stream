@@ -15,26 +15,25 @@ OPPapp.config(function($routeProvider) {
 		});
 	};
 
-
-	$routeProvider.when('/user/:search', {
-		templateUrl: '/html/user.html',
-		controller: UserCntl,
-		resolve: {
-			userList: function(APIservice) {
-				return APIservice.GET('/user/all').then(function(data) {
-					return data;
-				});
-			}
-		}
-	});	
+	
 	$routeProvider.when('/contact', {
-		templateUrl: '/static/html/contact.html',
+		templateUrl: '/html/contact.html',
 	});	
 	$routeProvider.when('/forbidden', {
-		templateUrl: '/static/html/forbidden.html',
+		templateUrl: '/html/forbidden.html',
 	});
 	
 	$routeProvider.when('/', {
-		templateUrl: '/static/html/partials/index.html',
+		templateUrl: '/html/partials/index.html',
+		controller: IndexCntl,
+		resolve: { page: function() { return '/' }  }
+	});
+	$routeProvider.when('/new', {
+		templateUrl: '/html/partials/index.html',
+		controller: IndexCntl,
+		resolve: { 
+			page: function() { return '/new' },
+			user: userOrRedirect,
+		}
 	});
 });

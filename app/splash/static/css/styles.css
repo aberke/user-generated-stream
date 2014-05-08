@@ -1,0 +1,62 @@
+/*
+
+#3cf;
+
+*/
+
+input.error {
+	border: 3px solid red;
+}
+
+#header {
+	/*background-color: #3cf;*/
+	/* needs to take up space with elements that float inside */
+	float: left;
+	width: 100%;
+}
+#header nav {
+	max-width: 900px;
+	margin: auto;
+	padding: 5px;
+}
+#header nav img.brand {
+	height: 30px;
+	margin-top: 5px;
+	cursor: pointer;
+}
+#header nav a{
+	color: #3cf;
+	font-weight: bold;
+	font-size: 18px;
+}
+#header nav .user {
+	padding: 13px 0px;
+	color: gray;
+}
+
+.container {
+	min-height: 400px;
+}
+
+#index-partial {
+	border: 1px solid gray;
+	padding: 50px;
+	min-height: 500px;
+}
+.opp-list-container {
+	border: 1px solid gray;
+}
+
+
+footer {
+	border-top: 4px solid gray;
+}
+footer img{
+	width: 100%;
+	max-height: 240px;
+}
+
+
+
+
+

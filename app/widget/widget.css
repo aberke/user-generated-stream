@@ -111,3 +111,13 @@
 
 
 
+/* labs credit at bottom of widgets */
+p#labs-credit{
+	text-align: right;
+	padding-top: 7px;
+}
+p#labs-credit a{
+	color: gray;
+	font-style: italic;
+	vertical-align: middle;
+}

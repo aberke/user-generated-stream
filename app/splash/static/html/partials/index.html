@@ -1,0 +1,60 @@
+
+
+<div id='index-partial'>
+	INDEX PAGE
+    PAGE {{page}}
+    USER {{user}}
+
+<div ng-controller='NewCntl' id='new-partial' ng-if="page=='/new'">
+
+	<input ng-model='opp.name' type='text' placeholder='#'>
+
+	<label>Campaign Started</label>
+	<input ng-class='{error:error.start}' ng-model='opp.start' type='text' placeholder='MM/DD/YYYY'>
+
+	<button ng-disabled='!(opp.name&&opp.start)' ng-click='create(opp)' class='btn btn-sm btn-default'>CREATE</button>
+</div>
+
+	<div class='opp-list-container'>
+
+		<div class='row opp-and-embed-container' ng-repeat="o in OPPlist | filter:{$:searchText} | orderBy:'date_created':true" >
+			<div class='col-sm-8' class='quiz-container'>
+				<div class="huffpostlabs-opp" id="{{o._id}}"></div>
+			</div>
+
+			<div class='col-sm-4'>
+			<ul class="nav nav-pills nav-stacked">
+				<li>
+					<span ng-if="o._user._id">Owner: {{o._user.twitter_screen_name}}</span>
+					<a ng-click="claimQuiz(q)" ng-if="user._id&&!o._user._id" href="">Claim Ownership</a>
+				</li>
+				<li><a owner-only-element ng-href="/edit/{{o.type}}/{{o._id}}">Edit</a></li>
+				<li>
+					<a ng-show="!o.showEmbed" ng-click="o.showEmbed=true" href="">Embed in HTML</a>
+					<a ng-show="o.showEmbed" ng-click="o.showEmbed=false" href="">Hide Embed Code</a>
+
+					<pre class="embed-code" ng-show="o.showEmbed">&lt;div class="huffpostlabs-opp" id="{{o._id}}"&gt;&lt;/div&gt;&lt;script src="http://opp.huffingtonpost.com/widget/opp.js"&gt;&lt;/script&gt;&lt;p id="labs-credit"&gt;&lt;a href="http://code.huffingtonpost.com"&gt;Product by &lt;img height="23px" src="http://quiz.huffingtonpost.com/img/huffpostLABS_outline.png" /&gt;&lt;/a&gt;&lt;/p&gt;</pre>
+				</li>
+
+				<li owner-only-element class="dropdown">
+					<a class="dropdown-toggle" data-toggle="dropdown" href="">
+					More <span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="" ng-click="relinquishQuiz(q)">Relinquish Ownership</a></li>
+						<li><a href="" ng-click="delete(q)">Delete</a></li>
+					</ul>
+				</li>
+
+			</ul>
+			</div>
+
+		</div>
+
+		OPPlist
+		{{OPPlist}}
+
+	</div>
+
+
+</div>

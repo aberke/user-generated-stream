@@ -22,6 +22,8 @@ var OPPapp = angular.module('OPPapp', ['ngRoute'])
 	
 		// register services
 		$provide.service('APIservice', APIservice);
+		$provide.service('FormService', FormService);
+		$provide.service('WidgetService', WidgetService);
 
 		// register directives
 		//$compileProvider.directive('editQuizPartial', editQuizPartial);

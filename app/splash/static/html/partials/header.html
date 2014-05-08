@@ -1,0 +1,18 @@
+<!-- header.html: header-partial for include in base.html -->
+<div id="header">
+        <nav>
+            <ul class="nav nav-pills pull-left">
+                <li><img ng-click="goTo('/')" class="brand" src="/img/labs.png"></img>
+                </li></ul>
+            <ul class="nav nav-pills pull-right">
+                
+                <li><a ng-if="page!='/'" href="" ng-click="goTo('/')">HOME</a></li>
+                <li><a ng-if="user&&page!='/new'" href="" ng-click="goTo('/new')">Create New</a></li>
+                <!-- <li><a href="" ng-click="goTo('/contact')">Contact</a></li> -->
+                <li><a href="" ng-if="!user" ng-click="login()" id="login-button">Sign In</a></li>
+                <li><a href="" ng-if="user" ng-click="logout()" id="logout-button">Sign Out</a></li>
+                <li class='user'>{{user.twitter_screen_name}}</li>
+            </ul>
+        </nav>
+    <span class='username'>{{user.twitter_displayname||user.twitter_username}}</span>
+</div>
