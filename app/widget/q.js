@@ -8,8 +8,8 @@
 /* wrap in anonymous function as to not interfere with existing function and variable names */
 (function() {
 
-	var domain = static_domain = 'http://127.0.0.1:3000';
-	//var domain = static_domain = 'http://quizwidget-petri.dotcloud.com';
+	//var domain = static_domain = 'http://127.0.0.1:3000';
+	var domain = static_domain = 'http://user-generated-stream.herokuapp.com';
 
 
 	this.OPPwidgets = {};
