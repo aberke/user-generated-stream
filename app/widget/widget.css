@@ -5,6 +5,10 @@
   visibility: hidden;
   position: relative;
 }
+/* undo the above when editing */
+.huffpostlabs-opp.edit .swipe {
+  visibility: visible;
+}
 .huffpostlabs-opp .swipe-wrap {
   overflow: hidden;
   position: relative;
@@ -18,12 +22,8 @@
 
 /* non-mobile version -- shrink with media queries */
 .huffpostlabs-opp{
-	margin: 20px auto;
-	padding: 10px;
-	width: auto;
-	max-width: 600px;
-	background-color: lavender;
-	border: 3px solid lightgray;
+	margin: auto;
+	display: inline-block;
 	font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
 }
 .huffpostlabs-opp .opp-frame{
@@ -33,6 +33,9 @@
 	padding: 8px;
 	background-color: white;
 }
+.huffpostlabs-opp .slide-info {
+	color: gray;
+}
 .huffpostlabs-opp .slide-info .campaign-name,
 .huffpostlabs-opp .slide-info .slide-count {
 	display: inline-block;
@@ -40,9 +43,14 @@
 } 
 .huffpostlabs-opp .slide-info .campaign-name{
 	text-align: left;
+	font-size: 16px;
+	font-weight: bold;
 }
 .huffpostlabs-opp .slide-info .slide-count {
 	text-align: right;
+}
+.huffpostlabs-opp .slide-info .slide-change-arrow{
+	display: inline;
 }
 .huffpostlabs-opp .picture-frame{
 	border: 2px solid gray;
@@ -64,10 +72,16 @@
 }
 .huffpostlabs-opp .picture-caption .tweet-body {
 	margin: 0;
+	color: darkcyan;
+	font-weight: bold;
+	font-size: 15px;
 }
 .huffpostlabs-opp .picture-caption .tweet-body em{
 	text-decoration: none;
 	font-weight: bold;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 13px;
 }
 .huffpostlabs-opp .share-container {
 	color: gray;

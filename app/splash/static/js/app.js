@@ -26,7 +26,7 @@ var OPPapp = angular.module('OPPapp', ['ngRoute'])
 		$provide.service('WidgetService', WidgetService);
 
 		// register directives
-		//$compileProvider.directive('editQuizPartial', editQuizPartial);
+		$compileProvider.directive('oppWidget', oppWidget);
 
 		// register factories
 		$provide.factory('UserFactory', UserFactory);

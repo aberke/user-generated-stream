@@ -1,7 +1,11 @@
 from flask import Blueprint, url_for, session, request
+import json
 
-from app.util import dumpJSON
+from twitter_api import searchHashtag, search
+
+from app.util import dumpJSON, respond500
 from app.decorators import jsonp
+from app.models import User, OPP
 
 
 """ 
@@ -10,7 +14,6 @@ All Routes to api are prefixed with /api
 api = Blueprint('api', __name__)
 
 # -- User -------------------------------------------
-from app.models import User
 
 @api.route('/user/all')
 def GETallUsers():
@@ -32,35 +35,65 @@ def POSTopp():
 	data = json.loads(request.data)
 	try:
 		opp = OPP.create(data)
-		return opp
+		return dumpJSON(opp)
 	except Exception as e:
-		return Response(e, 500)
+		return respond500(e)
 
+@api.route('/opp/<id>', methods=['DELETE'])
+def DELETEopp(id):
+	try:
+		OPP.remove(id)
+		return 'OK'
+	except Exception as e:
+		return respond500(e)
+
+@api.route('/opp/<id>/accept/<tweet_id>', methods=['PUT'])
+def PUTacceptEntry(id, tweet_id):
+	entry_data = json.loads(request.data)
+	print('PUTacceptEntry',tweet_id, entry_data)
+	try:
+		opp = OPP.acceptEntry(id, entry_data)
+		return dumpJSON(opp)
+	except Exception as e:
+		return respond500(e)
+
+@api.route('/opp/<id>/reject/<tweet_id>', methods=['PUT'])
+def PUTrejectEntry(id, tweet_id):
+	try:
+		opp = OPP.rejectEntry(id, tweet_id)
+		return dumpJSON(opp)
+	except Exception as e:
+		return respond500(e)
+
+
+@api.route('/opp/<id>/search/next', methods=['GET'])
+def GETsearchOPPnext(id):
+	""" 
+	Picks up where GETsearchOPP left off
+	"""
+	query = session[id + '_next_query'] if (id + '_next_query') in session else None
+	(data, next_query) = search(query)
+	session[id + '_next_query'] = next_query
+	return dumpJSON(data)
 
 
 @api.route('/opp/<id>/search', methods=['GET'])
-def GETsearchOPP():
-	data = searchHashtag(data['name'])
+def GETsearchOPP(id):
+	""" Keeping dictionary in session:
+			{id_next_query: query-string}
+	"""
+	opp = OPP.find(id)
+	print('GETsearchOPP', opp, opp['title'], opp['start'])
+	(data, next_query) = searchHashtag(opp['title'], since=opp['start'])
+
+	session[id + '_next_query'] = next_query
 
 	return dumpJSON(data)
 
 
 @api.route('/opp/all', methods=['GET'])
 def GETallOPP():
-	data = [{
-			'_id': 1,
-			'title': 'wizards',
-			'start': '2013-12-4',
-		},{
-			'_id': 2,
-			'title': 'wizards',
-			'start': '2013-12-4',
-		},{
-			'_id': 3,
-			'title': 'wizards',
-			'start': '2013-12-4',
-		}
-	]
+	data = OPP.all()
 	return dumpJSON(data)
 
 
@@ -68,38 +101,11 @@ def GETallOPP():
 @api.route('/opp/<id>', methods=['GET'])
 @jsonp
 def GETopp(id):
-	data = {
-		'_id': id,
-		'title': 'wizards',
-		'entryList': [{
-			'_OPP' : id,
-			'tweet_id': 1,
-			'tweet_text': 'Here is a picture of a #wizard blah blah blah blah blah blah, and yada yada yada weroihwoeirh',
-			'username': 'AlexandraBerke',
-			'img_url': '/forbidden.jpg',
-			'date': '',
-			'shares': 8,
-			'retweets': 2,
-		},{
-			'_OPP' : id,
-			'tweet_id': 2,
-			'tweet_text': 'We code like a #wizard blah blah blah blah blah blah, and yada yada yada weroihwoeirh',
-			'username': 'OtherPerson',
-			'img_url': '/img/labs.png',
-			'date': '',
-			'shares': 8,
-			'retweets': 2,
-		},{
-			'_OPP' : id,
-			'tweet_id': 3,
-			'tweet_text': 'Labs is like a #wizard blah blah blah blah blah blah, and yada yada yada weroihwoeirh',
-			'username': 'SomeoneElse',
-			'img_url': '/img/huffpostLABS_outline.png',
-			'date': '',
-			'shares': 8,
-			'retweets': 2,
-		},]
-	}
-	return dumpJSON(data)
+	opp = OPP.find(id)
+	return dumpJSON(opp)
+
+
+
+
 
 

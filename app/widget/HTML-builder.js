@@ -4,17 +4,32 @@ var HTMLbuilder = function(container, data) {
 	this.container = container;
 	this.data = data;
 	this.entryList = data.entryList;
+	this.onclickPrefix = ("OPPwidgets['" + data.id + "']");
 
 	var pictureFrameHeight = 240;
 	var static_domain = "http://127.0.0.1:3000";
 
+
+	this.buildSlideInfo = function() {
+		var onclickPrev = this.onclickPrefix + ".SwipeCntl.prev()";
+		var onclickNext = this.onclickPrefix + ".SwipeCntl.next()";
+		var html = "<div class='slide-info'>"
+			html+= "	<p class='campaign-name'>#" + this.data.title + "</p>";
+			html+= "	<p class='slide-count'>";
+			html+= "		<span class='slide-index'>1</span>/" + this.entryList.length;
+			html+= "		<img onclick=" + onclickPrev + " class='touch slide-change-arrow' width='10px' src='" + static_domain + "/widget/icon/left-arrow.png'>";
+			html+= "		<img onclick=" + onclickNext + " class='touch slide-change-arrow' width='10px' src='" + static_domain + "/widget/icon/right-arrow.png'>";
+			html+= "	</p>";
+			html+= "</div>";
+		return html;
+	}
 	// handle short img awkwardly sticking to top of container
 	function addImg(container, img_url, callback) {
-	 	if (!img_url) { return; }
+	 	if (!img_url) { return callback(); }
 
 		var img = document.createElement('img');
 		img.onload = function() {
-			if (!img.height || img.height > img.width) { return; }
+			if (!img.height || img.height > img.width) { return callback(); }
 			
 			var extra_space = pictureFrameHeight - img.height;
 			img.style.marginTop = (extra_space/2).toString() + "px";
@@ -22,20 +37,6 @@ var HTMLbuilder = function(container, data) {
 		};
 		container.appendChild(img);
 		img.src=img_url;
-	}
-
-	this.buildSlideInfo = function() {
-		var onclickPrev = "OPPwidgets[1].SwipeCntl.prev()";
-		var onclickNext = "OPPwidgets[1].SwipeCntl.next()";
-		var html = "<div class='slide-info'>"
-			html+= "	<p class='campaign-name'>#" + this.data.title + "</p>";
-			html+= "	<p class='slide-count'>";
-			html+= "		<span class='slide-index'>1</span>/" + this.entryList.length;
-			html+= "		<img onclick=" + onclickPrev + " class='touch' width='10px' src='" + static_domain + "/widget/icon/left-arrow.png'>";
-			html+= "		<img onclick=" + onclickNext + " class='touch' width='10px' src='" + static_domain + "/widget/icon/right-arrow.png'>";
-			html+= "	</p>";
-			html+= "</div>";
-		return html;
 	}
 	this.addImages = function(callback) {
 		var imageContainers = this.container.getElementsByClassName('image-container');
@@ -62,8 +63,8 @@ var HTMLbuilder = function(container, data) {
 		return html;
 	}
 	this.setCaption = function(entry) {
-		var html = "<em>@" + entry.username + ": </em>";
-			html+= entry.tweet_text;
+		var html = "<em>@" + entry.screen_name + ": </em>";
+			html+= entry.text;
 		this.tweetBody.innerHTML = html;
 	}
 	this.setSlide = function(index) {
@@ -94,16 +95,14 @@ var HTMLbuilder = function(container, data) {
 
 	this.buildWidget = function(callback) {
 
-		var html = "<div class='opp-container'>";
-			html+= "	<div class='opp-frame'>";
+		var html = "<div class='opp-frame'>";
 			html+= this.buildSlideInfo();
 			html+= this.buildPicture();
 			html+= this.buildCaption();
 
-			html+="		</div>";
 			html+="</div>";
 		this.container.innerHTML = html;
-
+		
 		// add the images to the image-containers
 		this.addImages(callback);
 

@@ -1,0 +1,36 @@
+<div class='huffpostlabs-opp edit'>
+	<div class='opp-frame'>
+		<div class='slide-info'>
+			<p class='campaign-name'>#{{opp.title}}</p>
+			<p class='slide-count'>
+				1/{{opp.entryList.length}}
+				<img onclick='swipe.prev()' class='touch slide-change-arrow' width='10px' src='/widget/icon/left-arrow.png'>
+				<img onclick='swipe.next()' class='touch slide-change-arrow' width='10px' src='/widget/icon/right-arrow.png'>
+				</p>
+		</div>
+		<div class='picture-frame'>
+			<div class='picture swipe'>
+				<div class='swipe-wrap'>
+					<img ng-src='{{entry.img_url}}'>
+				</div>
+			</div>
+		</div>
+		<div class='picture-caption'>
+			<p class='tweet-body'><em>@{{entry.screen_name}}: </em>{{entry.text}}</p>
+			<div class='share-container'>
+				<p>Upvote via sharing</p>
+				<div class='fb-share share'>
+					<img width='30px' height='30px' class='share share-btn' src='/widget/icon/fb-icon.png'>
+					<img class='share share-btn-swap' width='30px' height='30px' src='/widget/icon/fb-icon-blue.png'>
+				</div>
+				<div class='twitter-share share'>
+					<img width='30px' height='30px' class='share share-btn' src='/widget/icon/twitter-icon.png'>
+					<img class='share share-btn-swap' width='30px' height='30px' src='/widget/icon/twitter-icon-blue.png'>
+				</div>
+				<div class='email-share share'>
+					<img width='30px' height='30px' class='share email-share-btn' src='/widget/icon/email.png'>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

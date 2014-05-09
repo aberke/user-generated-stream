@@ -36,4 +36,16 @@ OPPapp.config(function($routeProvider) {
 			user: userOrRedirect,
 		}
 	});
+	$routeProvider.when('/update/:id', {
+		templateUrl: '/html/partials/update.html',
+		controller: UpdateCntl,
+		resolve: {
+			user: userOrRedirect,
+			opp: function(APIservice, $location) {
+					return APIservice.GET('/opp/' + $location.path().split('/')[2]).then(function(data) { 
+						return data; 
+				});
+			}
+		}
+	});
 });

@@ -1,6 +1,6 @@
 
 var HuffpostLabsOPP = function(container, data) {
-	console.log('HuffpostLabsOPP', data, container)
+	console.log('HuffpostLabsOPP', data)
 	this.container = container;
 	this.OPPdata = data;
 	this.id = data._id;
@@ -28,11 +28,13 @@ var HuffpostLabsOPP = function(container, data) {
 		this.HTMLbuilder = new HTMLbuilder(container, data);
 		
 		var startSlide = this.getStartSlide();
+		console.log('startSlide', startSlide)
 
 		/* must add all slides/setup images before can create Swipe */
 		this.HTMLbuilder.buildWidget(function() {
-
+			console.log('************')
 			var swipeContainer = self.container.getElementsByClassName('swipe')[0];
+			console.log('swipeContainer', swipeContainer)
 			self.SwipeCntl = new Swipe(swipeContainer, {
 				startSlide: startSlide,
 				speed: 400,

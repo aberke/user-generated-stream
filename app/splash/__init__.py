@@ -9,7 +9,7 @@ splash = Blueprint('splash', __name__, static_url_path='', static_folder='static
 
 @splash.route('/')
 @splash.route('/new')
-@splash.route('/user-generated-stream/<id>')
+@splash.route('/update/<id>')
 def base(id=None):
 	return send_file('splash/static/html/base.html')
 

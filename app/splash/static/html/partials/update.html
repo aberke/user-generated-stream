@@ -1,0 +1,90 @@
+
+<link href="/widget/widget.css" rel="stylesheet">
+<div id='update-partial'>
+
+<div class='container'>
+	<div class='row tab-control'>
+		<span ng-class="{'selected':showTab=='accepted'}" ng-click="showTab='accepted'" class='data-tab accepted-data col-md-4'>
+			<p><span class='tab-title'>Accepted</span> {{entryList.length}}</p>
+		</span>
+		<span ng-class="{'selected':!showTab||showTab=='pending'}" ng-click="showTab='pending'" class='data-tab pending-data col-md-4'>
+			<p><span class='tab-title'>Pending</span> {{pendingEntryList.length}}</p>
+		</span>
+		<span ng-class="{'selected':showTab=='rejected'}" ng-click="showTab='rejected'" class='data-tab rejected-data col-md-4'>
+			<p><span class='tab-title'>Rejected</span> {{rejectEntryList.length}}</p>
+		</span>
+	</div>
+</div>
+
+<div ng-show="showTab=='accepted'" class='container entry-list-container accepted-entries'>
+	
+	<div class='row entry-container' ng-repeat="e in entryList">
+	
+		<div class='col-md-2 entry-accept-reject-buttons'>
+			<button ng-click="acceptEntry('entryList', e)" class='btn btn-success btn-xs'>Accept</button>
+			<button ng-click="rejectEntry('entryList', e)" class='btn btn-danger btn-xs'>Reject</button>
+		</div>
+		<div class='col-md-6 entry-pic'>
+			<opp-widget opp='opp' entry='e'></opp-widget>
+		</div>
+		<div class='col-md-4 entry-metadata'>
+			<p class='screen_name'>@{{e.screen_name}}</p>
+			<p class='tweet-text'>{{e.tweet_text}}</p>
+			<p class='created-at'>
+				{{e.created_at | date:'MM/dd/yyyy @ h:mma'}}
+			</p>
+		</div>
+
+	</div>
+</div>
+
+<div ng-show="!showTab||showTab=='pending'" class='entry-list-container pending-entries container'>
+	
+	<div class='row entry-container' ng-repeat="e in pendingEntryList">
+
+		<div class='col-md-2 entry-accept-reject-buttons'>
+			<button ng-click="acceptEntry('pendingEntryList', e)" class='btn btn-success btn-xs'>&#x2713;</button>
+			<button ng-click="rejectEntry('pendingEntryList', e)" class='btn btn-danger btn-xs'>X</button>
+		</div>
+		<div class='col-md-6 entry-pic'>
+			<opp-widget opp='opp' entry='e'></opp-widget>
+		</div>
+		<div class='col-md-4 entry-metadata'>
+			<p class='screen_name'>@{{e.screen_name}}</p>
+			<p class='tweet-text'>{{e.text}}</p>
+			<p class='created-at'>
+				{{e.created_at | date:'MM/dd/yyyy @ h:mma'}}
+			</p>
+		</div>
+
+	</div>
+</div>
+
+<div ng-show="showTab=='rejected'" class='container entry-list-container rejected-entries'>
+	
+	<div class='row entry-container' ng-repeat="e in rejectEntryList">
+		
+		<div class='col-md-2 entry-accept-reject-buttons'>
+			<button ng-click="acceptEntry('rejectEntryList', e)" class='btn btn-success btn-xs'>&#x2713;</button>
+			<button ng-click="rejectEntry('rejectEntryList', e)" class='btn btn-danger btn-xs'>&#x2717;</button>
+		</div>
+		<div class='col-md-6 entry-pic'>
+			<opp-widget opp='opp' entry='e'></opp-widget>
+		</div>
+		<div class='col-md-4 entry-metadata'>
+			<p class='screen_name'>@{{e.screen_name}}</p>
+			<p class='tweet-text'>{{e.tweet_text}}</p>
+			<p class='created-at'>
+				{{e.created_at | date:'MM/dd/yyyy @ h:mma'}}
+			</p>
+		</div>
+
+	</div>
+</div>
+
+<button ng-click='moreEntries()' class='btn'>More</button>
+
+</div>
+
+
+
