@@ -28,7 +28,8 @@ twitter = setup()
 
 @auth.route('/user')
 def user():
-	return Response(json.dumps(session['user']))
+	user = session['user'] if 'user' in session else None
+	return Response(json.dumps(user))
 
 @auth.route('/logout')
 def logout():
