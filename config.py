@@ -7,18 +7,18 @@ PORT = os.getenv('PORT', 3000)
 # - MONGO ----------------------------------
 
 # set Development defaults
-MONGO_DBNAME 		= 'OPP'
+#MONGO_DBNAME 		= "OPP"
 MONGODB_HOST 		= "localhost"
 MONGODB_PORT 		= "27017"
-MONGODB_DB 			= "OPP_database"
+MONGODB_DB 			= "OPP"
 
 # if on Heroku - set heroku variables
 HEROKU_MONGODB_URL 	= os.environ.get("MONGOHQ_URL", None)
 if HEROKU_MONGODB_URL:
 	db_info 		= urlparse(HEROKU_MONGODB_URL)
 
-	MONGO_DBNAME 	= db_info.path.replace('/', '')
-	#MONGODB_DB		= "app24775728"
+	#MONGO_DBNAME 	= db_info.path.replace('/', '')
+	MONGODB_DB		= db_info.path.replace('/', '')
 	MONGODB_HOST 	= db_info.hostname
 	MONGODB_PORT 	= db_info.port
 	MONGODB_USERNAME= db_info.username
