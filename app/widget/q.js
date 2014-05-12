@@ -18,9 +18,9 @@
 	var scripts 	= [
 					   	(static_domain + "/widget/OPP-object.js"),
 					   	(static_domain + "/widget/HTML-builder.js"),
-					   	(static_domain + "/widget/lib/swipe.js"),
-					   	(static_domain + "/widget/lib/btn-master.js"),
-					   	(static_domain + "/widget/lib/social-network-sharing.js"),
+					   	(static_domain + "/widget/vendor/swipe.js"),
+					   	(static_domain + "/widget/vendor/btn-master.js"),
+					   	(static_domain + "/widget/vendor/social-network-sharing.js"),
 					   ];
 	var stylesheets = [(static_domain + "/widget/widget.css")];
 
