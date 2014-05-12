@@ -1,4 +1,5 @@
 import os
+from urlparse import urlparse
 
 HOST = os.getenv('HOST', '127.0.0.1')
 PORT = os.getenv('PORT', 3000)
@@ -14,12 +15,14 @@ MONGODB_DB 			= "OPP_database"
 # if on Heroku - set heroku variables
 HEROKU_MONGODB_URL 	= os.environ.get("MONGOHQ_URL", None)
 if HEROKU_MONGODB_URL:
-	MONGO_DBNAME 	= "app24775728"
-	MONGODB_DB		= "app24775728"
-	MONGODB_HOST 	= "oceanic.mongohq.com"
-	MONGODB_PORT 	= "10012"
-	MONGODB_USERNAME= "heroku"
-	MONGODB_PASSWORD= HEROKU_MONGODB_URL.split(':')[2].split('@')[0]
+	db_info 		= urlparse(HEROKU_MONGODB_URL)
+
+	MONGO_DBNAME 	= db_info.path.replace('/', '')
+	#MONGODB_DB		= "app24775728"
+	MONGODB_HOST 	= db_info.hostname
+	MONGODB_PORT 	= db_info.port
+	MONGODB_USERNAME= db_info.username
+	MONGODB_PASSWORD= db_info.password
 
 print('---------------')
 print('MONGO_DBNAME',MONGO_DBNAME)
