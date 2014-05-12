@@ -14,7 +14,7 @@ MONGODB_DB 			= "OPP_database"
 # if on Heroku - set heroku variables
 HEROKU_MONGODB_URL 	= os.environ.get("MONGOHQ_URL", None)
 if HEROKU_MONGODB_URL:
-	MONGO_DBNAME 	= "app24775728"
+	MONGO_DBNAME 	= "OPP"
 	MONGODB_HOST 	= "oceanic.mongohq.com"
 	MONGODB_PORT 	= "10012"
 	MONGODB_USERNAME= os.environ.get("heroku")
