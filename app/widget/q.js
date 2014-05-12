@@ -13,6 +13,7 @@
 
 
 	this.OPPwidgets = {};
+	this.OPPglobals = {};
 
 
 	var scripts 	= [
@@ -25,20 +26,20 @@
 	var stylesheets = [(static_domain + "/widget/widget.css")];
 
 
-	var setupOPPfunctions = function() {
-		/* define a set of quiz functions that are global
+	var setupOPPglobals = function() {
+		/* define a set of opp functions and strings that are global
 			- defined functions are callable by 
-				quizFunctions.f_name(arguments)
+				OPPglobals.f_name(arguments)
 		*/
-		this.OPPfunctions = (this.QuizFunctions || {});
+		this.OPPglobals.static_domain = static_domain;
 
-		this.OPPfunctions.twitterShare = function(text, share) {
+		this.OPPglobals.twitterShare = function(text, share) {
 			/* using HuffpostLabs social-network-sharing library */
 			HuffpostLabsShareTwitter(text, share.link, function() {
 				PUT("/api/share/" + share._id + "/increment-twitter-count", null);
 			});
 		}
-		this.OPPfunctions.fbShare = function(shareData, share) { 
+		this.OPPglobals.fbShare = function(shareData, share) { 
 			/* using HuffpostLabs social-network-sharing library */
 			HuffpostLabsShareFB(shareData, function() {
 				if (share._id) { /* log that it was shared */
@@ -185,12 +186,12 @@
 			showLoading(widgetContainers[c]);
 			disablePinterestBullshit(widgetContainers[c]);
 		}
-		setupOPPfunctions();
+		setupOPPglobals();
 	}
 	main();
 
 	return {
 		OPPwidgets: this.OPPwidgets,
-		OPPfunctions: this.OPPfunctions,
+		OPPglobals: this.OPPglobals,
 	};	
 })();

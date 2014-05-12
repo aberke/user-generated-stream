@@ -7,7 +7,7 @@ var HTMLbuilder = function(container, data) {
 	this.onclickPrefix = ("OPPwidgets['" + data.id + "']");
 
 	var pictureFrameHeight = 240;
-	var static_domain = "http://127.0.0.1:3000";
+	var static_domain = OPPglobals.static_domain;
 
 
 	this.buildSlideInfo = function() {
