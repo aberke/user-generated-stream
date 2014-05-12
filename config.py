@@ -11,23 +11,15 @@ MONGODB_HOST 		= "localhost"
 MONGODB_PORT 		= "27017"
 MONGODB_DB 			= "OPP_database"
 
-
+# if on Heroku - set heroku variables
 HEROKU_MONGODB_URL 	= os.environ.get("MONGOHQ_URL", None)
 if HEROKU_MONGODB_URL:
-	print('HEROKU_MONGODB_URL', HEROKU_MONGODB_URL)
 	MONGO_DBNAME 	= "app24775728"
 	MONGODB_HOST 	= "oceanic.mongohq.com"
 	MONGODB_PORT 	= "10012"
 	MONGODB_USERNAME= os.environ.get("heroku")
 	MONGODB_PASSWORD= HEROKU_MONGODB_URL.split(':')[2].split('@')[0]
 
-
-# MONGO_DBNAME 		= 'OPP'
-# MONGODB_HOST 		= os.environ.get("DOTCLOUD_API_DB_MONGODB_HOST", "localhost")
-# MONGODB_PORT 		= os.environ.get("DOTCLOUD_API_DB_MONGODB_PORT", "27017")
-# MONGODB_USERNAME 	= os.environ.get("API_DB_MONGODB_LOGIN", "")
-# MONGODB_PASSWORD 	= os.environ.get("API_DB_MONGODB_PASSWORD", "")
-# MONGODB_DB 			= "OPP_database"
 
 # ---------------------------------- MONGO -
 
