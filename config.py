@@ -14,12 +14,20 @@ MONGODB_DB 			= "OPP_database"
 # if on Heroku - set heroku variables
 HEROKU_MONGODB_URL 	= os.environ.get("MONGOHQ_URL", None)
 if HEROKU_MONGODB_URL:
-	MONGO_DBNAME 	= "OPP"
+	MONGO_DBNAME 	= "app24775728"
+	MONGODB_DB		= "app24775728"
 	MONGODB_HOST 	= "oceanic.mongohq.com"
 	MONGODB_PORT 	= "10012"
-	MONGODB_USERNAME= os.environ.get("heroku")
+	MONGODB_USERNAME= "heroku"
 	MONGODB_PASSWORD= HEROKU_MONGODB_URL.split(':')[2].split('@')[0]
 
+print('---------------')
+print('MONGO_DBNAME',MONGO_DBNAME)
+print('MONGODB_HOST',MONGODB_HOST)
+print('MONGODB_PORT', MONGODB_PORT)
+print('MONGODB_USERNAME',MONGODB_USERNAME)
+print('MONGODB_PASSWORD', MONGODB_PASSWORD)
+print('MONGODB_DB',MONGODB_DB)
 
 # ---------------------------------- MONGO -
 
