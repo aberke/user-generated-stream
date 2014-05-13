@@ -27,6 +27,7 @@ var OPPapp = angular.module('OPPapp', ['ngRoute'])
 
 		// register directives
 		$compileProvider.directive('oppWidget', oppWidget);
+		$compileProvider.directive('entryContainer', entryContainer);
 
 		// register factories
 		$provide.factory('UserFactory', UserFactory);

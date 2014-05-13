@@ -1,4 +1,4 @@
-/* name is q.js: let's make the name as short as possible as for easy reference
+/* name is o.js: let's make the name as short as possible as for easy reference
 	
 	This is pure javascript - no jQuery
 
@@ -8,8 +8,18 @@
 /* wrap in anonymous function as to not interfere with existing function and variable names */
 (function() {
 
-	//var domain = static_domain = 'http://127.0.0.1:3000';
-	var domain = static_domain = 'http://user-generated-stream.herokuapp.com';
+	//var domain = 'http://127.0.0.1:3000';
+	var domain = 'http://opp.huffingtonpost.com';
+
+	 /* akamai cache domain: 'opp.huffingtonpost.com'
+			Only use it for GET requests on foreign host
+			- if on our own host or in development, we care to see changes right away, not cache
+	 */
+	var static_domain = 'http://opp.huffingtonpost.com';
+	if (window.location.origin == domain || window.location.origin.match(new RegExp('http://localhost', 'g'))) {
+		static_domain = domain;
+	}
+	console.log('static_domain', static_domain)
 
 
 	this.OPPwidgets = {};

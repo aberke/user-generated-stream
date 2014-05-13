@@ -26,13 +26,11 @@ OPPapp.config(function($routeProvider) {
 	$routeProvider.when('/', {
 		templateUrl: '/html/partials/index.html',
 		controller: IndexCntl,
-		resolve: { page: function() { return '/' }  }
 	});
 	$routeProvider.when('/new', {
 		templateUrl: '/html/partials/index.html',
 		controller: IndexCntl,
 		resolve: { 
-			page: function() { return '/new' },
 			user: userOrRedirect,
 		}
 	});

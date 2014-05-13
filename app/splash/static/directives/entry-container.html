@@ -1,0 +1,21 @@
+<!-- 
+wrapped within
+
+<div entry-list="*EntryList" class='row entry-container' ng-repeat="e in *EntryList"></div>
+-->
+
+<div class='col-md-2 entry-accept-reject-buttons'>
+	<button ng-click="acceptEntry(entryList, e)" class='btn btn-success btn-xs'>&#x2713;</button>
+	<button ng-click="rejectEntry(entryList, e)" class='btn btn-danger btn-xs'>&#x2717;</button>
+</div>
+<div class='col-md-6 entry-pic'>
+	<opp-widget opp='opp' entry='e'></opp-widget>
+</div>
+<div class='col-md-4 entry-metadata'>
+	<p class='screen_name'>@{{e.screen_name}}</p>
+	<p class='tweet-text'>{{e.tweet_text}}</p>
+	<p class='created-at'>
+		{{e.created_at | date:'MM/dd/yyyy @ h:mma'}}
+	</p>
+</div>
+

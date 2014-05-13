@@ -6,7 +6,7 @@ var HTMLbuilder = function(container, data) {
 	this.entryList = data.entryList;
 	this.onclickPrefix = ("OPPwidgets['" + data.id + "']");
 
-	var pictureFrameHeight = 240;
+	var pictureFrameDimension = 290;
 	var static_domain = OPPglobals.static_domain;
 
 
@@ -16,24 +16,36 @@ var HTMLbuilder = function(container, data) {
 		var html = "<div class='slide-info'>"
 			html+= "	<p class='campaign-name'>#" + this.data.title + "</p>";
 			html+= "	<p class='slide-count'>";
-			html+= "		<span class='slide-index'>1</span>/" + this.entryList.length;
+			/* slide-index is 0 until setSlide called */
+			html+= "		<span class='slide-index'>0</span>/" + this.entryList.length;
 			html+= "		<img onclick=" + onclickPrev + " class='touch slide-change-arrow' width='10px' src='" + static_domain + "/widget/icon/left-arrow.png'>";
 			html+= "		<img onclick=" + onclickNext + " class='touch slide-change-arrow' width='10px' src='" + static_domain + "/widget/icon/right-arrow.png'>";
 			html+= "	</p>";
 			html+= "</div>";
 		return html;
 	}
-	// handle short img awkwardly sticking to top of container
+	
 	function addImg(container, img_url, callback) {
 	 	if (!img_url) { return callback(); }
 
 		var img = document.createElement('img');
 		img.onload = function() {
-			if (!img.height || img.height > img.width) { return callback(); }
-			
-			var extra_space = pictureFrameHeight - img.height;
+			if (!img.height) { console.log('ERROR: !img.height'); return callback(); }
+
+			// if height > width: horizontally center image
+			if (img.height > img.width) {
+				img.style.height = (pictureFrameDimension + "px");
+				// browser will handle the rest
+				return callback(); 
+			}
+			// else width <= height: vertically center image - handle short img awkwardly sticking to top of container
+			var originalWidth = img.width;
+			var originalHeight = img.height;
+			img.width = pictureFrameDimension;
+			img.height = (originalHeight/originalWidth)*pictureFrameDimension;
+			var extra_space = pictureFrameDimension - img.height;
 			img.style.marginTop = (extra_space/2).toString() + "px";
-			if (callback) { callback(); }
+			callback();
 		};
 		container.appendChild(img);
 		img.src=img_url;

@@ -22,7 +22,7 @@ var FormService = function() {
 var WidgetService = function($http) {
 
   this.loadOscript = function() {
-    $http.get("/widget/q.js").success(function(data) {
+    $http.get("/widget/o.js").success(function(data) {
       eval(data);
     });
   }
@@ -30,14 +30,15 @@ var WidgetService = function($http) {
 
 var APIservice = function($rootScope, $http, $q){
 
-  function HTTP(method, endpoint, data) {
+  function HTTP(method, endpoint, data, params) {
     $rootScope.unauthorized = false;
     
     var deferred = $q.defer();
     $http({
-      method: method,
-      url: ('/api' + endpoint),
-      data: (data || {}),
+      method:  method,
+      url:    ('/api' + endpoint),
+      data:   (data || {}),
+      params: (params || {}),
     })
     .success(function(returnedData){
       deferred.resolve(returnedData);
@@ -61,8 +62,8 @@ var APIservice = function($rootScope, $http, $q){
   /* ---------- below functions return promises --------------------------- */
   
 
-  this.GET = function(endpoint) {
-    return HTTP('GET', endpoint, null);
+  this.GET = function(endpoint, data) { // if there's data, send it as params
+    return HTTP('GET', endpoint, null, data);
   };
   this.POST = function(endpoint, data) {
     return HTTP('POST', endpoint, data);

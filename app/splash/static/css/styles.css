@@ -84,29 +84,55 @@ footer img{
 
 .data-tab {
 	cursor: pointer;
+	border: none;
+	border-bottom: 1px solid gray;
+	opacity: 0.5;
 }
-.pending-data.selected,
-.pending-data:hover {
+.data-tab.selected {
+	border: 1px solid gray;
+	border-bottom: none;
+	opacity: 1;
+}
+/*.data-tab.selected,
+.data-tab:hover{
+	opacity: 1;
+}*/
+
+.widget-tab.selected,
+.widget-tab:hover {
+	opacity: 1;
+}
+.widget-tab.selected{
+	border: 1px solid gray;
+	border-bottom: none;
+}
+.pending-tab.selected,
+.pending-tab:hover {
 	background-color: rgba(51,204,255,0.1);
 }
-.rejected-data.selected,
-.rejected-data:hover {
+.rejected-tab.selected,
+.rejected-tab:hover {
 	background-color: rgba(255,0,0,0.1);
 }
-.accepted-data.selected,
-.accepted-data:hover {
+.accepted-tab.selected,
+.accepted-tab:hover {
 	background-color: rgba(0,255,0,0.1);
 }
-.accepted-data .tab-title {
+.accepted-tab .tab-title {
 	color: green;
 }
-.pending-data .tab-title {
+.pending-tab .tab-title {
 	color: rgb(51,204,255);
 }
-.rejected-data .tab-title {
+.rejected-tab .tab-title {
 	color: red;
 }
-.entry-list-container {
+.tab-content {
+	border: 1px solid gray;
+	border-top: none;
+}
+.widget-row {
+	padding: 20px;
 }
 .accepted-entries {
 	background-color: rgba(0,255,0,0.1);
@@ -118,7 +144,7 @@ footer img{
 	background-color: rgba(255,0,0,0.1);
 }
 .entry-container {
-	margin: 20px;
+	padding: 30px;
 }
 
 .entry-accept-reject-buttons {

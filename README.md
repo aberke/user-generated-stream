@@ -5,6 +5,8 @@ user-generated-stream
 
 Other People's Photos (OPP), posted to us through twitter, consumed like a slideshow
 
+It's alive <http://user-generated-stream.herokuapp.com/>
+
 Running Locally
 ---
 
@@ -34,6 +36,8 @@ $ source venv/bin/activate
 TODO
 ---
 
+
+- fix how you're querying next
 
 
 

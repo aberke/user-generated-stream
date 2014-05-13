@@ -3,6 +3,12 @@ function MainCntl($scope, $location, UserFactory) {
 	$scope.domain = window.location.origin;
 	$scope.user;
 
+	/* controls the header, so update the page for the header */ 
+	$scope.$on('$routeChangeStart', function(next, current) {
+		$scope.page = $location.path();
+	});
+
+
 	$scope.goTo = function(path) {
 		$location.path(path);
 		document.body.scrollTop = document.documentElement.scrollTop = 0;
@@ -21,8 +27,7 @@ function MainCntl($scope, $location, UserFactory) {
 	}
 	init();
 }
-function IndexCntl($scope, $rootScope, APIservice, WidgetService, page) {
-	$rootScope.page = page;
+function IndexCntl($scope, $rootScope, APIservice, WidgetService) {
 	$scope.showNew = false;
 	$scope.OPPlist;
 
@@ -50,17 +55,16 @@ function IndexCntl($scope, $rootScope, APIservice, WidgetService, page) {
 	init();
 }
 function UpdateCntl($scope, APIservice, FormService, opp) {
-	$scope.allEntries;
+	$scope.allEntries = [];
 	$scope.pendingEntryList = [];
 	$scope.rejectEntryList = [];
 	$scope.entryList = [];
-	console.log($scope['rejectEntryList'])
+	var max_id = null;
 
 	$scope.rejectEntry = function(curr_entryList, entry) {
 		var index = $scope[curr_entryList].indexOf(entry);
 		if (index < 0) { console.log('ERROR'); return false; }
 
-		console.log('rejectEntry', entry.tweet_id)
 		APIservice.PUT('/opp/' + opp.id + '/reject/' + entry.tweet_id).then(function(data) {
 			$scope.opp = data;
 			$scope[curr_entryList].splice(index, 1);
@@ -69,7 +73,6 @@ function UpdateCntl($scope, APIservice, FormService, opp) {
 	}
 	$scope.acceptEntry = function(curr_entryList, entry) {
 		var index = $scope[curr_entryList].indexOf(entry);
-		console.log(curr_entryList, entry, index)
 		if (index < 0) { console.log('ERROR'); return false; }
 
 		APIservice.PUT('/opp/' + opp.id + '/accept/' + entry.tweet_id, entry).then(function(data) {
@@ -92,28 +95,31 @@ function UpdateCntl($scope, APIservice, FormService, opp) {
 			} else {
 				$scope.pendingEntryList.push(item);
 			}
+			$scope.allEntries.push(item);
 		}
 		
 	}
 
-	$scope.moreEntries = function() {
-		APIservice.GET('/opp/' + opp.id + '/search/next').then(function(data) {
-			console.log('search data', data)
-		});
-	}
+	$scope.moreEntries = function() { searchEntries(); }
+
 	var searchEntries = function() {
-		APIservice.GET('/opp/' + opp.id + '/search').then(function(data) {
-			filterEntryList(data);
+		var params = {'hashtag': opp.title, 'since': opp.start, 'max_id': (max_id || null)};
+
+		APIservice.GET('/opp/' + opp.id + '/search', params).then(function(ret) {
+			console.log('searchEntries returned', ret)
+			filterEntryList(ret.data);
+			max_id = ret.max_id;
 		});
 	}
 
 	var init = function() {
+		console.log('opp', opp)
 		$scope.opp = opp;
 		searchEntries();
 	}
 	init();
 }
-function NewCntl($scope, APIservice, FormService) {
+function NewCntl($scope, $location, APIservice, FormService) {
 	$scope.error;
 	$scope.opp;
 
@@ -126,7 +132,8 @@ function NewCntl($scope, APIservice, FormService) {
 			return false;
 		}
 		APIservice.POST('/opp', opp).then(function(data) {
-			console.log(data)
+			console.log('POST returned data',data)
+			$location.path('/update/' + data.id);
 		});
 	}
 	var init = function() {

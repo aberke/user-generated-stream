@@ -3,6 +3,8 @@ var HuffpostLabsOPP = function(container, data) {
 	console.log('HuffpostLabsOPP', data)
 	this.container = container;
 	this.OPPdata = data;
+	// can't put in this because this.slideTransition needs it and is called by window
+	var num_entries = this.OPPdata.entryList.length;
 	this.id = data._id;
 	var self = this;
 
@@ -10,9 +12,9 @@ var HuffpostLabsOPP = function(container, data) {
 	this.HTMLbuilder;
 	this.SwipeCntl;
 
-
-	this.slideTransition = function(index, element) {
-		self.HTMLbuilder.setSlide(index);
+	// called by window so this==window
+	this.slideTransition = function(index, element, f) {
+		self.HTMLbuilder.setSlide(index%num_entries);
 	}
 	this.getStartSlide = function() {
     	var regex = new RegExp("[\\?&]OPPslide=([^&#]*)");
@@ -20,7 +22,7 @@ var HuffpostLabsOPP = function(container, data) {
         result = (result == null) ? 0 : decodeURIComponent(result[1].replace(/\+/g, " "));
     	result = Number(result);
     	// check that result != NaN and that it is in bounds
-    	return (result < this.OPPdata.entryList.length) ? result : 0;
+    	return (result < num_entries) ? result : 0;
     }
 
 
@@ -32,9 +34,7 @@ var HuffpostLabsOPP = function(container, data) {
 
 		/* must add all slides/setup images before can create Swipe */
 		this.HTMLbuilder.buildWidget(function() {
-			console.log('************')
 			var swipeContainer = self.container.getElementsByClassName('swipe')[0];
-			console.log('swipeContainer', swipeContainer)
 			self.SwipeCntl = new Swipe(swipeContainer, {
 				startSlide: startSlide,
 				speed: 400,
@@ -45,7 +45,7 @@ var HuffpostLabsOPP = function(container, data) {
 				callback: function(index, elem) {},
 				transitionEnd: self.slideTransition
 			});
-			self.HTMLbuilder.setSlide(startSlide);
+			if (num_entries > 0) { self.HTMLbuilder.setSlide(startSlide) };
 		});
 	}
 

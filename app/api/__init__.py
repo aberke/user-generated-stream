@@ -1,4 +1,4 @@
-from flask import Blueprint, url_for, session, request
+from flask import Blueprint, url_for, session, request, redirect
 import json
 
 from twitter_api import searchHashtag, search
@@ -66,15 +66,13 @@ def PUTrejectEntry(id, tweet_id):
 		return respond500(e)
 
 
-@api.route('/opp/<id>/search/next', methods=['GET'])
-def GETsearchOPPnext(id):
+@api.route('/opp/<id>/search/<query>', methods=['GET'])
+def GETsearchOPPnext(id, query):
 	""" 
 	Picks up where GETsearchOPP left off
 	"""
-	query = session[id + '_next_query'] if (id + '_next_query') in session else None
 	(data, next_query) = search(query)
-	session[id + '_next_query'] = next_query
-	return dumpJSON(data)
+	return dumpJSON({'data': data, 'next_query': next_query})
 
 
 @api.route('/opp/<id>/search', methods=['GET'])
@@ -82,13 +80,19 @@ def GETsearchOPP(id):
 	""" Keeping dictionary in session:
 			{id_next_query: query-string}
 	"""
-	opp = OPP.find(id)
-	print('GETsearchOPP', opp, opp['title'], opp['start'])
-	(data, next_query) = searchHashtag(opp['title'], since=opp['start'])
 
-	session[id + '_next_query'] = next_query
+	hashtag 	= request.args.get('hashtag', None)
+	since 		= request.args.get('since', None)
+	if not (hashtag and since):
+		opp 	= OPP.find(id)
+		hashtag = opp['title']
+		since 	= opp['start']
 
-	return dumpJSON(data)
+	max_id = request.args.get('max_id', None)
+
+	(data, new_max_id) = searchHashtag(hashtag, since=since, max_id=max_id)
+
+	return dumpJSON({'data': data, 'max_id': new_max_id})
 
 
 @api.route('/opp/all', methods=['GET'])
