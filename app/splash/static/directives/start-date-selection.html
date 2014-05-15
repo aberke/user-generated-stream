@@ -1,0 +1,12 @@
+<span ng-show="!edit" class='opp-start'>{{opp.start | date:'MM/dd/yyyy'}}</span>
+
+<span ng-show="edit">
+	<select ng-model="opp.month" ng-options='(m + 1) for m in monthOptions'>
+		<option value="">MONTH</option>
+	</select>
+	<select ng-model="opp.day" ng-options='d for d in dayOptions'>
+		<option value="">DAY</option>
+	</select>
+	<!-- to avoid going over twitter rate limit, they can only have 2014 for now -->
+	2014
+</span>

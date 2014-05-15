@@ -36,6 +36,10 @@ SECRET_KEY = os.getenv('SESSION_SECRET', 'OPP')
 TWITTER_CONSUMER_KEY = os.environ['TWITTER_CONSUMER_KEY']
 TWITTER_CONSUMER_SECRET = os.environ['TWITTER_CONSUMER_SECRET']
 
+# twitter screen_names of users that have access to all routes and api calls
+# see app.auth.route_wrappers or documentation in README
+ADMIN_WHITELIST = ['HuffPostLabs', 'AlexandraBerke']
+
 
 
 del os

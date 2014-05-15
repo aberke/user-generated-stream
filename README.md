@@ -32,12 +32,24 @@ $ source venv/bin/activate
 * Visit <http://127.0.0.1:3000>
 
 
+Admin
+---
+- Most users are limited to interacting with only the OPP's that they own
+- To gain route and API access to all OPP's, user's twitter_screen_name must be added to ADMIN_WHITELIST
+	- ADMIN_WHITELIST located in config.py file
+- Currently the ADMIN_WHITELIST has only 'HuffpostLabs' and 'AlexandraBerke'
+
 
 TODO
 ---
 
-
 - fix how you're querying next
+
+
+
+Necessary Tests
+---
+- saving date
 
 
 

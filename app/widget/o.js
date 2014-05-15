@@ -8,8 +8,8 @@
 /* wrap in anonymous function as to not interfere with existing function and variable names */
 (function() {
 
-	//var domain = 'http://127.0.0.1:3000';
-	var domain = 'http://opp.huffingtonpost.com';
+	var domain = 'http://127.0.0.1:3000';
+	//var domain = 'http://opp.huffingtonpost.com';
 
 	 /* akamai cache domain: 'opp.huffingtonpost.com'
 			Only use it for GET requests on foreign host
@@ -173,7 +173,6 @@
 		if (!id) { return null; }
 		/* load quiz data - create quiz widet object, replace loading display with widget */
         GET("/api/opp/" + id, function(data) {
-        	console.log('got', data)
 			this.OPPwidgets[id] = new HuffpostLabsOPP(container, data);//, mobile, quizStartedCallback, quizCompletedCallback, quizRestartedCallback);
 			doneLoadingCallback(container);
         	if (callback) { callback(); }

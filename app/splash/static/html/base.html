@@ -36,6 +36,8 @@
     <script src="/js/factories.js"></script>
     <script src="/js/routes.js"></script>
     <!-- directives -->
+    <script src="/directives/start-date-selection.js"></script>
+    <script src="/directives/owner-only-element.js"></script>
     <script src="/directives/widget-directive.js"></script>
     <script src="/directives/entry-container.js"></script>
 
@@ -44,11 +46,31 @@
 
     <!-- header -->
     <ng-include src="'/html/partials/header.html'"></ng-include>
+
+
+    <div ng-controller='NewCntl' id='new-partial' ng-show="showNew" class='container'>
+        
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h1 class='title'>New Campaign</h1>
+
+                <label>Name</label>
+                <input ng-model='opp.title' type='text' placeholder='#'>
+
+                <label>Started</label>
+                <start-date-selection edit="true" opp='opp'></start-date-selection>
+
+                <!-- <input ng-class='{error:error.start}' ng-model='opp.start' type='text' placeholder='MM/DD/YY'> -->
+
+                <button ng-disabled='!(opp.title&&opp.start)' ng-click='create(opp)' class='btn btn-sm btn-default'>CREATE</button>
+            </div>
+        </div>
+    </div>
     
     <!-- <div ng-include class='widget-container' src="'/widget/widget.html'"></div> -->
 
     <!-- main view -- decided by routes.js -->
-    <div class='container' id='view' ng-view></div>
+    <div id='view' ng-view></div>
 
     <footer>
         <img src='/img/800x150.jpg'></img>

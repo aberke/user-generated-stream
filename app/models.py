@@ -1,7 +1,9 @@
 
-from app import app
 from flask.ext.mongoengine import MongoEngine
 from datetime import datetime
+import dateutil.parser
+
+from app import app
 
 """
 With Mongo
@@ -19,13 +21,13 @@ class Entry(db.EmbeddedDocument):
 	img_url = db.URLField()
 	retweets = db.IntField()
 	
-	def __dict__(self):
+	def jsonify(self):
 		return {
-		    'tweet_id': self.tweet_id,
-		    'screen_name': self.screen_name,
-		    'text': self.text,
-		    'img_url': self.img_url,
-		    'retweets': self.retweets,
+		    'tweet_id': 	self.tweet_id,
+		    'screen_name': 	self.screen_name,
+		    'text': 		self.text,
+		    'img_url': 		self.img_url,
+		    'retweets': 	self.retweets,
 		}
 
 class Stat(db.Document):
@@ -34,49 +36,63 @@ class Stat(db.Document):
 	twitter_count = db.IntField()
 
 class OPP(db.Document):
+	_user 				= db.ReferenceField('User', default=None)
 	title 				= db.StringField(required=True, unique=True)
 	start 				= db.DateTimeField(default=datetime.now)
 	entryList 			= db.ListField(db.EmbeddedDocumentField(Entry))
-	# entryIDList 		-- formed in __dict__ from entryList : db.ListField(db.StringField())
+	# entryIDList 		-- formed in jsonify from entryList : db.ListField(db.StringField())
 	rejectEntryIDList 	= db.ListField(db.StringField())
 
-	start_format = "%Y-%m-%d" # format that twitter expects
+
+	def update(self, data):
+		""" Expects data as dictionary
+			{u'start': isoformatted date string, u'title': 'TITLE'}
+			throws error for invalid data
+		"""
+		bad_data_error = Exception('expected OPP data with title string and start with isoformatted string')
+		try:
+			if 'start' in data:
+				self.start = dateutil.parser.parse(data['start'])
+			if 'title in data':
+				self.title = data['title']
+		except:
+			raise bad_data_error
+		self.save()
+		return self
+
 
 	@staticmethod
 	def create(data):
 		""" Expects data as dictionary
-			{u'start': 'MM/DD/YYYY', u'title': 'TITLE'}
+			{u'start': isoformatted date string, u'title': 'TITLE'}
 			throws error for invalid data
 		"""
-		bad_data_error = Exception('Must create OPP with title and start with format MM/DD/YYYY')
-		if not ('title' in data and 'start' in data): raise bad_data_error
+		bad_data_error = Exception('Must create OPP with user as userID, title string and start with isoformatted string')
+		if not ('user' in data and 'title' in data and 'start' in data): raise bad_data_error
 		try:
-			start = datetime.strptime(data['start'], "%m/%d/%y")
+			start = dateutil.parser.parse(data['start'])
+			#start = datetime.strptime(data['start'], "%m/%d/%y")
+			opp = OPP(_user=data['user'], title=data['title'], start=start)
 		except:
 			raise bad_data_error
 
-		opp = OPP(title=data['title'], start=start)
 		opp.save()
-		return opp.__dict__()
+		return opp
 
-	@staticmethod
-	def acceptEntry(id, entry_data):
-		opp = OPP.objects(id=id).first()
+	def acceptEntry(self, entry_data):
 		# take out of the rejectEntryIDList if it was there
-		opp.update(pull__rejectEntryIDList=entry_data['tweet_id'])
+		self.update(pull__rejectEntryIDList=entry_data['tweet_id'])
 		
 		entry = Entry(tweet_id=entry_data['tweet_id'], screen_name=entry_data['screen_name'], text=entry_data['text'], img_url=entry_data['img_url'])
-		opp.update(push__entryList=entry)
-		opp.save()
-		return opp.__dict__()
+		self.update(push__entryList=entry)
+		self.save()
+		return self
 
-	@staticmethod
-	def rejectEntry(id, tweet_id):
-		opp = OPP.objects(id=id).first()
-		opp.update(pull__entryList=Entry(tweet_id=tweet_id))
-		opp.update(add_to_set__rejectEntryIDList=tweet_id) # add value to a list only if its not in the list already
-		opp.save()
-		return opp.__dict__()
+	def rejectEntry(self, tweet_id):
+		self.update(pull__entryList=Entry(tweet_id=tweet_id))
+		self.update(add_to_set__rejectEntryIDList=tweet_id) # add value to a list only if its not in the list already
+		self.save()
+		return self
 
 	@classmethod
 	def remove(cls, id):
@@ -84,19 +100,22 @@ class OPP(db.Document):
 
 	@classmethod
 	def all(cls):
-		return [c.__dict__() for c in cls.objects.all()]
+		return cls.objects.all()
 	
 	@classmethod
 	def find(cls, id):
-		return cls.objects(id=id).first().__dict__()
+		return cls.objects(id=id).first()
 
-	def __dict__(self):
+	def jsonify(self):
 		return {
+			'_user': str(self._user.id) if self._user else None, # don't want str(None) -- want null
+			'_user_name': self._user.twitter_screen_name if self._user else None,
+			
 			'id': str(self.id),
 		    'title': self.title,
-		    'start': self.start.strftime(self.start_format),
-		    'entryList': [e.__dict__() for e in self.entryList],
-		    'entryIDList': [e.__dict__()['tweet_id'] for e in self.entryList], 
+		    'start': self.start.isoformat(),
+		    'entryList': [e.jsonify() for e in self.entryList],
+		    'entryIDList': [e.jsonify()['tweet_id'] for e in self.entryList], 
 		    'rejectEntryIDList': self.rejectEntryIDList,
 		}
 
@@ -113,24 +132,25 @@ class User(db.Document):
 		if not user:
 			user = User(twitter_id=twitter_id, twitter_screen_name=twitter_screen_name)
 			user.save()
-		return user.__dict__()
+		return user
 
 	@classmethod
 	def find(cls, id):
 		""" Returns user with id or None if no such user """
-		return User.objects(id=id).first().__dict__()
+		return User.objects(id=id).first()
 
 	@classmethod
 	def all(cls):
 		""" Returns all of the users in database """
-		return [u.__dict__() for u in User.objects.all()]
+		return cls.objects.all()
 	
-	def __dict__(self):
+	def jsonify(self):
 		return {
 			'id': str(self.id),
 		    'twitter_id': self.twitter_id,
 		    'twitter_screen_name': self.twitter_screen_name,
-		    'OPPlist': self.OPPlist
+		    # check for potential issue with corrupted data: if OPP deleted but still remains in list
+		    'OPPlist': [o.jsonify() if isinstance(o, OPP) else None for o in self.OPPlist],
 		}
 
 

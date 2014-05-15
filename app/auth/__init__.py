@@ -1,10 +1,14 @@
-from flask import Blueprint, url_for, Response, session, request, redirect
+from flask import Blueprint, url_for, Response, abort, session, request, redirect
+import json
+
 import config
 
-from app.models import User
+from app.util import dumpJSON, respond500
+from app.models import User, OPP
 from app.twitter_client import OAuth
 
-import json
+from route_wrappers import login_required
+
 
 
 """ 
@@ -29,10 +33,11 @@ twitter = setup()
 @auth.route('/user')
 def user():
 	user = session['user'] if 'user' in session else None
-	return Response(json.dumps(user))
+	return dumpJSON(user)
 
 @auth.route('/logout')
-def logout():
+@login_required
+def logout(userID):
 	session['user'] = None
 	return redirect(request.referrer)
 
@@ -54,13 +59,22 @@ def twitter_callback(resp):
 		resp['oauth_token_secret']
 	)
 	user = User.find_or_create(resp['user_id'], resp['screen_name'])
-	session['user'] = user
+	session['user'] = user.jsonify()
 
 	return redirect(next_url)
 
 @twitter.tokengetter
 def get_twitter_token(token=None):
     return session.get('twitter_token')
+
+
+
+
+
+
+
+
+
 
 
 

@@ -6,7 +6,12 @@ function MainCntl($scope, $location, UserFactory) {
 	/* controls the header, so update the page for the header */ 
 	$scope.$on('$routeChangeStart', function(next, current) {
 		$scope.page = $location.path();
+		$scope.showNew = false;
 	});
+
+	$scope.createNew = function() {
+		$scope.showNew = true;
+	}
 
 
 	$scope.goTo = function(path) {
@@ -43,9 +48,24 @@ function IndexCntl($scope, $rootScope, APIservice, WidgetService) {
 		var index = $scope.OPPlist.indexOf(OPP);
 		if (index < 0) { return false; }
 		APIservice.DELETE('/opp/' + OPP.id).then(function(data) {
-			console.log('DELETE', data)
 			$scope.OPPlist.splice(index, 1);
 		});
+	}
+	$scope.claimOPP = function(opp) {
+		if (!$scope.user || opp._user) { return false; }
+		APIservice.PUT('/user/' + $scope.user.id + '/assign-opp/' + opp.id).then(function(data) {
+			opp._user = $scope.user.id;
+			opp._user_name = $scope.user.twitter_screen_name;
+			$scope.user.OPPlist.push(opp);
+		});
+	}
+	$scope.relinquishOPP = function(opp) {
+		APIservice.PUT('/user/' + $scope.user.id + '/resign-opp/' + opp.id).then(function(data) {
+			opp._user = null;
+			var index = $scope.user.OPPlist.indexOf(opp);
+			$scope.user.OPPlist.splice(index, 1);
+		});
+
 	}
 
 
@@ -54,21 +74,31 @@ function IndexCntl($scope, $rootScope, APIservice, WidgetService) {
 	}
 	init();
 }
-function UpdateCntl($scope, APIservice, FormService, opp) {
-	$scope.allEntries = [];
-	$scope.pendingEntryList = [];
-	$scope.rejectEntryList = [];
-	$scope.entryList = [];
-	var max_id = null;
+function UpdateCntl($scope, APIservice, OPPservice, FormService, WidgetService, opp) {
+	$scope.opp = opp;
+
+	// initialized in init
+	$scope.allEntries;
+	$scope.pendingEntryList;
+	$scope.rejectEntryList;
+	$scope.entryList;
+	var max_id;
+
+
+	var reloadOPP = function(OPPdata) {
+		$scope.opp = OPPservice.frontEndFormat(OPPdata);
+		console.log('reloaded opp', $scope.opp.start)
+		WidgetService.reloadOPP(OPPdata);
+	}
 
 	$scope.rejectEntry = function(curr_entryList, entry) {
 		var index = $scope[curr_entryList].indexOf(entry);
 		if (index < 0) { console.log('ERROR'); return false; }
 
 		APIservice.PUT('/opp/' + opp.id + '/reject/' + entry.tweet_id).then(function(data) {
-			$scope.opp = data;
 			$scope[curr_entryList].splice(index, 1);
 			$scope.rejectEntryList.push(entry);
+			reloadOPP(data);
 		});
 	}
 	$scope.acceptEntry = function(curr_entryList, entry) {
@@ -76,9 +106,16 @@ function UpdateCntl($scope, APIservice, FormService, opp) {
 		if (index < 0) { console.log('ERROR'); return false; }
 
 		APIservice.PUT('/opp/' + opp.id + '/accept/' + entry.tweet_id, entry).then(function(data) {
-			$scope.opp = data;
 			$scope[curr_entryList].splice(index, 1);
 			$scope.entryList.push(entry);
+			reloadOPP(data);
+		});
+	}
+	$scope.saveOPP = function() {
+		APIservice.PUT('/opp/' + opp.id, $scope.opp).then(function(data) {
+			console.log('data', data)
+			/* start over with fetching data since date changed */
+			init();
 		});
 	}
 
@@ -103,34 +140,37 @@ function UpdateCntl($scope, APIservice, FormService, opp) {
 	$scope.moreEntries = function() { searchEntries(); }
 
 	var searchEntries = function() {
-		var params = {'hashtag': opp.title, 'since': opp.start, 'max_id': (max_id || null)};
+		var params = {'hashtag': opp.title, 'since': opp.start.toISOString(), 'max_id': (max_id || null)};
 
 		APIservice.GET('/opp/' + opp.id + '/search', params).then(function(ret) {
 			console.log('searchEntries returned', ret)
 			filterEntryList(ret.data);
 			max_id = ret.max_id;
+			/* 
+				keep searching for the next stuff
+				max_id of 0 signifies no more to search for 
+			*/
+			//if (max_id) { searchEntries(); }
 		});
 	}
 
 	var init = function() {
-		console.log('opp', opp)
-		$scope.opp = opp;
+		$scope.allEntries = [];
+		$scope.pendingEntryList = [];
+		$scope.rejectEntryList = [];
+		$scope.entryList = [];
+		max_id = null;
 		searchEntries();
+		console.log('scope.opp', $scope.opp)
 	}
 	init();
 }
 function NewCntl($scope, $location, APIservice, FormService) {
 	$scope.error;
-	$scope.opp;
+	$scope.opp = {};
 
 	$scope.create = function(opp) {
 		$scope.error = {};
-		console.log('create', opp)
-		if (!FormService.dateValid(opp.start)) {
-			$scope.error.start = true;
-			opp.start = null;
-			return false;
-		}
 		APIservice.POST('/opp', opp).then(function(data) {
 			console.log('POST returned data',data)
 			$location.path('/update/' + data.id);

@@ -11,7 +11,7 @@ input.error {
 }
 
 #header {
-	/*background-color: #3cf;*/
+	margin-bottom: 50px;
 	/* needs to take up space with elements that float inside */
 	float: left;
 	width: 100%;
@@ -70,9 +70,6 @@ footer img{
 
 
 /******* update-partial *******/
-#update-partial {
-	margin: 50px auto;
-}
 
 .tab-control .data-tab{
 	padding: 10px 20px;
@@ -85,11 +82,11 @@ footer img{
 .data-tab {
 	cursor: pointer;
 	border: none;
-	border-bottom: 1px solid gray;
+	border-bottom: 4px solid gray;
 	opacity: 0.5;
 }
 .data-tab.selected {
-	border: 1px solid gray;
+	border: 4px solid gray;
 	border-bottom: none;
 	opacity: 1;
 }
@@ -103,7 +100,7 @@ footer img{
 	opacity: 1;
 }
 .widget-tab.selected{
-	border: 1px solid gray;
+	border: 4px solid gray;
 	border-bottom: none;
 }
 .pending-tab.selected,
@@ -128,7 +125,7 @@ footer img{
 	color: red;
 }
 .tab-content {
-	border: 1px solid gray;
+	border: 4px solid gray;
 	border-top: none;
 }
 .widget-row {

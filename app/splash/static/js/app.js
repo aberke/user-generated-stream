@@ -22,12 +22,15 @@ var OPPapp = angular.module('OPPapp', ['ngRoute'])
 	
 		// register services
 		$provide.service('APIservice', APIservice);
+		$provide.service('OPPservice', OPPservice);
 		$provide.service('FormService', FormService);
 		$provide.service('WidgetService', WidgetService);
 
 		// register directives
 		$compileProvider.directive('oppWidget', oppWidget);
 		$compileProvider.directive('entryContainer', entryContainer);
+		$compileProvider.directive('ownerOnlyElement', ownerOnlyElement);
+		$compileProvider.directive('startDateSelection', startDateSelection);
 
 		// register factories
 		$provide.factory('UserFactory', UserFactory);

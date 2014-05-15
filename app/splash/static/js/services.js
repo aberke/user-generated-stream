@@ -1,21 +1,15 @@
 
 var FormService = function() {
 
-  this.dateValid = function(date) {
-    /* return true for valid date, false otherwise
-      Date valid if matches MM/DD/YYYY
-    */
-    //var a = date.split(/\ |,|-|\//);
-    var a = date.split('/');
-    if (a.length != 3) { return false; }
-    var month = Number(a[0]),
-        day   = Number(a[1]),
-        year  = Number(a[2]);
-    if (month < 1 || month > 12) { return false; }
-    if (day < 1 || day > 31) { return false; }
-    if (year < 0 || a[2].length != 2) { return false; }
-    
-    return true;
+
+}
+var OPPservice = function() {
+  /* handles backend to javascript front end data type transition */
+
+  this.frontEndFormat = function(opp) {
+    /* take OPP fresh from the server and turn its fields into something front end wants to work with */
+    opp.start = new Date(opp.start);
+    return opp;
   }
 }
 
@@ -26,12 +20,16 @@ var WidgetService = function($http) {
       eval(data);
     });
   }
+  this.reloadOPP = function(OPPdata) {
+    if (!OPPwidgets || !OPPwidgets[OPPdata.id]) { return false; }
+    console.log(OPPwidgets[OPPdata.id])
+    OPPwidgets[OPPdata.id].reload(OPPdata);
+  }
 }
 
 var APIservice = function($rootScope, $http, $q){
 
   function HTTP(method, endpoint, data, params) {
-    $rootScope.unauthorized = false;
     
     var deferred = $q.defer();
     $http({

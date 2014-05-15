@@ -27,21 +27,14 @@ OPPapp.config(function($routeProvider) {
 		templateUrl: '/html/partials/index.html',
 		controller: IndexCntl,
 	});
-	$routeProvider.when('/new', {
-		templateUrl: '/html/partials/index.html',
-		controller: IndexCntl,
-		resolve: { 
-			user: userOrRedirect,
-		}
-	});
 	$routeProvider.when('/update/:id', {
 		templateUrl: '/html/partials/update.html',
 		controller: UpdateCntl,
 		resolve: {
 			user: userOrRedirect,
-			opp: function(APIservice, $location) {
+			opp: function(APIservice, OPPservice, $location) {
 					return APIservice.GET('/opp/' + $location.path().split('/')[2]).then(function(data) { 
-						return data; 
+						return OPPservice.frontEndFormat(data); 
 				});
 			}
 		}

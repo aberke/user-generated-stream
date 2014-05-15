@@ -1,6 +1,5 @@
 
 var HuffpostLabsOPP = function(container, data) {
-	console.log('HuffpostLabsOPP', data)
 	this.container = container;
 	this.OPPdata = data;
 	// can't put in this because this.slideTransition needs it and is called by window
@@ -13,7 +12,7 @@ var HuffpostLabsOPP = function(container, data) {
 	this.SwipeCntl;
 
 	// called by window so this==window
-	this.slideTransition = function(index, element, f) {
+	this.slideTransition = function(index, element) {
 		self.HTMLbuilder.setSlide(index%num_entries);
 	}
 	this.getStartSlide = function() {
@@ -25,12 +24,15 @@ var HuffpostLabsOPP = function(container, data) {
     	return (result < num_entries) ? result : 0;
     }
 
-
+    this.reload = function(data) { // 'this' is likely just {reload: function}
+    	console.log('TODO: reload')
+    	 //this.OPPdata = data;
+    	 //this.init();
+    }
 	this.init = function() {
-		this.HTMLbuilder = new HTMLbuilder(container, data);
+		this.HTMLbuilder = new HTMLbuilder(this.container, this.OPPdata);
 		
 		var startSlide = this.getStartSlide();
-		console.log('startSlide', startSlide)
 
 		/* must add all slides/setup images before can create Swipe */
 		this.HTMLbuilder.buildWidget(function() {
