@@ -104,6 +104,8 @@ def POSTopp(userID):
 @opp_ownership_required
 def DELETEopp(opp):
 	try:
+		if opp._user: # opp will have a User unless admin making request and got through opp_ownership_required
+			opp._user.update(pull__OPPlist=opp)
 		opp.delete()
 		return 'OK'
 	except Exception as e:

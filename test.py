@@ -133,7 +133,6 @@ class TestAPI(OPPTestCase):
 	# ----------------------------------------------------- User Tests -
 
 	# - OPP Tests -------------------------------------------------------
-	# -------------- POSTopp implicitely tested
 	def test_GETallOPP(self):
 		opp = self.GETdata('/api/opp/all')
 		self.assertEqual(opp, [])
@@ -151,6 +150,36 @@ class TestAPI(OPPTestCase):
 		self.assertEqual(opp['title'], test_opp_data['title'])
 		self.assertEqual(opp['entryList'], [])
 		self.assertEqual(opp['rejectEntryIDList'], [])
+
+	def test_POSTopp(self):
+		"""
+		Despite having POSTopp helper, necessary to check that OPP added to User's OPPlist
+		"""
+		self.login()
+		user = self.GETdata('/api/user/{0}'.format(self.user['id']))
+		self.assertEqual(user['OPPlist'], [])
+		# post opp and verify its added to OPPlist
+		opp = self.POSTopp()
+		user = self.GETdata('/api/user/{0}'.format(self.user['id']))
+		self.assertEqual(len(user['OPPlist']), 1)
+		self.assertEqual(user['OPPlist'][0]['id'], opp['id'])
+
+	def test_DELETEopp(self):
+		""" 
+		Not only needs to delete OPP, but also needs to remove from its User's OPPlist
+		"""
+		# post it and delete it
+		opp = self.POSTopp()
+		rv = self.app.delete('/api/opp/{0}'.format(opp['id']))
+		self.assertEqual(rv.status_code, 200)
+		# verify can't GET it -- GET methods tested above
+		allOPP = self.GETdata('/api/opp/all')
+		self.assertEqual(allOPP, [])
+		opp = self.GETdata('/api/opp/{0}'.format(opp['id']))
+		self.assertEqual(opp, None)
+		# verify not in User OPPlist -- POSTopp tests that it was added
+		user = self.GETdata('/api/user/{0}'.format(self.user['id']))
+		self.assertEqual(user['OPPlist'], [])
 	# ------------------------------------------------------- OPP Tests -
 
 
