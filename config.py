@@ -14,8 +14,12 @@ MONGODB_DB 			= "OPP"
 MONGODB_USERNAME	= ""
 MONGODB_PASSWORD	= ""
 
+# if TESTING - set TESTING variables
+TESTING = bool(os.environ.get("TESTING", False))
+if TESTING:
+	MONGODB_DB 		= "testing"
 
-# if on Heroku - set heroku variables
+# if on Heroku (production) - set heroku variables
 HEROKU_MONGODB_URL 	= os.environ.get("MONGOHQ_URL", None)
 if HEROKU_MONGODB_URL:
 	db_info 		= urlparse(HEROKU_MONGODB_URL)
