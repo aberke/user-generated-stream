@@ -85,36 +85,36 @@ function UpdateCntl($scope, APIservice, OPPservice, FormService, WidgetService, 
 	var max_id;
 
 
-	var reloadOPP = function(OPPdata) {
-		$scope.opp = OPPservice.frontEndFormat(OPPdata);
-		console.log('reloaded opp', $scope.opp.start)
-		WidgetService.reloadOPP(OPPdata);
+	var reloadOPP = function() {
+		WidgetService.reloadOPP();
 	}
 
 	$scope.rejectEntry = function(curr_entryList, entry) {
 		var index = $scope[curr_entryList].indexOf(entry);
 		if (index < 0) { console.log('ERROR'); return false; }
 
-		APIservice.PUT('/opp/' + opp.id + '/reject/' + entry.tweet_id).then(function(data) {
+		APIservice.PUT('/opp/' + opp.id + '/reject/' + entry.tweet_id).then(function() {
 			$scope[curr_entryList].splice(index, 1);
 			$scope.rejectEntryList.push(entry);
-			reloadOPP(data);
+			reloadOPP();
 		});
 	}
 	$scope.acceptEntry = function(curr_entryList, entry) {
 		var index = $scope[curr_entryList].indexOf(entry);
 		if (index < 0) { console.log('ERROR'); return false; }
 
-		APIservice.PUT('/opp/' + opp.id + '/accept/' + entry.tweet_id, entry).then(function(data) {
+		APIservice.PUT('/opp/' + opp.id + '/accept/' + entry.tweet_id, entry).then(function() {
 			$scope[curr_entryList].splice(index, 1);
 			$scope.entryList.push(entry);
-			reloadOPP(data);
+			reloadOPP();
 		});
 	}
 	$scope.saveOPP = function() {
 		APIservice.PUT('/opp/' + opp.id, $scope.opp).then(function(data) {
-			console.log('data', data)
-			/* start over with fetching data since date changed */
+			/* 
+			Don't set $scope.opp = data
+			start over with fetching data since date changed 
+			*/
 			init();
 		});
 	}
@@ -150,7 +150,7 @@ function UpdateCntl($scope, APIservice, OPPservice, FormService, WidgetService, 
 				keep searching for the next stuff
 				max_id of 0 signifies no more to search for 
 			*/
-			//if (max_id) { searchEntries(); }
+			if (max_id > 0) { searchEntries(); }
 		});
 	}
 
@@ -167,7 +167,7 @@ function UpdateCntl($scope, APIservice, OPPservice, FormService, WidgetService, 
 }
 function NewCntl($scope, $location, APIservice, FormService) {
 	$scope.error;
-	$scope.opp = {};
+	$scope.opp;
 
 	$scope.create = function(opp) {
 		$scope.error = {};
@@ -180,5 +180,8 @@ function NewCntl($scope, $location, APIservice, FormService) {
 		$scope.opp = {};
 	}
 	init();
+}
+function OPPCntl($scope, opp) {
+	$scope.opp = opp;
 }
 

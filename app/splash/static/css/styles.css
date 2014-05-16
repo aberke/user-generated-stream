@@ -68,6 +68,11 @@ footer img{
 	max-height: 240px;
 }
 
+/******* opp-partial **********/
+#opp-partial .huffpostlabs-opp {
+	text-align: center;
+	margin: 50px;
+}
 
 /******* update-partial *******/
 

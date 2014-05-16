@@ -18,16 +18,23 @@ OPPapp.config(function($routeProvider) {
 	
 	$routeProvider.when('/contact', {
 		templateUrl: '/html/contact.html',
-	});	
-	$routeProvider.when('/forbidden', {
-		templateUrl: '/html/forbidden.html',
-	});
-	
-	$routeProvider.when('/', {
+	})
+	.when('/opp/:id', {
+		templateUrl: '/html/partials/opp.html',
+		controller: OPPCntl,
+		resolve: {
+			opp: function(APIservice, OPPservice, $location) {
+					return APIservice.GET('/opp/' + $location.path().split('/')[2]).then(function(data) { 
+						return OPPservice.frontEndFormat(data); 
+				});
+			}
+		},
+	})
+	.when('/', {
 		templateUrl: '/html/partials/index.html',
 		controller: IndexCntl,
-	});
-	$routeProvider.when('/update/:id', {
+	})
+	.when('/update/:id', {
 		templateUrl: '/html/partials/update.html',
 		controller: UpdateCntl,
 		resolve: {

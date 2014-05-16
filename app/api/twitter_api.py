@@ -59,32 +59,32 @@ def search(query):
 	data = response.data 
 	if 'errors' in data:
 		raise Exception(str(data['errors']))
-		#return (data['errors'], 0)
 		
 	metadata = response.data['search_metadata']
 	next_query = metadata['next_results'] if 'next_results' in metadata else None
 	(filtered_statuses, min_id) = filter_data(response.data['statuses'])
 
-	#return (filtered_statuses, next_query)
 	return (filtered_statuses, min_id - 1)
 
 # format in which twitter wants to accept dates in query
 date_format="%Y-%m-%d"
 
-def searchHashtag(hashtag, since=None, filter_links=True, max_id=None):
+def searchHashtag(hashtag, since=None, max_id=None, filter_links=True, exclude_retweets=True):
 	""" Sets include_entities=true AND count=20 
 		Returns everything by using 'next_results'
 	"""
-	query = {'include_entities': True, 'count': 4}
+	query = {'include_entities': True, 'count': 100}
 	query['q'] = ('#' + hashtag)
 	if since:
 		# since should be an iso formatted date string
 		since = dateutil.parser.parse(since).strftime(date_format)
 		query['q'] += ('+since:' + since)
-	if filter_links:
-		query['q'] += ('+filter:links')
 	if max_id:
 		query['max_id'] = max_id
+	if filter_links:
+		query['q'] += ('+filter:links')
+	if exclude_retweets:  #  -RT == +exclude:retweets
+		query['q'] += ('+exclude:retweets')
 	return search(urlencode(query))
 
 

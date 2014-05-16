@@ -79,19 +79,16 @@ class OPP(db.Document):
 		return opp
 
 	def acceptEntry(self, entry_data):
+		print('---self', self, self.objects)
 		# take out of the rejectEntryIDList if it was there
-		self.update(pull__rejectEntryIDList=entry_data['tweet_id'])
+		OPP.objects(id=self.id).update(pull__rejectEntryIDList=entry_data['tweet_id'])
 		
 		entry = Entry(tweet_id=entry_data['tweet_id'], screen_name=entry_data['screen_name'], text=entry_data['text'], img_url=entry_data['img_url'])
-		self.update(push__entryList=entry)
-		self.save()
-		return self
+		OPP.objects(id=self.id).update(push__entryList=entry)
 
 	def rejectEntry(self, tweet_id):
-		self.update(pull__entryList=Entry(tweet_id=tweet_id))
-		self.update(add_to_set__rejectEntryIDList=tweet_id) # add value to a list only if its not in the list already
-		self.save()
-		return self
+		OPP.objects(id=self.id).update(pull__entryList=Entry(tweet_id=tweet_id))
+		OPP.objects(id=self.id).update(add_to_set__rejectEntryIDList=tweet_id) # add value to a list only if its not in the list already
 
 	@classmethod
 	def remove(cls, id):

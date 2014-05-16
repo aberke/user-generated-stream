@@ -1,4 +1,4 @@
-from flask import Blueprint, session, request
+from flask import Blueprint, session, request, Response
 import json
 
 from twitter_api import searchHashtag, search
@@ -116,24 +116,24 @@ def DELETEopp(opp):
 def PUTacceptEntry(opp, tweet_id):
 	entry_data = json.loads(request.data)
 	try:
-		opp = opp.acceptEntry(entry_data)
-		return dumpJSON(opp.jsonify())
+		opp.acceptEntry(entry_data)
+		return Response(200)
 	except Exception as e:
 		return respond500(e)
 
 @api.route('/opp/<oppID>/reject/<tweet_id>', methods=['PUT'])
+@opp_ownership_required
 def PUTrejectEntry(opp, tweet_id):
 	try:
-		opp = opp.rejectEntry(tweet_id)
-		return dumpJSON(opp.jsonify())
+		opp.rejectEntry(tweet_id)
+		return Response(200)
 	except Exception as e:
 		return respond500(e)
 
 @api.route('/opp/<oppID>', methods=['PUT'])
+@opp_ownership_required
 def PUTopp(opp):
-	"""
-	saves start date
-	"""
+	""" saves start date """
 	data = json.loads(request.data)
 	try:
 		opp = opp.update(data)

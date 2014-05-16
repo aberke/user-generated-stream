@@ -17,6 +17,9 @@
 					<a ng-click="claimOPP(o)" ng-if="user.id&&!o._user" href="">Claim Ownership</a>
 				</li>
 				<li>
+					<a ng-href="/opp/{{o.id}}">View Page</a>
+				</li>
+				<li>
 					<a owner-only-element opp='o' user='user' ng-href="/update/{{o.id}}">Update</a>
 				</li>
 				<li>
