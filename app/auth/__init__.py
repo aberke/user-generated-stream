@@ -7,7 +7,8 @@ from app.util import dumpJSON, respond500
 from app.models import User, OPP
 from app.twitter_client import OAuth
 
-from route_wrappers import login_required
+# opp_ownership_required not used in this file - importing here other files to import from app.auth
+from route_wrappers import login_required, opp_ownership_required
 
 
 
@@ -16,7 +17,7 @@ All Routes to auth are prefixed with /auth
 """
 auth = Blueprint('auth', __name__)
 
-def setup():
+def setup_twitter():
 	oauth = OAuth()
 	twitter = oauth.remote_app('twitter',
 		base_url='https://api.twitter.com/1.1/',
@@ -28,7 +29,7 @@ def setup():
 	)
 	return twitter
 
-twitter = setup()
+twitter = setup_twitter()
 
 @auth.route('/user')
 def user():
@@ -41,11 +42,26 @@ def logout(userID):
 	session['user'] = None
 	return redirect(request.referrer)
 
-@auth.route('/login')
+@auth.route('/login', methods=['GET', 'POST'])
 def login():
-	return twitter.authorize(callback=url_for('auth.twitter_callback',
-		next=request.args.get('next') or request.referrer or None))
+	""" POST Testing: data is {'twitter_id': xx, 'twitter_screen_name': xx}
+			go straight to session_insert_user and redirect
+		GET Otherwise: go through twitter 3-way handshake dance
+	"""
+	next_url = (request.args.get('next') or request.referrer or '/')
+	
+	if config.TESTING:
+		user_data = json.loads(request.data)
+		session_insert_user(user_data['twitter_id'], user_data['twitter_screen_name'])
+		return redirect(next_url)
 
+	return twitter.authorize(callback=url_for('auth.twitter_callback',
+		next=next_url))
+
+def session_insert_user(twitter_id, twitter_screen_name):
+	""" Separated out of twitter_callback so that it can be used in tests """
+	user = User.find_or_create(twitter_id, twitter_screen_name)
+	session['user'] = user.jsonify()
 
 @auth.route('/twitter-callback')
 @twitter.authorized_handler
@@ -58,8 +74,7 @@ def twitter_callback(resp):
 		resp['oauth_token'],
 		resp['oauth_token_secret']
 	)
-	user = User.find_or_create(resp['user_id'], resp['screen_name'])
-	session['user'] = user.jsonify()
+	session_insert_user(resp['user_id'], resp['screen_name'])
 
 	return redirect(next_url)
 

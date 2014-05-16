@@ -34,7 +34,7 @@ def opp_ownership_required(f):
 		If request allowed:
 			The wrapped function will be passed OPP as first argument
 		If access denied:
-			aborts with 404
+			aborts with 401
 
 		Access always granted to users in ADMIN_WHITELIST
 	"""

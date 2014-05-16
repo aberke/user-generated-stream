@@ -22,16 +22,15 @@ def GETallUsers():
 	users = User.all()
 	return dumpJSON([o.jsonify() for o in users])
 
-@api.route('/user/<id>', methods=['GET'])
-def GETuser(id):
+@api.route('/user/<userID>', methods=['GET'])
+def GETuser(userID):
 	try:
-		user = User.find(id)
+		user = User.find(userID)
 		if user: 
 			user = user.jsonify()
 		return dumpJSON(user)
 	except Exception as e:
 		return respond500(e)
-
 
 @api.route('/user/<userID>/resign-opp/<oppID>', methods=['PUT'])
 @opp_ownership_required
@@ -96,6 +95,7 @@ def POSTopp(userID):
 	try:
 		data['user'] = userID
 		opp = OPP.create(data)
+		User.objects(id=userID).update_one(push__OPPlist=opp)
 		return dumpJSON(opp.jsonify())
 	except Exception as e:
 		return respond500(e)

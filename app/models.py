@@ -71,7 +71,6 @@ class OPP(db.Document):
 		if not ('user' in data and 'title' in data and 'start' in data): raise bad_data_error
 		try:
 			start = dateutil.parser.parse(data['start'])
-			#start = datetime.strptime(data['start'], "%m/%d/%y")
 			opp = OPP(_user=data['user'], title=data['title'], start=start)
 		except:
 			raise bad_data_error
