@@ -28,8 +28,23 @@ $ source venv/bin/activate
 * Install dependencies: ```$ pip install -r requirements.txt``` (may need to run with sudo)
 * Make sure you have mongodb installed ```$ brew install mongodb```
 * Make sure mongodb is started ```$ mongod```
+* Obtain and set the environment variables that do not have defaults
+	- Note: The twitter variables can be found in our user-generated-stream twitter app, or you can create a new twitter app.  They're used for user signin and querying the twitter API
+
+```
+$ source TWITTER_CONSUMER_KEY='XXXXXXXXXXXXX'
+$ source TWITTER_CONSUMER_SECRET='XXXXXXXXXXXXX'
+```
+
 * Run 'er: ```python run.py```
 * Visit <http://127.0.0.1:3000>
+
+Running Tests
+---
+
+* From base directory
+
+```$ python test.py ```
 
 
 Admin
