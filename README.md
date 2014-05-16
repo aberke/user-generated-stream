@@ -42,9 +42,7 @@ $ source TWITTER_CONSUMER_SECRET='XXXXXXXXXXXXX'
 Running Tests
 ---
 
-* From base directory
-
-```$ python test.py ```
+From base directory ```$ python test.py ```
 
 
 Admin

@@ -3,6 +3,7 @@ import json
 import unittest
 from datetime import datetime
 
+# Set TESTING before loading any packages so that they load with the TESTING configuration
 # config.py checks environment variable TESTING for setting: MONGODB_DB,
 os.environ["TESTING"] = "True"
 
@@ -28,6 +29,7 @@ class OPPTestCase(unittest.TestCase):
 
 	user = None
 
+	# - Setup/Teardown -----------------------------------------------
 	def setUp(self):
 		app.config['TESTING'] = True
 		app.config.from_object('config')
@@ -35,6 +37,7 @@ class OPPTestCase(unittest.TestCase):
 
 	def tearDown(self):
 		db.connection.drop_database(app.config['MONGODB_DB'])
+	# ----------------------------------------------- Setup/Teardown -
 
 	# - Utility Methods ----------------------------------------------
 	def assertDataMatch(self, test_data, response_data):
@@ -162,19 +165,19 @@ class TestAuth(OPPTestCase):
 
 		# login and test /auth/user
 		self.login()
-		rv = self.app.get('/auth/user')
-		self.assertEqual(rv.status_code, 200)
-		self.assertDataMatch(test_user_data, json.loads(rv.data))
+		user = self.GETdata('/auth/user')
+		self.assertDataMatch(test_user_data, user)
 
 		# test /auth/logout
 		self.logout()
-		rv = self.app.get('/auth/user')
-		self.assertEqual(json.loads(rv.data), None)
+		user = self.GETdata('/auth/user')
+		self.assertEqual(user, None)
 
 	def test_login_required(self):
 		""" Some routes such as POST /api/opp are wrapped with @login_required """
 		rv = self.app.post('/api/opp', data=json.dumps(test_opp_data))
 		self.assertEqual(rv.status_code, 401)
+		
 		self.login()
 		rv = self.app.post('/api/opp', data=json.dumps(test_opp_data))
 		self.assertEqual(rv.status_code, 200)

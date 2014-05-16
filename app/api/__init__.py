@@ -1,4 +1,4 @@
-from flask import Blueprint, url_for, session, request, redirect
+from flask import Blueprint, session, request
 import json
 
 from twitter_api import searchHashtag, search
@@ -144,7 +144,6 @@ def GETsearchOPP(id):
 	""" Keeping dictionary in session:
 			{id_next_query: query-string}
 	"""
-
 	hashtag 	= request.args.get('hashtag', None)
 	since 		= request.args.get('since', None)
 
