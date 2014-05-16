@@ -8,8 +8,8 @@
 /* wrap in anonymous function as to not interfere with existing function and variable names */
 (function() {
 
-	var domain = 'http://127.0.0.1:3000';
-	//var domain = 'http://opp.huffingtonpost.com';
+	//var domain = 'http://127.0.0.1:3000';
+	var domain = 'http://opp.huffingtonpost.com';
 
 	 /* akamai cache domain: 'opp.huffingtonpost.com'
 			Only use it for GET requests on foreign host
