@@ -21,6 +21,6 @@ def dumpJSON(data):
 
 def respond500(err='ERROR'):
 	yellERROR(err)
-	data = json.dumps({'error': str(err)})
+	data = json.dumps({'message': str(err)})
 	response_headers = {'Content-Type': 'application/json'}
 	return Response(data, 500, response_headers)

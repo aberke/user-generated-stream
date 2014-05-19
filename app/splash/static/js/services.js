@@ -27,7 +27,14 @@ var WidgetService = function($http) {
   }
 }
 
+var ErrorService = function($rootScope) {
+    $rootScope.$on('$routeChangeStart', function(next, current) {
+    console.log('routeChangeStart')
+  });
+}
+
 var APIservice = function($rootScope, $http, $q){
+  // $rootScope broadcasts errors
 
   function HTTP(method, endpoint, data, params) {
     
@@ -42,17 +49,20 @@ var APIservice = function($rootScope, $http, $q){
       deferred.resolve(returnedData);
     })
     .error(function(errData, status) {
-      console.log('API ERROR', status, errData)
-      var e = new APIserviceError(errData);
+      var e = new APIserviceError(errData, status);
       deferred.reject(e);
     });
     return deferred.promise;
   };
   /* when there is an $http error, service rejects promise with a custom Error */
-  function APIserviceError(err) {
-    this.name = "APIserviceError";
-    this.data = (err || {});
-    this.message = (err || "");
+  function APIserviceError(err, status) {
+    console.log('API Error', status, err)
+    var error = (err || {});
+    this.type = "APIserviceError";
+    this.data = err;
+    this.message = (err.message || "");
+    this.status = status;
+    $rootScope.$broadcast('error', this);
   }
   APIserviceError.prototype = Error.prototype;
 

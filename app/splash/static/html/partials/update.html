@@ -13,7 +13,11 @@
 						<button ng-click="editStart=true" ng-show="!editStart" class='btn-xs btn btn-default'>edit</button>
 						<button ng-click="saveOPP();editStart=false" ng-show="editStart" class='btn-xs btn btn-default'>save</button>
 					</span>
-					Total Entries: {{allEntries.length}}
+					<span class='showing-entries'>
+						Showing {{entryList.length + pendingEntryList.length + rejectEntryList.length}} Entries 
+						<button ng-click="loadMoreEntries()" ng-show="moreEntries!=false&&!loadingMoreEntries" class='btn btn-sm btn-default'>+</button>
+						<img ng-show="loadingMoreEntries" class="loading-gif" src="/img/loading.gif">
+					</span>
 				</small>
 			</h1>
 		</div>
@@ -30,10 +34,10 @@
 			<p><span class='tab-title'>Accepted</span> {{entryList.length}}</p>
 		</span>
 		<span ng-class="{'selected':showTab=='pending'}" ng-click="showTab='pending'" class='data-tab pending-tab col-md-3'>
-			<p><span class='tab-title'>Pending</span> {{pendingEntryList.length}}</p>
+			<p><span class='tab-title'>Pending</span></p>
 		</span>
 		<span ng-class="{'selected':showTab=='rejected'}" ng-click="showTab='rejected'" class='data-tab rejected-tab col-md-3'>
-			<p><span class='tab-title'>Rejected</span> {{rejectEntryList.length}}</p>
+			<p><span class='tab-title'>Rejected</span> {{opp.rejectEntryIDList.length}}</p>
 		</span>
 	</div>
 
@@ -45,20 +49,29 @@
 		</div>
 	</div>
 
-	<div ng-show="showTab=='accepted'" class='row tab-content entry-list-container accepted-entries'>
-		<div entry-list="entryList" class='entry-container' ng-repeat="e in entryList"></div>
+	<div ng-show="showTab=='accepted'" class='tab-content entry-list-container accepted-entries'>
+		<div entry-list="entryList" class='row entry-container' ng-repeat="e in opp.entryList"></div>
 	</div>
 
 	<div ng-show="showTab=='pending'" class='tab-content entry-list-container pending-entries'>
 		<div entry-list="pendingEntryList" class='row entry-container' ng-repeat="e in pendingEntryList"></div>
-			<!-- <img src="/img/spinner.gif"> -->
+			<!-- <img src="/img/loading.gif"> -->
 	</div>
 
 	<div ng-show="showTab=='rejected'" class='tab-content entry-list-container rejected-entries'>
 		<div entry-list="rejectEntryList" class='row entry-container' ng-repeat="e in rejectEntryList"></div>
 	</div>
 
-	<button ng-click='moreEntries()' class='btn'>More</button>
+	<div>
+		<span class='showing-entries'>
+			Showing {{entryList.length + pendingEntryList.length + rejectEntryList.length}} Entries 
+			<button ng-click="loadMoreEntries()" ng-show="moreEntries!=false&&!loadingMoreEntries" class='btn btn-sm btn-default'>+</button>
+			<img ng-show="loadingMoreEntries" class="loading-gif" src="/img/loading.gif">
+		</span>
+	</div>
+
+
+
 
 </div>
 

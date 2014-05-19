@@ -180,6 +180,14 @@ def GETopp(oppID):
 
 
 
+# - for testing ------------------------------------------------
+@api.route('/error', methods=['GET', 'POST', 'PUT', 'DELETE'])
+def errorRoute():
+	try:
+		raise Exception('TEST Exception')
+	except Exception as e:
+		return respond500(e)
+
 
 
 

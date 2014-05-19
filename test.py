@@ -78,6 +78,34 @@ class TestAPI(OPPTestCase):
 		return json.loads(rv.data)
 	# ----------------------------------------------- Utility Methods -
 
+
+	# - Error Tests ----------------------------------------------------
+	# Expect errors to return with 500 error code and JSON with 'message'
+	def assertAPIerror(self, endpoint="/api/error", method="GET"):
+		""" Helper for Error Tests """
+		if method == 'PUT':
+			rv = self.app.put(endpoint)
+		elif method == 'POST':
+			rv = self.app.post(endpoint)
+		elif method == 'DELETE':
+			rv = self.app.delete(endpoint)
+		else:
+			rv = self.app.get(endpoint)
+		self.assertEqual(rv.status_code, 500)
+		data = json.loads(rv.data)
+		self.assertTrue('message' in data)
+		return data
+
+	def test_GETerror(self):
+		self.assertAPIerror()
+	def test_POSTerror(self):
+		self.assertAPIerror(method='POST')
+	def test_PUTerror(self):
+		self.assertAPIerror(method='PUT')
+	def test_DELETEerror(self):
+		self.assertAPIerror(method='DELETE')
+	# ---------------------------------------------------- Error Tests -
+
 	# - User Tests ----------------------------------------------------
 	def test_GETallUsers(self):
 		# no users should return []

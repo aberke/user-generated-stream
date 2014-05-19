@@ -40,12 +40,15 @@
     <script src="/directives/owner-only-element.js"></script>
     <script src="/directives/widget-directive.js"></script>
     <script src="/directives/entry-container.js"></script>
+    <script src="/directives/error.js"></script>
 
 </head>
 <body ng-controller="MainCntl">
 
     <!-- header -->
     <ng-include src="'/html/partials/header.html'"></ng-include>
+
+    <error></error>
 
 
     <div ng-controller='NewCntl' id='new-partial' ng-show="showNew" class='container'>

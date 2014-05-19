@@ -19,7 +19,6 @@
 	if (window.location.origin == domain || window.location.origin.match(new RegExp('http://localhost', 'g'))) {
 		static_domain = domain;
 	}
-	console.log('static_domain', static_domain)
 
 
 	this.OPPwidgets = {};

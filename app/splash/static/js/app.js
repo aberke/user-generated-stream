@@ -27,6 +27,7 @@ var OPPapp = angular.module('OPPapp', ['ngRoute'])
 		$provide.service('WidgetService', WidgetService);
 
 		// register directives
+		$compileProvider.directive('error', error);
 		$compileProvider.directive('oppWidget', oppWidget);
 		$compileProvider.directive('entryContainer', entryContainer);
 		$compileProvider.directive('ownerOnlyElement', ownerOnlyElement);

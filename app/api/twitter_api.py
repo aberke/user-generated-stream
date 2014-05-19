@@ -70,7 +70,7 @@ def search(query):
 date_format="%Y-%m-%d"
 
 def searchHashtag(hashtag, since=None, max_id=None, filter_links=True, exclude_retweets=True):
-	""" Sets include_entities=true AND count=20 
+	""" Sets include_entities=true AND count=100 -- the max 
 		Returns everything by using 'next_results'
 	"""
 	query = {'include_entities': True, 'count': 100}

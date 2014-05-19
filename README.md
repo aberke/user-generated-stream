@@ -64,6 +64,13 @@ Necessary Tests
 ---
 - saving date
 
+- error.html shows on error
+	- python api tests test the /api/error endpoint (which uses respond500)
+	- should hide on route change
+
+- center widget
+
+- pull from instagram as well
 
 
 
