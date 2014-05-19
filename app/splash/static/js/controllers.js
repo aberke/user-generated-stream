@@ -165,15 +165,15 @@ function UpdateCntl($scope, APIservice, OPPservice, FormService, WidgetService, 
 	}
 
 	var searchEntries = function(callback) {
+		$scope.moreEntries = false;
 		var params = {'hashtag': opp.title, 'since': opp.start.toISOString(), 'max_id': (max_id || null)};
 		
 		APIservice.GET('/opp/' + opp.id + '/search', params).then(function(ret) {
 			filterEntries2(ret.data);
 			max_id = ret.max_id;
 			if (callback) { callback(); }
-			console.log(ret.data)
 			/*  max_id of <= 0 signifies no more to search for  */
-			if (max_id <= 0) { $scope.moreEntries = false; }
+			if (max_id > 0) { $scope.moreEntries = true; }
 		});
 	}
 	$scope.loadMoreEntries = function() {
@@ -184,8 +184,9 @@ function UpdateCntl($scope, APIservice, OPPservice, FormService, WidgetService, 
 	}
 
 	var reloadOPP = function() {
-		console.log('TODO reloadOPP')
-		//WidgetService.reloadOPP();
+		APIservice.GET('/opp/' + opp.id).then(function(data) { 
+			WidgetService.reloadOPP(data);
+		});
 	}
 
 	$scope.rejectEntry = function(curr_entryList, entry) {
@@ -235,7 +236,6 @@ function UpdateCntl($scope, APIservice, OPPservice, FormService, WidgetService, 
 		}
 		max_id = null;
 		searchEntries();
-		console.log('scope.opp', $scope.opp)
 	}
 	init();
 }

@@ -1,6 +1,6 @@
 
 
-var UserFactory = function($http, $q) {
+var UserFactory = function($http, $q, $rootScope, $location) {
 	/* consumers call 
 						UserFactory.then(function(userData) {
 							check userData isn't null

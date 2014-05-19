@@ -40,7 +40,7 @@ def user():
 @login_required
 def logout(userID):
 	session['user'] = None
-	return redirect(request.referrer)
+	return redirect('/')
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():

@@ -22,19 +22,13 @@ var WidgetService = function($http) {
   }
   this.reloadOPP = function(OPPdata) {
     if (!OPPwidgets || !OPPwidgets[OPPdata.id]) { return false; }
-    console.log(OPPwidgets[OPPdata.id])
-    OPPwidgets[OPPdata.id].reload(OPPdata);
+    OPPwidgets[OPPdata.id].init(OPPdata);
   }
 }
 
-var ErrorService = function($rootScope) {
-    $rootScope.$on('$routeChangeStart', function(next, current) {
-    console.log('routeChangeStart')
-  });
-}
 
 var APIservice = function($rootScope, $http, $q){
-  // $rootScope broadcasts errors
+  /* $rootScope broadcasts errors */
 
   function HTTP(method, endpoint, data, params) {
     

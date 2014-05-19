@@ -56,8 +56,13 @@ Admin
 TODO
 ---
 
-- fix how you're querying next
+- sharing 
 
+- upvoting
+
+- center widget
+
+- pull from instagram as well
 
 
 Necessary Tests
@@ -68,9 +73,6 @@ Necessary Tests
 	- python api tests test the /api/error endpoint (which uses respond500)
 	- should hide on route change
 
-- center widget
-
-- pull from instagram as well
 
 
 

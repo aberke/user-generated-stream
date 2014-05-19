@@ -1,10 +1,18 @@
-from flask import abort, session
+from flask import abort, session, Response
 from functools import wraps
+import json
 
 from config import ADMIN_WHITELIST
 
 from app.models import OPP
 
+
+def unauthorizedResponse(message=None):
+	if not message:
+		message = "Unauthorized: Sign in and try again"
+	data = json.dumps({'message': message})
+	response_headers = {'Content-Type': 'application/json'}
+	return Response(data, 401, response_headers)
 
 
 
@@ -13,14 +21,13 @@ def login_required(f):
 	If request allowed: 
 		The wrapped function will be passed the user id (string) as first argument.
 	If access denied:
-		aborts with 401
+		unauthorizedResponse
 	"""
 	@wraps(f)
 	def decorated(*args, **kwargs):
 		user = session['user'] if 'user' in session else None
 		if not (user and 'id' in user):
-			return abort(401)
-			
+			unauthorizedResponse()
 		return f(*((user['id'],) + args), **kwargs)
 	return decorated
 
@@ -34,7 +41,7 @@ def opp_ownership_required(f):
 		If request allowed:
 			The wrapped function will be passed OPP as first argument
 		If access denied:
-			aborts with 401
+			unauthorizedResponse
 
 		Access always granted to users in ADMIN_WHITELIST
 	"""
@@ -42,7 +49,7 @@ def opp_ownership_required(f):
 	def decorated(oppID, *args, **kwargs):
 		user = session['user'] if 'user' in session else None
 		if not (user and 'id' in user):
-			return abort(401)
+			return unauthorizedResponse()
 		
 		opp = OPP.find(oppID)
 		if not opp: raise Exception('No such OPP ' + oppID)
@@ -51,7 +58,7 @@ def opp_ownership_required(f):
 			return f(*((opp,) + args), **kwargs)
 
 		if not (opp._user and str(opp._user.id) == user['id']):
-			return abort(401)
+			return unauthorizedResponse()
 
 		return f(*((opp,) + args), **kwargs)
 	return decorated

@@ -4,6 +4,10 @@
  * Brad Birdsall
  * Copyright 2013, MIT License
  *
+
+ ---- Additions by Alex -----
+  - added optional 'frameWidth' to options
+
 */
 
 function Swipe(container, options) {
@@ -54,8 +58,7 @@ function Swipe(container, options) {
     slidePos = new Array(slides.length);
 
     // determine width of each slide
-    width = container.getBoundingClientRect().width || container.offsetWidth;
-
+    width = options.frameWidth || container.getBoundingClientRect().width || container.offsetWidth;
     element.style.width = (slides.length * width) + 'px';
 
     // stack elements
@@ -467,6 +470,8 @@ function Swipe(container, options) {
 
   // expose the Swipe API
   return {
+    container: container,
+
     setup: function() {
 
       setup();

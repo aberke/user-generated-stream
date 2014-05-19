@@ -1,14 +1,21 @@
 
 
-var HTMLbuilder = function(container, data) {
-	this.container = container;
-	this.data = data;
-	this.entryList = data.entryList;
-	this.onclickPrefix = ("OPPwidgets['" + data.id + "']");
+var HTMLbuilder = function() {
+	this.container;
+	this.data;
+	this.entryList;
+	this.onclickPrefix;
 
 	var pictureFrameDimension = 290;
 	var static_domain = OPPglobals.static_domain;
 
+	this.init = function(container, data, callback) {
+		this.container = container;
+		this.data = data;
+		this.entryList = data.entryList;
+		this.onclickPrefix = ("OPPwidgets['" + data.id + "']");
+		this.buildWidget(callback);
+	}
 
 	this.buildSlideInfo = function() {
 		var onclickPrev = this.onclickPrefix + ".SwipeCntl.prev()";
@@ -122,7 +129,6 @@ var HTMLbuilder = function(container, data) {
 		this.tweetBody = this.container.getElementsByClassName('tweet-body')[0];
 		this.slideIndex = this.container.getElementsByClassName('slide-index')[0];
 	}
-	
 }
 	
 
