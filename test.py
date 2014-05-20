@@ -9,7 +9,7 @@ os.environ["TESTING"] = "True"
 
 from app import app
 from app.auth import session_insert_user, login_required, opp_ownership_required
-from app.models import db, OPP, User
+from app.models import db, OPP, User, Stat
 
 
 
@@ -105,6 +105,7 @@ class TestAPI(OPPTestCase):
 	def test_DELETEerror(self):
 		self.assertAPIerror(method='DELETE')
 	# ---------------------------------------------------- Error Tests -
+
 
 	# - User Tests ----------------------------------------------------
 	def test_GETallUsers(self):
@@ -212,6 +213,70 @@ class TestAPI(OPPTestCase):
 
 
 
+class TestStats(TestAPI):
+	""" Child of TestAPI that focuses on just testing stats 
+
+
+		Tests stats outside of Entries
+		TODO: make sure works with entries
+	"""
+	
+	def create_stat(self):
+		""" Create stat without creating entry 
+			need to create OPP for _OPP and OPP.id 
+			Then can delete stat with delete OPP
+		"""
+		opp = self.POSTopp()
+		stat = Stat(_OPP=opp['id'])
+		stat.save()
+		return stat
+
+	def test_GETstat(self):
+		# GET non existant stat should return null
+		data = self.GETdata('/api/stat/53726fde8f4a0f55769476da')
+		self.assertEqual(data, None)
+		stat = self.create_stat()
+		data = self.GETdata('/api/stat/{0}'.format(str(stat.id)))
+		self.assertEqual(data, stat.jsonify())
+
+
+	def test_GETallStats(self):
+		data = self.GETdata('/api/stat/all')
+		self.assertEqual(data, [])
+		stat = self.create_stat()
+		data = self.GETdata('/api/stat/all')
+		self.assertEqual(len(data), 1)
+		self.assertDataMatch(data[0], stat.jsonify())
+
+	def test_delete_stat(self):
+		""" Stat should be deleted when OPP referenced by stat._OPP deleted """
+		stat = self.create_stat()
+		self.app.delete('/api/opp/{0}'.format(str(stat._OPP)))
+		data = self.GETdata('/api/stat/all')
+		self.assertEqual(data, [])
+		data = self.GETdata('/api/stat/{0}'.format(str(stat.id)))
+		self.assertEqual(data, None)
+
+	def test_PUTstatIncrementFB(self):
+		stat = self.create_stat()
+		data = self.GETdata('/api/stat/{0}'.format(str(stat.id)))
+		self.assertEqual(data['fb_count'], 0)
+		for i in range(2):
+			self.app.put('/api/stat/{0}/increment-fb-count'.format(str(stat.id)))
+		data = self.GETdata('/api/stat/{0}'.format(str(stat.id)))
+		self.assertEqual(data['fb_count'], 2)
+
+	def test_PUTstatIncrementTwitter(self):
+		stat = self.create_stat()
+		data = self.GETdata('/api/stat/{0}'.format(str(stat.id)))
+		self.assertEqual(data['twitter_count'], 0)
+		for i in range(3):
+			self.app.put('/api/stat/{0}/increment-twitter-count'.format(str(stat.id)))
+		data = self.GETdata('/api/stat/{0}'.format(str(stat.id)))
+		self.assertEqual(data['twitter_count'], 3)
+
+
+
 
 class TestAuth(OPPTestCase):
 
@@ -255,9 +320,6 @@ class TestAuth(OPPTestCase):
 		rv = self.app.put('/api/user/{0}/resign-opp/{1}'.format(self.user['id'], opp['id']))
 		rv = self.app.get('/update/{0}'.format(opp['id']))
 		self.assertEqual(rv.status_code, 401)
-
-
-
 
 
 

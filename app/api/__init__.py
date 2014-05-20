@@ -6,7 +6,7 @@ from twitter_api import searchHashtag, search
 from app.auth.route_wrappers import login_required, opp_ownership_required
 from app.util import dumpJSON, respond500
 from app.decorators import jsonp
-from app.models import User, OPP
+from app.models import User, OPP, Stat
 
 
 """ 
@@ -14,6 +14,33 @@ All Routes to api are prefixed with /api
 """
 api = Blueprint('api', __name__)
 
+
+# -- Stat -------------------------------------------
+
+@api.route('/stat/all', methods=['GET'])
+def GETallStats():
+	stats = Stat.all()
+	return dumpJSON([s.jsonify() for s in stats])
+
+@api.route('/stat/<statID>', methods=['GET'])
+def GETstat(statID):
+	stat = Stat.find(statID)
+	if stat:
+		stat = stat.jsonify()
+	return dumpJSON(stat)
+
+# --- below PUT's made with JSONP on widget pages - need GET ----
+@api.route('/stat/<statID>/increment-fb-count', methods=['GET', 'PUT'])
+def PUTstatIncrementFB(statID):
+	Stat.objects(id=statID).update_one(inc__fb_count=1)
+	return Response(status=200)
+
+@api.route('/stat/<statID>/increment-twitter-count', methods=['GET', 'PUT'])
+def PUTstatIncrementTwitter(statID):
+	Stat.objects(id=statID).update_one(inc__twitter_count=1)
+	return Response(status=200)
+
+# -------------------------------------------- Stat -
 
 # -- User -------------------------------------------
 
@@ -87,15 +114,33 @@ def PUTassignOPP(session_userID, userID, oppID):
 
 # -- OPP -------------------------------------------
 
+@api.route('/opp/all', methods=['GET'])
+def GETallOPP():
+	data = OPP.all()
+	return dumpJSON([o.jsonify() for o in data])
+
+
+@api.route('/opp/<oppID>', methods=['GET'])
+@jsonp
+def GETopp(oppID):
+	try:
+		opp = OPP.find(oppID)
+		if opp: opp = opp.jsonify()
+		return dumpJSON(opp)
+	except Exception as e:
+		return respond500(e)
+
+
 @api.route('/opp', methods=['POST'])
 @login_required
 def POSTopp(userID):
 	"""  """
 	data = json.loads(request.data)
 	try:
-		data['user'] = userID
-		opp = OPP.create(data)
-		User.objects(id=userID).update_one(push__OPPlist=opp)
+		user = User.find(userID)
+		opp = OPP(user=user, json_data=data)
+		opp.save()
+		user.update(add_to_set__OPPlist=opp)
 		return dumpJSON(opp.jsonify())
 	except Exception as e:
 		return respond500(e)
@@ -106,7 +151,7 @@ def DELETEopp(opp):
 	try:
 		if opp._user: # opp will have a User unless admin making request and got through opp_ownership_required
 			opp._user.update(pull__OPPlist=opp)
-		opp.delete()
+		opp.remove() # responsible for removing stats
 		return 'OK'
 	except Exception as e:
 		return respond500(e)
@@ -117,7 +162,7 @@ def PUTacceptEntry(opp, tweet_id):
 	entry_data = json.loads(request.data)
 	try:
 		opp.acceptEntry(entry_data)
-		return Response(200)
+		return Response(status=200)
 	except Exception as e:
 		return respond500(e)
 
@@ -126,7 +171,7 @@ def PUTacceptEntry(opp, tweet_id):
 def PUTrejectEntry(opp, tweet_id):
 	try:
 		opp.rejectEntry(tweet_id)
-		return Response(200)
+		return Response(status=200)
 	except Exception as e:
 		return respond500(e)
 
@@ -137,6 +182,7 @@ def PUTopp(opp):
 	data = json.loads(request.data)
 	try:
 		opp = opp.update(data)
+		opp.save()
 		return dumpJSON(opp.jsonify())
 	except Exception as e:
 		return respond500(e)
@@ -161,22 +207,6 @@ def GETsearchOPP(id):
 	except Exception as e:
 		return respond500(e)
 
-
-@api.route('/opp/all', methods=['GET'])
-def GETallOPP():
-	data = OPP.all()
-	return dumpJSON([o.jsonify() for o in data])
-
-
-@api.route('/opp/<oppID>', methods=['GET'])
-@jsonp
-def GETopp(oppID):
-	try:
-		opp = OPP.find(oppID)
-		if opp: opp = opp.jsonify()
-		return dumpJSON(opp)
-	except Exception as e:
-		return respond500(e)
 
 
 

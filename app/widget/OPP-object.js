@@ -11,6 +11,10 @@ var HuffpostLabsOPP = function(container, data) {
 	this.HTMLbuilder;
 	this.SwipeCntl;
 
+	this.shareFB = function() {
+		console.log('TODO shareFB')
+	}
+
 	// called by window so this==window
 	this.slideTransition = function(index, element) {
 		self.HTMLbuilder.setSlide(index%num_entries);

@@ -92,11 +92,13 @@ var HTMLbuilder = function() {
 		this.slideIndex.innerHTML = index + 1;
 	}
 	this.buildCaption = function() {
+		var onclickShareFB = this.onclickPrefix + ".shareFB()";
+
 		var html = "<div class='picture-caption'>";
 			html+= "<p class='tweet-body'></p>";	
 			html+= "	<div class='share-container'>";
 			html+= "		<p>Upvote via sharing</p>";
-			html+= "		<div class='fb-share share'>";
+			html+= "		<div class='fb-share share' data-huffpostlabs-btn onclick=" + onclickShareFB + ">";
 			html+= "			<img width='30px' height='30px' class='share share-btn' src='" + static_domain + "/widget/icon/fb-icon.png'>";
 			html+= "			<img class='share share-btn-swap' width='30px' height='30px' src='" + static_domain + "/widget/icon/fb-icon-blue.png'>";
 			html+= "		</div>";

@@ -63,9 +63,8 @@
 	</div>
 
 	<div>
-		<span class='showing-entries'>
-			Showing {{entryList.length + pendingEntryList.length + rejectEntryList.length}} Entries 
-			<button ng-click="loadMoreEntries()" ng-show="moreEntries!=false&&!loadingMoreEntries" class='btn btn-sm btn-default'>+</button>
+		<span class='showing-entries'> 
+			<button ng-click="loadMoreEntries()" ng-show="moreEntries!=false&&!loadingMoreEntries" class='btn btn-sm btn-default'>Shore More</button>
 			<img ng-show="loadingMoreEntries" class="loading-gif" src="/img/loading.gif">
 		</span>
 	</div>

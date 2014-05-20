@@ -39,6 +39,7 @@ def filter_data(statuses):
 		filtered_data['tweet_id'] = status['id_str']
 		filtered_data['screen_name'] = status['user']['screen_name']
 		filtered_data['created_at'] = status['created_at']
+		filtered_data['retweet_count'] = status['retweet_count']
 
 		filtered_statuses.append(filtered_data)
 	return (filtered_statuses, min_id)

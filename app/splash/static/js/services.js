@@ -54,7 +54,7 @@ var APIservice = function($rootScope, $http, $q){
     var error = (err || {});
     this.type = "APIserviceError";
     this.data = err;
-    this.message = (err.message || "");
+    this.message = (err.message || status + " Error");
     this.status = status;
     $rootScope.$broadcast('error', this);
   }

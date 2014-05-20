@@ -27,7 +27,7 @@ def login_required(f):
 	def decorated(*args, **kwargs):
 		user = session['user'] if 'user' in session else None
 		if not (user and 'id' in user):
-			unauthorizedResponse()
+			return unauthorizedResponse()
 		return f(*((user['id'],) + args), **kwargs)
 	return decorated
 
