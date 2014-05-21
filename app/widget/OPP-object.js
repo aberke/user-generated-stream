@@ -55,7 +55,7 @@ var HuffpostLabsOPP = function(container, data) {
 
 		var subject = "[HuffpostLabs] #" + this.OPPdata.title;
 		var body 	= (this.buildShareLink(entry));
-		var mailto 	= ("mailto:?subject" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body));
+		var mailto 	= ("mailto:?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body));
 
 		location.href = mailto;
 		OPPglobals.shareEmail({'statID': entry.statID})
