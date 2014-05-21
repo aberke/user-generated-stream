@@ -21,7 +21,7 @@ var HuffpostLabsSocialNetworks = function() {
 		var defaultSharePicture = "http://www.huffingtonpost.com/favicon.ico";
 	    var appIDMap = {
 	    				/* application specific sharing support */
-	    				"http://YOUR-SPECIFIC-DOMAIN": 'YOUR-SPECIFIC-APP-ID',
+	    				"http://user-generated-stream.herokuapp.com": '672937459443973',
 
 	    				"http://quizwidget-petri.dotcloud.com": '611233398931791',
 					    "http://7edc0fcb.ngrok.com": '502717763181151',
