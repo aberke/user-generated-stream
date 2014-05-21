@@ -35,7 +35,7 @@ var HuffpostLabsOPP = function(container, data) {
 		var entry = this.OPPdata.entryList[current_slide];
 		OPPglobals.shareFB({
 			'name': this.OPPdata.title,
-			'picture': this.OPPdata.img_url,
+			'picture': entry.img_url,
 			'link': this.buildShareLink(entry),
 			'caption': entry.text,
 			'description': 'TODO',
@@ -43,7 +43,6 @@ var HuffpostLabsOPP = function(container, data) {
 		});
 	}
 	this.shareTwitter = function() {
-		console.log('shareTwitter', this, self, this.OPPdata.entryList[current_slide])
 		var entry = this.OPPdata.entryList[current_slide];
 		OPPglobals.shareTwitter({
 			'text': "Look at this widget!",
