@@ -14,9 +14,10 @@ db = MongoEngine(app)
 
 class Stat(db.Document):
 	""" _OPP id allows deletion of stat when OPP deleted """
-	_OPP 	 = db.ObjectIdField(default=None)
-	fb_count = db.IntField(default=0)
-	twitter_count = db.IntField(default=0)
+	_OPP 	 		= db.ObjectIdField(default=None)
+	fb_count 		= db.IntField(default=0)
+	email_count 	= db.IntField(default=0)
+	twitter_count 	= db.IntField(default=0)
 
 	@classmethod
 	def all(cls):
@@ -27,10 +28,12 @@ class Stat(db.Document):
 		return cls.objects(id=id).first()
 
 	def jsonify(self):
+		print('-----', self._OPP, self.fb_count, self.twitter_count)
 		return {
 			'id': str(self.id),
 			'_OPP': str(self._OPP),
 			'fb_count': self.fb_count,
+			'email_count':self.email_count,
 			'twitter_count': self.twitter_count,
 		}
 
@@ -67,8 +70,10 @@ class Entry(db.EmbeddedDocument):
 		    'img_url': 				self.img_url,
 		    'created_at': 			self.created_at.isoformat(),
 		    # stat relevant
+		    'statID':				str(self.stat.id), # so that sharing can make PUT to /api/stat/statID
 		    'retweet_count':		self.retweet_count,
 		    'stat_fb_count': 		self.stat.fb_count,
+		    'stat_email_count': 	self.stat.email_count,
 		    'stat_twitter_count':	self.stat.twitter_count,
 		}
 
@@ -79,6 +84,7 @@ class OPP(db.Document):
 	start 				= db.DateTimeField(default=datetime.now)
 	entryList 			= db.ListField(db.EmbeddedDocumentField(Entry))
 	rejectEntryIDList 	= db.ListField(db.StringField())
+	share_link 			= db.URLField()
 
 
 	def __init__(self, user=None, json_data=None, start=None, title=None, **kwargs):
@@ -101,15 +107,15 @@ class OPP(db.Document):
 
 	def update(self, data):
 		""" Expects data as dictionary
-			{u'start': isoformatted date string, u'title': 'TITLE'}
+			{u'start': isoformatted date string, u'share_link': 'URL'}
 			throws error for invalid data
 		"""
-		bad_data_error = Exception('expected OPP data with title string and start with isoformatted string')
+		bad_data_error = Exception('expected OPP data with share_link as URL and start with isoformatted string')
 		try:
 			if 'start' in data:
 				self.start = dateutil.parser.parse(data['start'])
-			if 'title in data':
-				self.title = data['title']
+			if 'share_link' in data:
+				self.share_link = data['share_link']
 		except:
 			raise bad_data_error
 		return self
@@ -122,7 +128,7 @@ class OPP(db.Document):
 		bad_data_error = Exception('Must create Entry with text as string and created_at as isoformatted string')
 		try:
 			created_at = dateutil.parser.parse(entry_data['created_at'])
-			entry = Entry(tweet_id=entry_data['tweet_id'], screen_name=entry_data['screen_name'], text=entry_data['text'], img_url=entry_data['img_url'], created_at=created_at)
+			entry = Entry(OPP=self.id, tweet_id=entry_data['tweet_id'], screen_name=entry_data['screen_name'], text=entry_data['text'], img_url=entry_data['img_url'], created_at=created_at)
 		except:
 			raise bad_data_error
 		OPP.objects(id=self.id).update(push__entryList=entry)
@@ -155,6 +161,7 @@ class OPP(db.Document):
 		    'entryList': [e.jsonify() for e in self.entryList],
 		    'entryIDList': [e.jsonify()['tweet_id'] for e in self.entryList], 
 		    'rejectEntryIDList': self.rejectEntryIDList,
+		    'share_link': self.share_link,
 		}
 
 

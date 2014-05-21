@@ -29,15 +29,17 @@ def GETstat(statID):
 		stat = stat.jsonify()
 	return dumpJSON(stat)
 
-# --- below PUT's made with JSONP on widget pages - need GET ----
-@api.route('/stat/<statID>/increment-fb-count', methods=['GET', 'PUT'])
-def PUTstatIncrementFB(statID):
-	Stat.objects(id=statID).update_one(inc__fb_count=1)
-	return Response(status=200)
-
-@api.route('/stat/<statID>/increment-twitter-count', methods=['GET', 'PUT'])
-def PUTstatIncrementTwitter(statID):
-	Stat.objects(id=statID).update_one(inc__twitter_count=1)
+@api.route('/stat/<statID>/increment/<count>', methods=['GET', 'PUT'])
+def PUTstatIncrement(statID, count):
+	""" PUT's made with JSONP on widget pages - need GET """
+	if count == 'facebook':
+		Stat.objects(id=statID).update_one(inc__fb_count=1)
+	elif count == 'twitter':
+		Stat.objects(id=statID).update_one(inc__twitter_count=1)
+	elif count == 'email':
+		Stat.objects(id=statID).update_one(inc__email_count=1)
+	else:
+		return Response(status=404)
 	return Response(status=200)
 
 # -------------------------------------------- Stat -

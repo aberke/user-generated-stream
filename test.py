@@ -257,23 +257,53 @@ class TestStats(TestAPI):
 		data = self.GETdata('/api/stat/{0}'.format(str(stat.id)))
 		self.assertEqual(data, None)
 
-	def test_PUTstatIncrementFB(self):
+	def test_PUTstatIncrement_facebook(self):
+		""" endpoint needs to be able to get hit by both PUT and GET for JSONP """
 		stat = self.create_stat()
 		data = self.GETdata('/api/stat/{0}'.format(str(stat.id)))
 		self.assertEqual(data['fb_count'], 0)
+		# ensure PUT works
 		for i in range(2):
-			self.app.put('/api/stat/{0}/increment-fb-count'.format(str(stat.id)))
+			self.app.put('/api/stat/{0}/increment/facebook'.format(str(stat.id)))
 		data = self.GETdata('/api/stat/{0}'.format(str(stat.id)))
 		self.assertEqual(data['fb_count'], 2)
+		# ensure GET (JSONP) works
+		for i in range(2):
+			self.app.get('/api/stat/{0}/increment/facebook'.format(str(stat.id)))
+		data = self.GETdata('/api/stat/{0}'.format(str(stat.id)))
+		self.assertEqual(data['fb_count'], 4)
 
-	def test_PUTstatIncrementTwitter(self):
+	def test_PUTstatIncrement_twitter(self):
+		""" endpoint needs to be able to get hit by both PUT and GET for JSONP """
 		stat = self.create_stat()
 		data = self.GETdata('/api/stat/{0}'.format(str(stat.id)))
 		self.assertEqual(data['twitter_count'], 0)
+		# ensure PUT works
 		for i in range(3):
-			self.app.put('/api/stat/{0}/increment-twitter-count'.format(str(stat.id)))
+			self.app.put('/api/stat/{0}/increment/twitter'.format(str(stat.id)))
 		data = self.GETdata('/api/stat/{0}'.format(str(stat.id)))
 		self.assertEqual(data['twitter_count'], 3)
+		# ensure GET (JSONP) works
+		for i in range(3):
+			self.app.get('/api/stat/{0}/increment/twitter'.format(str(stat.id)))
+		data = self.GETdata('/api/stat/{0}'.format(str(stat.id)))
+		self.assertEqual(data['twitter_count'], 6)
+
+	def test_PUTstatIncrement_email(self):
+		""" endpoint needs to be able to get hit by both PUT and GET for JSONP """
+		stat = self.create_stat()
+		data = self.GETdata('/api/stat/{0}'.format(str(stat.id)))
+		self.assertEqual(data['email_count'], 0)
+		# ensure PUT works
+		for i in range(3):
+			self.app.put('/api/stat/{0}/increment/email'.format(str(stat.id)))
+		data = self.GETdata('/api/stat/{0}'.format(str(stat.id)))
+		self.assertEqual(data['email_count'], 3)
+		# ensure GET (JSONP) works
+		for i in range(3):
+			self.app.get('/api/stat/{0}/increment/email'.format(str(stat.id)))
+		data = self.GETdata('/api/stat/{0}'.format(str(stat.id)))
+		self.assertEqual(data['email_count'], 6)
 
 
 

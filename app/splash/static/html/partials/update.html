@@ -43,10 +43,19 @@
 
 
 	<div ng-show="!showTab||showTab=='widget'" class='row tab-content widget-row'>
-		<div class='widget-container'>
+		<div class='widget-container col-md-6'>
 			<div class="huffpostlabs-opp" id="{{opp.id}}"></div>
 			<script src="/widget/o.js"></script>
 		</div>
+		<div class='col-md-6'>
+
+			<form name="updateForm">
+				<label>Share Link</label>
+				<input ng-class="{'error':updateForm.$error.url}" ng-model="opp.share_link" type="url">
+				<button ng-disabled="!updateForm.$valid" ng-click="saveOPP()" class='btn btn-default btn-xs'>SAVE</button>
+			</form>
+		</div>
+
 	</div>
 
 	<div ng-show="showTab=='accepted'" class='tab-content entry-list-container accepted-entries'>

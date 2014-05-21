@@ -8,8 +8,8 @@
 /* wrap in anonymous function as to not interfere with existing function and variable names */
 (function() {
 
-	var domain = 'http://127.0.0.1:3000';
-	//var domain = 'http://opp.huffingtonpost.com';
+	//var domain = 'http://127.0.0.1:3000';
+	var domain = 'http://opp.huffingtonpost.com';
 
 	 /* akamai cache domain: 'opp.huffingtonpost.com'
 			Only use it for GET requests on foreign host
@@ -42,19 +42,22 @@
 		*/
 		this.OPPglobals.static_domain = static_domain;
 
-		this.OPPglobals.twitterShare = function(text, share) {
+		this.OPPglobals.shareTwitter = function(shareData) {
 			/* using HuffpostLabs social-network-sharing library */
-			HuffpostLabsShareTwitter(text, share.link, function() {
-				PUT("/api/share/" + share._id + "/increment-twitter-count", null);
+			HuffpostLabsShareTwitter(shareData.text, shareData.link, function() {
+				/* on callback, log in database the share */
+				PUT("/api/stat/" + shareData.statID + "/increment/count", null);
 			});
 		}
-		this.OPPglobals.fbShare = function(shareData, share) { 
+		this.OPPglobals.shareFB = function(shareData) { 
 			/* using HuffpostLabs social-network-sharing library */
 			HuffpostLabsShareFB(shareData, function() {
-				if (share._id) { /* log that it was shared */
-					PUT("/api/share/" + share._id + "/increment-fb-count", null);
-				}
+				PUT("/api/stat/" + shareData.statID + "/increment/facebook", null);
 			});
+		}
+		this.OPPglobals.shareEmail = function(shareData) { 
+			/* just log it */
+			PUT("/api/stat/" + shareData.statID + "/increment/email", null);
 		}
 	}
 

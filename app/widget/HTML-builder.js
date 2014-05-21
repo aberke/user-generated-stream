@@ -93,6 +93,9 @@ var HTMLbuilder = function() {
 	}
 	this.buildCaption = function() {
 		var onclickShareFB = this.onclickPrefix + ".shareFB()";
+		var onclickShareTwitter = this.onclickPrefix + ".shareTwitter()";
+
+		var onclickShareEmail = this.onclickPrefix + ".shareEmail()";
 
 		var html = "<div class='picture-caption'>";
 			html+= "<p class='tweet-body'></p>";	
@@ -102,11 +105,11 @@ var HTMLbuilder = function() {
 			html+= "			<img width='30px' height='30px' class='share share-btn' src='" + static_domain + "/widget/icon/fb-icon.png'>";
 			html+= "			<img class='share share-btn-swap' width='30px' height='30px' src='" + static_domain + "/widget/icon/fb-icon-blue.png'>";
 			html+= "		</div>";
-			html+= "		<div class='twitter-share share'>";
+			html+= "		<div class='twitter-share share' data-huffpostlabs-btn onclick=" + onclickShareTwitter + ">";
 			html+= "			<img width='30px' height='30px' class='share share-btn' src='" + static_domain + "/widget/icon/twitter-icon.png'>";
 			html+= "			<img class='share share-btn-swap' width='30px' height='30px' src='" + static_domain + "/widget/icon/twitter-icon-blue.png'>";
 			html+= "		</div>";
-			html+= "		<div class='email-share share'>";
+			html+= "		<div class='email-share share' data-huffpostlabs-btn onclick=" + onclickShareEmail + ">";
 			html+= "			<img width='30px' height='30px' class='share email-share-btn' src='" + static_domain + "/widget/icon/email.png'>";
 			html+= "		</div>";
 			html+= "	</div>";

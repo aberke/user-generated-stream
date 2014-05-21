@@ -18,5 +18,9 @@ wrapped within
 		{{e.created_at | date:'MM/dd/yyyy @ h:mma'}}
 	</p>
 	<p>Retweets: {{e.retweet_count}}</p>
+	<p><strong>From Slide Show</strong></p>
+	<p>Twitter Shares: {{e.stat_twitter_count || 0}}</p>
+	<p>Facebook Shares: {{e.stat_fb_count || 0}}</p>
+	<p>Email Shares: {{e.stat_email_count || 0}}</p>
 </div>
 

@@ -4,34 +4,82 @@ var HuffpostLabsOPP = function(container, data) {
 	this.OPPdata;
 	// can't put in this because this.slideTransition needs it and is called by window
 	var num_entries;
+	var current_slide;
+	this.slide_map; // {entryID: slideIndex}
 	this.id;
 	var self = this;
+
+	this.sortEntries = function() {
+		// also create slide_map so that if user got here via share_link, can go right to entry
+
+		// TODO: SORT THEM
+
+		this.slide_map = {}; // {entryID: slideIndex}
+		for (var i=0; i<num_entries; i++) {
+			var entry = this.OPPdata.entryList[i];
+			this.slide_map[entry.id] = i;
+		}
+	}
 
 	/* configured in init() */
 	this.HTMLbuilder;
 	this.SwipeCntl;
 
+	this.buildShareLink = function(entry) {
+		var link = (this.OPPdata.share_link || window.location.href);
+			link+= ('?OPPslide=' + entry.id);
+		return link;
+	}
 	this.shareFB = function() {
-		console.log('TODO shareFB')
+		var entry = this.OPPdata.entryList[current_slide];
+		OPPglobals.shareFB({
+			'name': this.OPPdata.title,
+			'picture': this.OPPdata.img_url,
+			'link': this.buildShareLink(entry),
+			'caption': entry.text,
+			'description': 'TODO',
+		});
+	}
+	this.shareTwitter = function() {
+		var entry = this.OPPdata.entryList[current_slide];
+		OPPglobals.shareTwitter({
+			'text': "Look at this widget!",
+			'statID': entry.statID,
+			'link': this.buildShareLink(entry),
+		});
+	}
+	this.shareEmail = function() {
+		var entry = this.OPPdata.entryList[current_slide];
+
+		var subject = "[HuffpostLabs] #" + this.OPPdata.title;
+		var body 	= (this.buildShareLink(entry));
+		var mailto 	= ("mailto:?subject" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body));
+
+		location.href = mailto;
+		OPPglobals.shareEmail({'statID': entry.statID})
 	}
 
 	// called by window so this==window
 	this.slideTransition = function(index, element) {
-		self.HTMLbuilder.setSlide(index%num_entries);
+		current_slide = (index % num_entries);
+		self.HTMLbuilder.setSlide(current_slide);
 	}
 	this.getStartSlide = function() {
     	var regex = new RegExp("[\\?&]OPPslide=([^&#]*)");
         var result = regex.exec(location.search);
-        result = (result == null) ? 0 : decodeURIComponent(result[1].replace(/\+/g, " "));
-    	result = Number(result);
-    	// check that result != NaN and that it is in bounds
-    	return (result < num_entries) ? result : 0;
+    	if (result) { 
+    		result = decodeURIComponent(result[1].replace(/\+/g, " "));
+    		result = this.slide_map[result];
+    	}
+    	return (result || 0);
     }
 
 	this.init = function(data) {
 		this.OPPdata = data;
     	num_entries = this.OPPdata.entryList.length;
+    	current_slide = 0;
 		this.id = data.id;
+		this.sortEntries();
 
 		// might be a reload - if so reuse HTMLbuilder
 		this.HTMLbuilder = (this.HTMLbuilder || new HTMLbuilder());

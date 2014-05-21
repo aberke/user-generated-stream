@@ -209,6 +209,7 @@ function UpdateCntl($scope, APIservice, OPPservice, FormService, WidgetService, 
 			reloadOPP();
 		});
 	}
+	// to save start and share_link
 	$scope.saveOPP = function() {
 		APIservice.PUT('/opp/' + opp.id, $scope.opp).then(function(data) {
 			/* 
@@ -220,6 +221,7 @@ function UpdateCntl($scope, APIservice, OPPservice, FormService, WidgetService, 
 	}
 
 	var init = function() {
+		console.log('opp', $scope.opp)
 		$scope.allEntries = [];
 		$scope.pendingEntryList = [];
 		$scope.rejectEntryList = [];

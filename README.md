@@ -58,7 +58,7 @@ TODO
 
 - sharing 
 
-- upvoting
+- upvoting -- use .sorted() on entries model ?
 
 - center widget
 
