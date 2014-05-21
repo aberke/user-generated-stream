@@ -43,22 +43,20 @@
 		this.OPPglobals.static_domain = static_domain;
 
 		this.OPPglobals.shareTwitter = function(shareData) {
-			console.log('shareTwitter', shareData)
 			/* using HuffpostLabs social-network-sharing library */
 			HuffpostLabsShareTwitter(shareData.text, shareData.link, function() {
 				/* on callback, log in database the share */
 				PUT("/api/stat/" + shareData.statID + "/increment/twitter", null);
 			});
 		}
-		this.OPPglobals.shareFB = function(shareData) { 
+		this.OPPglobals.shareFB = function(shareData) {
 			console.log('shareFB', shareData)
 			/* using HuffpostLabs social-network-sharing library */
 			HuffpostLabsShareFB(shareData, function() {
 				PUT("/api/stat/" + shareData.statID + "/increment/facebook", null);
 			});
 		}
-		this.OPPglobals.shareEmail = function(shareData) { 
-			console.log('shareEmail', shareData)
+		this.OPPglobals.shareEmail = function(shareData) {
 			/* just log it */
 			PUT("/api/stat/" + shareData.statID + "/increment/email", null);
 		}
