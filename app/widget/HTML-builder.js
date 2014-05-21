@@ -2,6 +2,7 @@
 
 var HTMLbuilder = function() {
 	this.container;
+	this.BtnMaster;
 	this.data;
 	this.entryList;
 	this.onclickPrefix;
@@ -15,6 +16,7 @@ var HTMLbuilder = function() {
 		this.entryList = data.entryList;
 		this.onclickPrefix = ("OPPwidgets['" + data.id + "']");
 		this.buildWidget(callback);
+		this.BtnMaster = new HuffpostLabsBtnMaster(this.container);
 	}
 
 	this.buildSlideInfo = function() {

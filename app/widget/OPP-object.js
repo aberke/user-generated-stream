@@ -34,7 +34,7 @@ var HuffpostLabsOPP = function(container, data) {
 	this.shareFB = function() {
 		var entry = this.OPPdata.entryList[current_slide];
 		OPPglobals.shareFB({
-			'name': this.OPPdata.title,
+			'name': ('#' + this.OPPdata.title),
 			'picture': entry.img_url,
 			'link': this.buildShareLink(entry),
 			'caption': entry.text,
