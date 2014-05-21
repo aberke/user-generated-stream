@@ -9,7 +9,7 @@
 (function() {
 
 	//var domain = 'http://127.0.0.1:3000';
-	var domain = 'http://opp.huffingtonpost.com';
+	var domain = 'http://user-generated-stream.herokuapp.com';
 
 	 /* akamai cache domain: 'opp.huffingtonpost.com'
 			Only use it for GET requests on foreign host
@@ -43,6 +43,7 @@
 		this.OPPglobals.static_domain = static_domain;
 
 		this.OPPglobals.shareTwitter = function(shareData) {
+			console.log('shareTwitter', shareData)
 			/* using HuffpostLabs social-network-sharing library */
 			HuffpostLabsShareTwitter(shareData.text, shareData.link, function() {
 				/* on callback, log in database the share */
@@ -50,12 +51,14 @@
 			});
 		}
 		this.OPPglobals.shareFB = function(shareData) { 
+			console.log('shareFB', shareData)
 			/* using HuffpostLabs social-network-sharing library */
 			HuffpostLabsShareFB(shareData, function() {
 				PUT("/api/stat/" + shareData.statID + "/increment/facebook", null);
 			});
 		}
 		this.OPPglobals.shareEmail = function(shareData) { 
+			console.log('shareEmail', shareData)
 			/* just log it */
 			PUT("/api/stat/" + shareData.statID + "/increment/email", null);
 		}
