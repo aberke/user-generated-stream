@@ -39,6 +39,7 @@ var HuffpostLabsOPP = function(container, data) {
 			'link': this.buildShareLink(entry),
 			'caption': entry.text,
 			'description': 'TODO',
+			'statID': entry.statID,
 		});
 	}
 	this.shareTwitter = function() {
@@ -46,8 +47,8 @@ var HuffpostLabsOPP = function(container, data) {
 		var entry = this.OPPdata.entryList[current_slide];
 		OPPglobals.shareTwitter({
 			'text': "Look at this widget!",
-			'statID': entry.statID,
 			'link': this.buildShareLink(entry),
+			'statID': entry.statID,
 		});
 	}
 	this.shareEmail = function() {

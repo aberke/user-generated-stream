@@ -47,7 +47,7 @@
 			/* using HuffpostLabs social-network-sharing library */
 			HuffpostLabsShareTwitter(shareData.text, shareData.link, function() {
 				/* on callback, log in database the share */
-				PUT("/api/stat/" + shareData.statID + "/increment/count", null);
+				PUT("/api/stat/" + shareData.statID + "/increment/twitter", null);
 			});
 		}
 		this.OPPglobals.shareFB = function(shareData) { 
