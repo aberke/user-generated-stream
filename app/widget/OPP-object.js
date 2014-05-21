@@ -1,5 +1,6 @@
 
 var HuffpostLabsOPP = function(container, data) {
+	console.log('HuffpostLabsOPP', data)
 	this.container = container;
 	this.OPPdata;
 	// can't put in this because this.slideTransition needs it and is called by window
@@ -41,6 +42,7 @@ var HuffpostLabsOPP = function(container, data) {
 		});
 	}
 	this.shareTwitter = function() {
+		console.log('shareTwitter', this, self, this.OPPdata.entryList[current_slide])
 		var entry = this.OPPdata.entryList[current_slide];
 		OPPglobals.shareTwitter({
 			'text': "Look at this widget!",
