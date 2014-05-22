@@ -76,8 +76,45 @@ footer img{
 
 /******* update-partial *******/
 
+.nav-tabs.widget {
+	border-color: gray;
+}
+.nav-tabs.widget>li.active>a,
+.nav-tabs.widget>li.active>a:hover,
+.nav-tabs.widget>li.active>a:focus {
+	border: 3px solid gray;
+	border-bottom-color: transparent;
+}
+.nav-tabs.accepted {
+	border-color: green;
+}
+.nav-tabs.accepted>li.active>a,
+.nav-tabs.accepted>li.active>a:hover,
+.nav-tabs.accepted>li.active>a:focus {
+	border: 3px solid green;
+	border-bottom-color: transparent;
+}
+.nav-tabs.pending {
+	border-color: lavender;
+}
+.nav-tabs.pending>li.active>a,
+.nav-tabs.pending>li.active>a:hover,
+.nav-tabs.pending>li.active>a:focus {
+	border: 3px solid lavender;
+	border-bottom-color: transparent;
+}
+.nav-tabs.rejected {
+	border-color: red;
+}
+.nav-tabs.rejected>li.active>a,
+.nav-tabs.rejected>li.active>a:hover,
+.nav-tabs.rejected>li.active>a:focus {
+	border: 3px solid red;
+	border-bottom-color: transparent;
+}
+
+
 .tab-control .data-tab{
-	padding: 10px 20px;
 	font-size: 20px;
 	color: gray;
 	border-top-left-radius: 10px;
@@ -86,65 +123,28 @@ footer img{
 
 .data-tab {
 	cursor: pointer;
-	border: none;
-	border-bottom: 4px solid gray;
 	opacity: 0.5;
 }
-.data-tab.selected {
-	border: 4px solid gray;
-	border-bottom: none;
+.data-tab.active {
 	opacity: 1;
 }
-/*.data-tab.selected,
-.data-tab:hover{
-	opacity: 1;
-}*/
+.tab-control .data-tab a{
+	margin: 0; /*override bootstrap*/
+}
 
-.widget-tab.selected,
-.widget-tab:hover {
-	opacity: 1;
-}
-.widget-tab.selected{
-	border: 4px solid gray;
-	border-bottom: none;
-}
-.pending-tab.selected,
-.pending-tab:hover {
-	background-color: rgba(51,204,255,0.1);
-}
-.rejected-tab.selected,
-.rejected-tab:hover {
-	background-color: rgba(255,0,0,0.1);
-}
-.accepted-tab.selected,
-.accepted-tab:hover {
-	background-color: rgba(0,255,0,0.1);
-}
-.accepted-tab .tab-title {
-	color: green;
-}
-.pending-tab .tab-title {
-	color: rgb(51,204,255);
-}
-.rejected-tab .tab-title {
-	color: red;
-}
 .tab-content {
 	border: 4px solid gray;
 	border-top: none;
 	padding: 20px;
 }
-.widget-row {
-	padding: 20px;
+.tab-content.accepted-entries {
+	border-color: green;
 }
-.accepted-entries {
-	background-color: rgba(0,255,0,0.1);
+.tab-content.pending-entries {
+	border-color: lavender;
 }
-.pending-entries {
-	background-color: rgba(51,204,255,0.1);
-}
-.rejected-entries {
-	background-color: rgba(255,0,0,0.1);
+.tab-content.rejected-entries {
+	border-color: red;
 }
 .entry-container {
 	padding: 30px;

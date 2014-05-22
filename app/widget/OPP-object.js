@@ -13,13 +13,25 @@ var HuffpostLabsOPP = function(container, data) {
 	this.sortEntries = function() {
 		// also create slide_map so that if user got here via share_link, can go right to entry
 
-		// TODO: SORT THEM
+		for (var i=0; i<num_entries; i++) {
+			var entry = this.OPPdata.entryList[i];
+			entry.points = entry.retweet_count;
+			entry.points+= entry.stat.fb_count;
+			entry.points+= entry.stat.twitter_count;
+			entry.points+= entry.stat.email_count;
+		}
+		var comparator = function(entry1, entry2) {
+			return entry2.points - entry1.points;
+		}
+		this.OPPdata.entryList = this.OPPdata.entryList.sort(comparator);
+
 
 		this.slide_map = {}; // {entryID: slideIndex}
 		for (var i=0; i<num_entries; i++) {
 			var entry = this.OPPdata.entryList[i];
 			this.slide_map[entry.id] = i;
 		}
+		console.log('slide_map', this.slide_map, this.OPPdata.entryList);
 	}
 
 	/* configured in init() */
@@ -39,7 +51,7 @@ var HuffpostLabsOPP = function(container, data) {
 			'link': this.buildShareLink(entry),
 			'caption': entry.text,
 			'description': 'TODO',
-			'statID': entry.statID,
+			'statID': entry.stat.id,
 		});
 	}
 	this.shareTwitter = function() {
@@ -47,7 +59,7 @@ var HuffpostLabsOPP = function(container, data) {
 		OPPglobals.shareTwitter({
 			'text': "Look at this widget!",
 			'link': this.buildShareLink(entry),
-			'statID': entry.statID,
+			'statID': entry.stat.id,
 		});
 	}
 	this.shareEmail = function() {
@@ -58,7 +70,7 @@ var HuffpostLabsOPP = function(container, data) {
 		var mailto 	= ("mailto:?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body));
 
 		location.href = mailto;
-		OPPglobals.shareEmail({'statID': entry.statID})
+		OPPglobals.shareEmail({'statID': entry.stat.id})
 	}
 
 	// called by window so this==window

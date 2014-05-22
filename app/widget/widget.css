@@ -22,7 +22,7 @@
 
 /* non-mobile version -- shrink with media queries */
 .huffpostlabs-opp{
-	margin: auto;
+	margin: 10px auto;
 	display: inline-block;
 	font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
 	width: 314px;
@@ -72,6 +72,7 @@
 	text-align: left;
 }
 .huffpostlabs-opp .picture-caption .tweet-body {
+	height: 110px;
 	margin: 0;
 	color: darkcyan;
 	font-weight: bold;

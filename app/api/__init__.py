@@ -32,15 +32,11 @@ def GETstat(statID):
 @api.route('/stat/<statID>/increment/<count>', methods=['GET', 'PUT'])
 def PUTstatIncrement(statID, count):
 	""" PUT's made with JSONP on widget pages - need GET """
-	if count == 'facebook':
-		Stat.objects(id=statID).update_one(inc__fb_count=1)
-	elif count == 'twitter':
-		Stat.objects(id=statID).update_one(inc__twitter_count=1)
-	elif count == 'email':
-		Stat.objects(id=statID).update_one(inc__email_count=1)
-	else:
-		return Response(status=404)
-	return Response(status=200)
+	try:
+		Stat.increment(statID, count)
+		return Response(status=200)
+	except Exception as e:
+		return respond500(e)
 
 # -------------------------------------------- Stat -
 
@@ -76,7 +72,6 @@ def PUTresignOPP(opp, userID):
 			raise Exception('Invalid userID {0}'.format(userID))
 
 		user.update(pull__OPPlist=opp)
-		user.save()
 		opp._user = None
 		opp.save()
 		return dumpJSON(user.jsonify())

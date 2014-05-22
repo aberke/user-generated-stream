@@ -8,9 +8,9 @@ PORT = os.getenv('PORT', 3000)
 # - MONGO ----------------------------------
 
 # set Development defaults
+MONGODB_DB 			= "OPP"
 MONGODB_HOST 		= "localhost"
 MONGODB_PORT 		= "27017"
-MONGODB_DB 			= "OPP"
 MONGODB_USERNAME	= ""
 MONGODB_PASSWORD	= ""
 

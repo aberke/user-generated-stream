@@ -56,13 +56,14 @@ Admin
 TODO
 ---
 
-- sharing 
-
-- upvoting -- use .sorted() on entries model ?
-
 - center widget
 
 - pull from instagram as well
+
+- get a replica set (MongoHQ) and configure app to read from replica set
+	- see Randall's help below
+
+- sort entries on the client-side better
 
 
 Necessary Tests
@@ -73,7 +74,14 @@ Necessary Tests
 	- python api tests test the /api/error endpoint (which uses respond500)
 	- should hide on route change
 
-
+Randall's help
+---
+[5/21/14 11:13:53 PM] Randall Hunt: // MongoReplicaSet
+// writer = MongoClient().db
+// reader = MongoClient(read_preference=ReadPreference.Secondary_preferred)
+// Read Preference: SecondaryPreferred
+// client.read_prefence = pymongo.readpreference.SecondaryPreffered
+[5/21/14 11:21:51 PM] Randall Hunt: http://docs.mongoengine.org/apireference.html
 
 
 

@@ -12,12 +12,25 @@ With Mongo
 db = MongoEngine(app)
 
 
+
 class Stat(db.Document):
 	""" _OPP id allows deletion of stat when OPP deleted """
 	_OPP 	 		= db.ObjectIdField(default=None)
 	fb_count 		= db.IntField(default=0)
 	email_count 	= db.IntField(default=0)
 	twitter_count 	= db.IntField(default=0)
+
+
+	@staticmethod
+	def increment(id, count):
+		if count == 'facebook':
+			Stat.objects(id=id).update_one(inc__fb_count=1)
+		elif count == 'twitter':
+			Stat.objects(id=id).update_one(inc__twitter_count=1)
+		elif count == 'email':
+			Stat.objects(id=id).update_one(inc__email_count=1)
+		else:
+			raise Exception("Invalid count: {0}".format(count))
 
 	@classmethod
 	def all(cls):
@@ -28,7 +41,6 @@ class Stat(db.Document):
 		return cls.objects(id=id).first()
 
 	def jsonify(self):
-		print('-----', self._OPP, self.fb_count, self.twitter_count)
 		return {
 			'id': str(self.id),
 			'_OPP': str(self._OPP),
@@ -70,11 +82,8 @@ class Entry(db.EmbeddedDocument):
 		    'img_url': 				self.img_url,
 		    'created_at': 			self.created_at.isoformat(),
 		    # stat relevant
-		    'statID':				str(self.stat.id), # so that sharing can make PUT to /api/stat/statID
 		    'retweet_count':		self.retweet_count,
-		    'stat_fb_count': 		self.stat.fb_count,
-		    'stat_email_count': 	self.stat.email_count,
-		    'stat_twitter_count':	self.stat.twitter_count,
+		    'stat': 				self.stat.jsonify(),
 		}
 
 
@@ -197,6 +206,15 @@ class User(db.Document):
 		    # check for potential issue with corrupted data: if OPP deleted but still remains in list
 		    'OPPlist': [o.jsonify() if isinstance(o, OPP) else None for o in self.OPPlist],
 		}
+
+
+
+
+
+
+
+
+
 
 
 

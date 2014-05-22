@@ -23,37 +23,35 @@
 		</div>
 	</div>
 
+	<ul ng-class="(showTab||'widget')" class="nav nav-tabs tab-control">
+		<li class='data-tab widget-tab' ng-click="showTab='widget'" ng-class="{'active':!showTab||showTab=='widget'}" ng-click="showTab='widget'">
+			<a>Widget</a>
+		</li>
+		<li class='data-tab accepted-tab' class='data-tab widget-tab' ng-click="showTab='accepted'" ng-class="{'active':showTab=='accepted'}" >
+			<a><span class='tab-title'>Accepted</span> ({{entryList.length}})</a>
+		</li>
+		<li class='data-tab pending-tab' ng-class="{'active':showTab=='pending'}" ng-click="showTab='pending'">
+			<a>Pending</a>
+		</li>
+		<li class='data-tab rejected-tab' ng-class="{'active':showTab=='rejected'}" ng-click="showTab='rejected'">
+			<a>Rejected ({{rejectEntryList.length}})</a>
+		</li>
+	</ul>
 
-	<div class='row tab-control'>
+	<div ng-show="!showTab||showTab=='widget'" class='tab-content widget-row'>
+		<div class='row'>
+			<div class='widget-container col-md-6'>
+				<div class="huffpostlabs-opp" id="{{opp.id}}"></div>
+				<script src="/widget/o.js"></script>
+			</div>
+			<div class='col-md-6'>
 
-		<span ng-class="{'selected':!showTab||showTab=='widget'}" ng-click="showTab='widget'" class='data-tab widget-tab col-md-3'>
-			<p><span class='tab-title'>Widget</span></p>
-		</span>		
-
-		<span ng-class="{'selected':showTab=='accepted'}" ng-click="showTab='accepted'" class='data-tab accepted-tab col-md-3'>
-			<p><span class='tab-title'>Accepted</span> {{entryList.length}}</p>
-		</span>
-		<span ng-class="{'selected':showTab=='pending'}" ng-click="showTab='pending'" class='data-tab pending-tab col-md-3'>
-			<p><span class='tab-title'>Pending</span></p>
-		</span>
-		<span ng-class="{'selected':showTab=='rejected'}" ng-click="showTab='rejected'" class='data-tab rejected-tab col-md-3'>
-			<p><span class='tab-title'>Rejected</span> {{opp.rejectEntryIDList.length}}</p>
-		</span>
-	</div>
-
-
-	<div ng-show="!showTab||showTab=='widget'" class='row tab-content widget-row'>
-		<div class='widget-container col-md-6'>
-			<div class="huffpostlabs-opp" id="{{opp.id}}"></div>
-			<script src="/widget/o.js"></script>
-		</div>
-		<div class='col-md-6'>
-
-			<form name="updateForm">
-				<label>Share Link</label>
-				<input ng-class="{'error':updateForm.$error.url}" ng-model="opp.share_link" type="url">
-				<button ng-disabled="!updateForm.$valid" ng-click="saveOPP()" class='btn btn-default btn-xs'>SAVE</button>
-			</form>
+				<form name="updateForm">
+					<label>Share Link</label>
+					<input ng-class="{'error':updateForm.$error.url}" ng-model="opp.share_link" type="url">
+					<button ng-disabled="!updateForm.$valid" ng-click="saveOPP()" class='btn btn-default btn-xs'>SAVE</button>
+				</form>
+			</div>
 		</div>
 
 	</div>
