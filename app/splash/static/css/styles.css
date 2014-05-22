@@ -61,20 +61,23 @@ input.error {
 /********* new partial above ***********/
 
 footer {
-	border-top: 4px solid gray;
-}
-footer img{
-	width: 100%;
-	max-height: 240px;
+	margin-top: 30px;
+	border-top: 3px solid lavender;
+	text-align: center;
+	background-color: aliceblue;
+	padding: 20px;
 }
 
 /******* opp-partial **********/
 #opp-partial .huffpostlabs-opp {
-	text-align: center;
-	margin: 50px;
 }
 
 /******* update-partial *******/
+
+#update-partial .page-header small {
+	float: right;
+	margin-top: 10px;
+}
 
 .nav-tabs.widget {
 	border-color: gray;
@@ -94,12 +97,21 @@ footer img{
 	border: 3px solid green;
 	border-bottom-color: transparent;
 }
-.nav-tabs.pending {
+.nav-tabs.pending-twitter {
+	border-color: lightblue;
+}
+.nav-tabs.pending-twitter>li.active>a,
+.nav-tabs.pending-twitter>li.active>a:hover,
+.nav-tabs.pending-twitter>li.active>a:focus {
+	border: 3px solid lightblue;
+	border-bottom-color: transparent;
+}
+.nav-tabs.pending-instagram {
 	border-color: lavender;
 }
-.nav-tabs.pending>li.active>a,
-.nav-tabs.pending>li.active>a:hover,
-.nav-tabs.pending>li.active>a:focus {
+.nav-tabs.pending-instagram>li.active>a,
+.nav-tabs.pending-instagram>li.active>a:hover,
+.nav-tabs.pending-instagram>li.active>a:focus {
 	border: 3px solid lavender;
 	border-bottom-color: transparent;
 }
@@ -141,7 +153,7 @@ footer img{
 	border-color: green;
 }
 .tab-content.pending-entries {
-	border-color: lavender;
+	border-color: lightblue;
 }
 .tab-content.rejected-entries {
 	border-color: red;
@@ -168,6 +180,22 @@ footer img{
 .entry-metadata p.tweet-text {
 	font-weight: bold;
 	font-size: 16px;
+}
+#update-partial form {
+	max-width: 400px;
+	margin: 10px auto;
+
+}
+#update-partial form p{
+	color: gray;
+}
+#update-partial form input{
+	width: 80%;
+}
+
+#update-partial .showing-entries {
+	text-align: center;
+	padding: 15px;
 }
 
 /* ----- error.html -------------- */

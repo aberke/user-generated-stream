@@ -204,7 +204,7 @@ class User(db.Document):
 		    'twitter_id': self.twitter_id,
 		    'twitter_screen_name': self.twitter_screen_name,
 		    # check for potential issue with corrupted data: if OPP deleted but still remains in list
-		    'OPPlist': [o.jsonify() if isinstance(o, OPP) else None for o in self.OPPlist],
+		    'OPPlist': [str(o.id) if isinstance(o, OPP) else None for o in self.OPPlist],
 		}
 
 

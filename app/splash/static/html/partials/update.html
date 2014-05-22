@@ -4,7 +4,8 @@
 
 	<div class='info-container'>
 		<div class="page-header">
-			<h1>#{{opp.title}} 
+			<h1>
+				#{{opp.title}} 
 				<small>
 					<span class='started'>
 						Started 
@@ -30,11 +31,14 @@
 		<li class='data-tab accepted-tab' class='data-tab widget-tab' ng-click="showTab='accepted'" ng-class="{'active':showTab=='accepted'}" >
 			<a><span class='tab-title'>Accepted</span> ({{entryList.length}})</a>
 		</li>
-		<li class='data-tab pending-tab' ng-class="{'active':showTab=='pending'}" ng-click="showTab='pending'">
-			<a>Pending</a>
-		</li>
 		<li class='data-tab rejected-tab' ng-class="{'active':showTab=='rejected'}" ng-click="showTab='rejected'">
 			<a>Rejected ({{rejectEntryList.length}})</a>
+		</li>
+		<li class='data-tab pending-twitter-tab' ng-class="{'active':showTab=='pending-twitter'}" ng-click="showTab='pending-twitter'">
+			<a>Pending: Twitter</a>
+		</li>
+		<li class='data-tab pending-instagram-tab' ng-class="{'active':showTab=='pending-instagram'}" ng-click="showTab='pending-instagram'">
+			<a>Pending: Instagram</a>
 		</li>
 	</ul>
 
@@ -48,7 +52,8 @@
 
 				<form name="updateForm">
 					<label>Share Link</label>
-					<input ng-class="{'error':updateForm.$error.url}" ng-model="opp.share_link" type="url">
+					<p>Put in a shortened URL for sharing to twitter</p>
+					<input placeholder="http://" ng-class="{'error':updateForm.$error.url}" ng-model="opp.share_link" type="url">
 					<button ng-disabled="!updateForm.$valid" ng-click="saveOPP()" class='btn btn-default btn-xs'>SAVE</button>
 				</form>
 			</div>
@@ -60,23 +65,18 @@
 		<div entry-list="entryList" class='row entry-container' ng-repeat="e in opp.entryList"></div>
 	</div>
 
-	<div ng-show="showTab=='pending'" class='tab-content entry-list-container pending-entries'>
-		<div entry-list="pendingEntryList" class='row entry-container' ng-repeat="e in pendingEntryList"></div>
-			<!-- <img src="/img/loading.gif"> -->
-	</div>
-
 	<div ng-show="showTab=='rejected'" class='tab-content entry-list-container rejected-entries'>
 		<div entry-list="rejectEntryList" class='row entry-container' ng-repeat="e in rejectEntryList"></div>
 	</div>
 
-	<div>
-		<span class='showing-entries'> 
-			<button ng-click="loadMoreEntries()" ng-show="moreEntries!=false&&!loadingMoreEntries" class='btn btn-sm btn-default'>Shore More</button>
-			<img ng-show="loadingMoreEntries" class="loading-gif" src="/img/loading.gif">
-		</span>
+	<div ng-show="showTab=='pending-twitter'" class='tab-content entry-list-container pending-entries'>
+		<div entry-list="pendingEntryList" class='row entry-container' ng-repeat="e in pendingEntryList"></div>
 	</div>
 
-
+	<div class='showing-entries'>
+		<button ng-click="loadMoreEntries()" ng-show="moreEntries!=false&&!loadingMoreEntries" class='btn btn-sm btn-default'>Shore More</button>
+		<img ng-show="loadingMoreEntries" class="loading-gif" src="/img/loading.gif">
+	</div>
 
 
 </div>
