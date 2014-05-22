@@ -63,8 +63,6 @@ TODO
 - get a replica set (MongoHQ) and configure app to read from replica set
 	- see Randall's help below
 
-- sort entries on the client-side better
-
 
 Necessary Tests
 ---
