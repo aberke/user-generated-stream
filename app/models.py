@@ -5,7 +5,6 @@ import dateutil.parser
 
 import config
 
-#from app import app
 from util import yellERROR
 
 """
@@ -175,15 +174,17 @@ class OPP(Document):
 
 	def acceptEntry(self, entry_data):
 		""" Create new Entry from entry_data and add it to the entryList """
+		print('acceptEntry ****', self, entry_data)
 		# take out of the rejectEntryIDList if it was there
 		OPP.objects(id=self.id).update(pull__rejectEntryIDList=entry_data['id'])
-		
+		print('------')
 		bad_data_error = Exception('Must create Entry with text as string and created_at as isoformatted string')
 		try:
 			created_at = dateutil.parser.parse(entry_data['created_at'])
 			entry = Entry(OPP=self.id, id=entry_data['id'], screen_name=entry_data['screen_name'], text=entry_data['text'], img_url=entry_data['img_url'], created_at=created_at)
 		except:
 			raise bad_data_error
+		print('------')
 		OPP.objects(id=self.id).update(push__entryList=entry)
 
 	def rejectEntry(self, id):

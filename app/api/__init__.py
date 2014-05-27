@@ -158,6 +158,7 @@ def DELETEopp(opp):
 @opp_ownership_required
 def PUTacceptEntry(opp, entryID):
 	entry_data = json.loads(request.data)
+	print('*** entry_data', entry_data)
 	try:
 		opp.acceptEntry(entry_data)
 		return Response(status=200)
@@ -202,9 +203,10 @@ def GETsearchOPP(id):
 
 	try:
 		if source == 'instagram':
-			(data, next_max_id) = instagram_api.searchHashtag(hashtag, since=since, max_id=max_id)
+			(data, next_max_id) = instagram_api.search_hashtag(hashtag, since, max_id=max_id)
 		else:
-			(data, next_max_id) = twitter_api.searchHashtag(hashtag, since=since, max_id=max_id)
+			(data, next_max_id) = twitter_api.search_hashtag(hashtag, since, max_id=max_id)
+		
 		return dumpJSON({'data': data, 'next_max_id': str(next_max_id)}) # make it a string to avoid JSON rounding errors
 	except Exception as e:
 		return respond500(e)

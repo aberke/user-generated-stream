@@ -33,7 +33,7 @@ $ source venv/bin/activate
 	- The instagram variables can be found in the user-generated-stream instagram app, or you can create a new instagram app.  They're used for querying instagram API
 
 ```
-$ source TWITTER_CONSUMER_KEY='XXX',TWITTER_CONSUMER_SECRET='XXX', INSTAGRAM_CLIENT_ID='XXX',INSTAGRAM_CLIENT_SECRET='XXX'
+$ source TWITTER_CONSUMER_KEY='XXX' TWITTER_CONSUMER_SECRET='XXX' INSTAGRAM_CLIENT_ID='XXX' INSTAGRAM_CLIENT_SECRET='XXX'
 ```
 
 * Run 'er: ```python run.py```

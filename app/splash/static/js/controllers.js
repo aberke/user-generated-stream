@@ -141,36 +141,42 @@ function UpdateCntl($scope, APIservice, OPPservice, FormService, WidgetService, 
 	var reloadOPP = function() {
 		APIservice.GET('/opp/' + opp.id).then(function(data) { 
 			WidgetService.reloadOPP(data);
+			$scope.opp.rejectEntryIDList = data.rejectEntryIDList;
+			$scope.opp.entryIDList = data.entryIDList;
 		});
 	}
-
-	$scope.rejectEntry = function(curr_entryList, entry) {
-		var index = $scope[curr_entryList].indexOf(entry);
+	var moveEntry = function(from_entryList, move, entry) {
+		/* handles rejectEntry/acceptEntry
+			params: 
+				from_entryList: current entryList
+				move: 'accept' or 'reject'
+				entry: entry JSON object
+		 */
+		var index = $scope[from_entryList].indexOf(entry);
 		if (index < 0) { console.log('ERROR'); return false; }
 
-		APIservice.PUT('/opp/' + opp.id + '/reject/' + entry.id).then(function() {
-			$scope[curr_entryList].splice(index, 1);
-			$scope.rejectEntryList.push(entry);
+		APIservice.PUT('/opp/' + opp.id + '/' + move + '/' + entry.id, entry).then(function() {
+			$scope[from_entryList].splice(index, 1);
+			if (move == 'reject') {
+				$scope['rejectEntryList'].push(entry);
+			} else {
+				$scope['entryList'].push(entry);
+			}
 			reloadOPP();
 		});
+
 	}
-	$scope.acceptEntry = function(curr_entryList, entry) {
-		var index = $scope[curr_entryList].indexOf(entry);
-		if (index < 0) { console.log('ERROR'); return false; }
 
-		APIservice.PUT('/opp/' + opp.id + '/accept/' + entry.id, entry).then(function() {
-			$scope[curr_entryList].splice(index, 1);
-			$scope.entryList.push(entry);
-			reloadOPP();
-		});
+	$scope.rejectEntry = function(from_entryList, entry) {
+		moveEntry(from_entryList, 'reject', entry);
+	}
+	$scope.acceptEntry = function(from_entryList, entry) {
+		moveEntry(from_entryList, 'accept', entry);
 	}
 	// to save start and share_link
 	$scope.saveOPP = function() {
 		APIservice.PUT('/opp/' + opp.id, $scope.opp).then(function(data) {
-			/* 
-			Don't set $scope.opp = data
-			start over with fetching data since date changed 
-			*/
+			/* Don't set $scope.opp = data, start over with fetching data since date changed */
 			init();
 		});
 	}

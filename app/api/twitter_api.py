@@ -68,17 +68,18 @@ def search(query):
 # format in which twitter wants to accept dates in query
 date_format="%Y-%m-%d"
 
-def searchHashtag(hashtag, since=None, max_id=None, filter_links=True, exclude_retweets=True):
+def search_hashtag(hashtag, since, max_id=None, filter_links=True, exclude_retweets=True):
 	""" Sets include_entities=true AND count=100 -- the max 
 		Returns everything by using 'next_results'
 	"""
 	query = {'include_entities': True, 'count': 100}
 	query['q'] = ('#' + hashtag)
-	if since:
-		# since should be an iso formatted date string
-		if isinstance(since, datetime): since = since.isoformat()
-		since = dateutil.parser.parse(since).strftime(date_format)
-		query['q'] += ('+since:' + since)
+
+	# since should be an iso formatted date string
+	if isinstance(since, datetime): since = since.isoformat()
+	since = dateutil.parser.parse(since).strftime(date_format)
+	query['q'] += ('+since:' + since)
+	
 	if max_id:
 		query['max_id'] = max_id
 	if filter_links:
