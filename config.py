@@ -9,7 +9,9 @@ PORT = os.getenv('PORT', 3000)
 
 # set Development defaults
 MONGODB_DB 			= "OPP"
-MONGODB_HOST 		= "localhost"
+# THE CHANGE	
+#MONGODB_HOST 		= "localhost"
+MONGODB_HOST		= "mongodb://localhost:27017/OPP"
 MONGODB_PORT 		= "27017"
 MONGODB_USERNAME	= ""
 MONGODB_PASSWORD	= ""
@@ -29,6 +31,11 @@ if HEROKU_MONGODB_URL:
 	MONGODB_PORT 	= db_info.port
 	MONGODB_USERNAME= db_info.username
 	MONGODB_PASSWORD= db_info.password
+
+	# THE CHANGE
+	MONGODB_HOST 	= HEROKU_MONGODB_URL
+
+print('***************** MONGODB_HOST = ',HEROKU_MONGODB_URL)
 
 # ---------------------------------- MONGO -
 

@@ -53,6 +53,16 @@ Admin
 - Currently the ADMIN_WHITELIST has only 'HuffpostLabs' and 'AlexandraBerke'
 
 
+Production Notes
+---
+- Running on Heroku under the HuffpostLabs account
+- Stack:
+	- Python Flask backend
+	- AngularJS frontend
+- 2 Web dynos
+- MongoHQ database (using MongoEngine as driver)
+
+
 TODO
 ---
 
@@ -63,8 +73,6 @@ TODO
 - get a replica set (MongoHQ) and configure app to read from replica set
 	- see Randall's help below
 
-- scale Heroku dynos
-
 
 Necessary Tests
 ---
@@ -73,6 +81,8 @@ Necessary Tests
 - error.html shows on error
 	- python api tests test the /api/error endpoint (which uses respond500)
 	- should hide on route change
+
+
 
 
 Types
