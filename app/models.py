@@ -1,10 +1,7 @@
-#from flask.ext.mongoengine import MongoEngine
 from mongoengine import *
 from pymongo import ReadPreference
 from datetime import datetime
 import dateutil.parser
-
-from mongoengine.connection import _connection_settings
 
 import config
 
@@ -12,18 +9,54 @@ import config
 from util import yellERROR
 
 """
-With Mongo
+With Mongo as database, mongoengine as driver
+
+SCHEMAS:
+	USER 
+		OPPlist
+		twitter_id 			
+		twitter_screen_name 
+
+	OPP
+		_user 		
+		title 		
+		start 				
+		entryList: [ { (embedded document)	
+						id 	 (from twitter/instagram - EmbeddedDocuments don't get Id's)
+						stat (Stat)
+						source
+						created_at
+						text
+						screen_name
+						text
+						img_url
+						retweet_count
+		}, ...] 	
+		rejectEntryIDList: [ list of twitter/instagram post ids ]
+		share_link
+
+	STAT 
+		_OPP 			(ObjectId of OPP for deleting stats with OPP deletion)
+		fb_count 	
+		email_count 
+		twitter_count
+
+
+
+Read from Secondary 
 """
-print('********* _connection_settings', _connection_settings)
 
-connect(
-		config.MONGODB_DB, 
-		host=config.MONGODB_HOST,
-		read_preference=ReadPreference.SECONDARY,
-		replicaSet='set-5384a00401d11a55b7003af2',
-	)
+# need to handle 3 cases: PRODUCTION, DEVELOPMENT, TESTING
+if config.ENVIRONMENT == "PRODUCTION":
+	db = connect(
+			config.MONGODB_DB, # (Required Parameter) From docs: Note that database name from uri has priority over name in :connect()
+			host=config.MONGODB_HOST,
+			read_preference=ReadPreference.SECONDARY,
+			replicaSet='set-5384a00401d11a55b7003af2',
+		)
+else:	
+	db = connect(config.MONGODB_DB)#, host=config.MONGODB_HOST)
 
-print('********* _connection_settings', _connection_settings)
 
 
 class Stat(Document):
@@ -141,6 +174,7 @@ class OPP(Document):
 
 
 	def acceptEntry(self, entry_data):
+		""" Create new Entry from entry_data and add it to the entryList """
 		# take out of the rejectEntryIDList if it was there
 		OPP.objects(id=self.id).update(pull__rejectEntryIDList=entry_data['id'])
 		
@@ -155,7 +189,7 @@ class OPP(Document):
 	def rejectEntry(self, id):
 		OPP.objects(id=self.id).update(pull__entryList__id=id)
 		OPP.objects(id=self.id).update(add_to_set__rejectEntryIDList=id) # add value to a list only if its not in the list already
-
+	
 	def remove(self):
 		""" OPP responsible for removing all Stats of its Entries """
 		Stat.objects(_OPP=self.id).delete()

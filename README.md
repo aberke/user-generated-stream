@@ -61,6 +61,8 @@ Production Notes
 	- AngularJS frontend
 - 2 Web dynos
 - MongoHQ database (using MongoEngine as driver)
+	- view logs: <https://partners.mongohq.com/app24775728-heroku-com/mongo/app24775728/monitoring>
+	- Read preference set to ReadPreference.SECONDARY
 
 
 TODO
@@ -82,6 +84,7 @@ Necessary Tests
 	- python api tests test the /api/error endpoint (which uses respond500)
 	- should hide on route change
 
+- reject/accept entries
 
 
 
@@ -90,18 +93,6 @@ Types
 Slideshow
 	- from social campaign
 	- from editor
-
-
-
-Randall's help
----
-[5/21/14 11:13:53 PM] Randall Hunt: // MongoReplicaSet
-// writer = MongoClient().db
-// reader = MongoClient(read_preference=ReadPreference.Secondary_preferred)
-// Read Preference: SecondaryPreferred
-// client.read_prefence = pymongo.readpreference.SecondaryPreffered
-[5/21/14 11:21:51 PM] Randall Hunt: http://docs.mongoengine.org/apireference.html
-
 
 
 

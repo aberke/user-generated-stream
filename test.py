@@ -3,9 +3,9 @@ import json
 import unittest
 from datetime import datetime
 
-# Set TESTING before loading any packages so that they load with the TESTING configuration
-# config.py checks environment variable TESTING for setting: MONGODB_DB,
-os.environ["TESTING"] = "True"
+# Set ENVIRONMENT=TESTING before loading any packages so that they load with the TESTING configuration
+# config.py checks environment variable ENVIRONMENT for setting: MONGODB_DB,
+os.environ["ENVIRONMENT"] = "TESTING"
 
 from app import app
 from app.auth import session_insert_user, login_required, opp_ownership_required
@@ -36,7 +36,7 @@ class OPPTestCase(unittest.TestCase):
 		self.app = app.test_client()
 
 	def tearDown(self):
-		db.connection.drop_database(app.config['MONGODB_DB'])
+		db.drop_database(app.config['MONGODB_DB'])
 	# ----------------------------------------------- Setup/Teardown -
 
 	# - Utility Methods ----------------------------------------------
@@ -141,7 +141,7 @@ class TestAPI(OPPTestCase):
 		self.assertEqual(opp['_user'], self.user['id'])
 		user = self.GETdata('/api/user/{0}'.format(self.user['id']))
 		self.assertEqual(len(user['OPPlist']), 1)
-		self.assertEqual(test_opp_data['title'], user['OPPlist'][0]['title'])
+		self.assertEqual(opp['id'], user['OPPlist'][0])
 
 		# resign opp and verify no ownership
 		rv = self.app.put('/api/user/{0}/resign-opp/{1}'.format(self.user['id'], opp['id']))
@@ -158,7 +158,7 @@ class TestAPI(OPPTestCase):
 		self.assertEqual(opp['_user'], self.user['id'])
 		user = self.GETdata('/api/user/{0}'.format(self.user['id']))
 		self.assertEqual(len(user['OPPlist']), 1)
-		self.assertEqual(test_opp_data['title'], user['OPPlist'][0]['title'])
+		self.assertEqual(opp['id'], user['OPPlist'][0])
 	# ----------------------------------------------------- User Tests -
 
 	# - OPP Tests -------------------------------------------------------
@@ -191,7 +191,7 @@ class TestAPI(OPPTestCase):
 		opp = self.POSTopp()
 		user = self.GETdata('/api/user/{0}'.format(self.user['id']))
 		self.assertEqual(len(user['OPPlist']), 1)
-		self.assertEqual(user['OPPlist'][0]['id'], opp['id'])
+		self.assertEqual(user['OPPlist'][0], opp['id'])
 
 	def test_DELETEopp(self):
 		""" 

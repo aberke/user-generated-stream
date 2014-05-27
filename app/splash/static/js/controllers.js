@@ -148,7 +148,7 @@ function UpdateCntl($scope, APIservice, OPPservice, FormService, WidgetService, 
 		var index = $scope[curr_entryList].indexOf(entry);
 		if (index < 0) { console.log('ERROR'); return false; }
 
-		APIservice.PUT('/opp/' + opp.id + '/reject/' + entry.tweet_id).then(function() {
+		APIservice.PUT('/opp/' + opp.id + '/reject/' + entry.id).then(function() {
 			$scope[curr_entryList].splice(index, 1);
 			$scope.rejectEntryList.push(entry);
 			reloadOPP();
@@ -158,7 +158,7 @@ function UpdateCntl($scope, APIservice, OPPservice, FormService, WidgetService, 
 		var index = $scope[curr_entryList].indexOf(entry);
 		if (index < 0) { console.log('ERROR'); return false; }
 
-		APIservice.PUT('/opp/' + opp.id + '/accept/' + entry.tweet_id, entry).then(function() {
+		APIservice.PUT('/opp/' + opp.id + '/accept/' + entry.id, entry).then(function() {
 			$scope[curr_entryList].splice(index, 1);
 			$scope.entryList.push(entry);
 			reloadOPP();

@@ -193,6 +193,7 @@ footer {
 	font-weight: bold;
 	font-size: 16px;
 }
+#update-partial .info,
 #update-partial form {
 	max-width: 400px;
 	margin: 10px auto;

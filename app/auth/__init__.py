@@ -50,7 +50,7 @@ def login():
 	"""
 	next_url = (request.args.get('next') or request.referrer or '/')
 	
-	if config.TESTING:
+	if config.ENVIRONMENT == "TESTING":
 		user_data = json.loads(request.data)
 		session_insert_user(user_data['twitter_id'], user_data['twitter_screen_name'])
 		return redirect(next_url)

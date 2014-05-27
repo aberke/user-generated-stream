@@ -3,7 +3,6 @@ Flask-WTF==0.9.5
 Jinja2==2.7.2
 MarkupSafe==0.21
 Werkzeug==0.9.4
-flask-mongoengine==0.7.0
 gunicorn==18.0
 httplib2==0.9
 itsdangerous==0.24

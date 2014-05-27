@@ -1,41 +1,29 @@
 import os
-from urlparse import urlparse
 
 HOST = os.getenv('HOST', '127.0.0.1')
 PORT = os.getenv('PORT', 3000)
 
+ENVIRONMENT = os.environ.get('ENVIRONMENT', 'DEVELOPMENT')
 
 # - MONGO ----------------------------------
+# if development: host is "mongodb://localhost:27017"
+# if production: db is set in host URI, host is in "MONGOHQ_URL" env variable found in '$ heroku config' command
+# if TESTING: db is 'testing'
 
-# set Development defaults
-MONGODB_DB 			= "OPP" # required parameter of mongoengine.connect()
-# THE CHANGE	
-#MONGODB_HOST 		= "localhost"
-MONGODB_HOST		= "mongodb://localhost:27017/OPP"
-MONGODB_PORT 		= "27017"
-MONGODB_USERNAME	= ""
-MONGODB_PASSWORD	= ""
+MONGODB_HOST 	= "mongodb://localhost:27017"
+# required parameter of mongoengine.connect() -- BUT Note that database name from uri has priority over name in :connect()
+MONGODB_DB 		= "OPP" 
+
+MONGOHQ_URL 	= os.environ.get("MONGOHQ_URL", None)
+if MONGOHQ_URL:
+	MONGODB_HOST=MONGOHQ_URL
+	ENVIRONMENT = "PRODUCTION"
 
 # if TESTING - set TESTING variables
-TESTING = bool(os.environ.get("TESTING", False))
-if TESTING:
-	MONGODB_DB 		= "testing"
+if ENVIRONMENT == 'TESTING':
+	MONGODB_DB 	= "testing"
 
-# if on Heroku (production) - set heroku variables
-HEROKU_MONGODB_URL 	= os.environ.get("MONGOHQ_URL", None)
-if HEROKU_MONGODB_URL:
-	db_info 		= urlparse(HEROKU_MONGODB_URL)
-
-	# MONGODB_DB		= db_info.path.replace('/', '')
-	# MONGODB_HOST 	= db_info.hostname
-	# MONGODB_PORT 	= db_info.port
-	# MONGODB_USERNAME= db_info.username
-	# MONGODB_PASSWORD= db_info.password
-
-	# THE CHANGE
-	MONGODB_HOST 	= HEROKU_MONGODB_URL
-
-print('***************** MONGODB_HOST = ',HEROKU_MONGODB_URL)
+print('***************** MONGODB_HOST = ',MONGODB_HOST)
 
 # ---------------------------------- MONGO -
 

@@ -154,9 +154,9 @@ def DELETEopp(opp):
 	except Exception as e:
 		return respond500(e)
 
-@api.route('/opp/<oppID>/accept/<tweet_id>', methods=['PUT'])
+@api.route('/opp/<oppID>/accept/<entryID>', methods=['PUT'])
 @opp_ownership_required
-def PUTacceptEntry(opp, tweet_id):
+def PUTacceptEntry(opp, entryID):
 	entry_data = json.loads(request.data)
 	try:
 		opp.acceptEntry(entry_data)
@@ -164,11 +164,11 @@ def PUTacceptEntry(opp, tweet_id):
 	except Exception as e:
 		return respond500(e)
 
-@api.route('/opp/<oppID>/reject/<tweet_id>', methods=['PUT'])
+@api.route('/opp/<oppID>/reject/<entryID>', methods=['PUT'])
 @opp_ownership_required
-def PUTrejectEntry(opp, tweet_id):
+def PUTrejectEntry(opp, entryID):
 	try:
-		opp.rejectEntry(tweet_id)
+		opp.rejectEntry(entryID)
 		return Response(status=200)
 	except Exception as e:
 		return respond500(e)
