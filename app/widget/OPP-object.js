@@ -31,7 +31,6 @@ var HuffpostLabsOPP = function(container, data) {
 			var entry = this.OPPdata.entryList[i];
 			this.slide_map[entry.id] = i;
 		}
-		console.log('slide_map', this.slide_map, this.OPPdata.entryList);
 	}
 
 	/* configured in init() */

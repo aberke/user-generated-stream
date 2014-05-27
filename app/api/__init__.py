@@ -1,7 +1,8 @@
 from flask import Blueprint, session, request, Response
 import json
 
-from twitter_api import searchHashtag, search
+import twitter_api
+import instagram_api
 
 from app.auth.route_wrappers import login_required, opp_ownership_required
 from app.util import dumpJSON, respond500
@@ -191,6 +192,7 @@ def GETsearchOPP(id):
 	"""
 	hashtag 	= request.args.get('hashtag', None)
 	since 		= request.args.get('since', None)
+	source		= request.args.get('source', 'twitter')
 
 	if not (hashtag and since):
 		opp 	= OPP.find(id)
@@ -199,8 +201,11 @@ def GETsearchOPP(id):
 	max_id = request.args.get('max_id', None)
 
 	try:
-		(data, new_max_id) = searchHashtag(hashtag, since=since, max_id=max_id)
-		return dumpJSON({'data': data, 'max_id': str(new_max_id)}) # make it a string to avoid JSON rounding errors
+		if source == 'instagram':
+			(data, next_max_id) = instagram_api.searchHashtag(hashtag, since=since, max_id=max_id)
+		else:
+			(data, next_max_id) = twitter_api.searchHashtag(hashtag, since=since, max_id=max_id)
+		return dumpJSON({'data': data, 'next_max_id': str(next_max_id)}) # make it a string to avoid JSON rounding errors
 	except Exception as e:
 		return respond500(e)
 

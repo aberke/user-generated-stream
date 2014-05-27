@@ -152,17 +152,29 @@ footer {
 .tab-content.accepted-entries {
 	border-color: green;
 }
-.tab-content.pending-entries {
-	border-color: lightblue;
-}
 .tab-content.rejected-entries {
 	border-color: red;
+}
+.tab-content.pending-entries-twitter {
+	border-color: lightblue;
+}
+.tab-content.pending-entries-instagram {
+	border-color: lavender;
 }
 .entry-container {
 	padding: 30px;
 }
 
-.entry-accept-reject-buttons {
+.entry-accept-reject-buttons .btn {
+	display: block;
+	background-color: white;
+	margin: 10px;
+}
+.entry-accept-reject-buttons .accept-btn {
+	color: green;
+}
+.entry-accept-reject-buttons .reject-btn {
+	color: red;
 }
 .entry-pic {
 	min-height: 300px;

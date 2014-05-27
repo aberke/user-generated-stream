@@ -78,108 +78,63 @@ function UpdateCntl($scope, APIservice, OPPservice, FormService, WidgetService, 
 
 	// initialized in init
 	$scope.pendingEntryList;
+	$scope.pendingEntryListInstagram;
 	$scope.rejectEntryList;
 	$scope.entryList;
 	$scope.listLengths;
 	var queues;
-	var max_id;
+	var next_max_id; // {'twitter': next_max_id, 'instagram': next_max_id};
 
 	/* 
-	The problem: To fetch all the tweets from twitter right away 
-					pros: reflect correct entry numbers and store the least amount of data
-		Can only fetch up to 100 tweets at a time
-		Need to get back last set before can query next set (need max_id for "paging")
-		-- so iteratively fetch tweets
-
-		Can't iteratively update lists in scope 
-			- updating HTML (with angular ng-repeat) to that extent is too exhausting for the browser
-			- browser conks out until data fetching done
-
-	Solution: fetch all the data iteratively upfront, but don't reflect it all in the scope
-			  until it's asked for with showMore()
-
-		--------------------------
-
-		$scope.pendingEntryList
-		$scope.rejectEntryList
-		$scope.entryList --- accepted entries
-
-		3 sets of entryLists
-		for each set keep total length and queue of more lists to concat with
-
-		var queues = { 'listName': [[next-list-0], [next-list-1], [next-list-2],..] }
-		$scope.listLengths = { 'listName': x }
-
-		at page load iteratively call searchEntries
-			on callback: filterEntries into the 3 lists
-							add to respective queue as a next-list
-							$scope.listLengths[listName] += list.length;
-				
-			on showMore(listName):
-				nextList = queues[listName].shift(1)
-				$scope[listName].concat(nextList)
+	
 	*/
-	var filterEntries = function(list) { // callback to searchEntries
-		// set up tempLists before adding to queues
-		var tempLists = {'entryList': [], 'rejectEntryList': [], 'pendingEntryList': []};
-		for (var i=0; i<list.length; i++) {
-			var item = list[i];
-			item['created_at'] = new Date(item['created_at']);
-			
-			if (opp.entryIDList.indexOf(item.tweet_id) >= 0) {
-				tempLists['entryList'].push(item);
-			} else if (opp.rejectEntryIDList.indexOf(item.tweet_id) >= 0) {
-				tempLists['rejectEntryList'].push(item);
-			} else {
-				tempLists['pendingEntryList'].push(item);
-			}
-		}
-		// add tempLists to queues and listLengths
-		for (var listName in tempLists) {
-			var tempList = tempLists[listName];
-			queues[listName].push(tempList);
-			$scope.listLengths[listName] += tempList.length;
-
-			if (!$scope[listName].length) {
-				$scope[listName] = tempList;
-			}
-		}
-	}
-	$scope.showMore = function(listName) {
-		nextList = queues[listName].shift(1);
-		$scope[listName] = $scope[listName].concat(nextList);
-	}
+	
 	$scope.moreEntries = function() { searchEntries(); }
 
-	var filterEntries2 = function(list) {
+	var filterEntries = function(list, source) {
 		for (var i=0; i<list.length; i++) {
 			var item = list[i];
 			item['created_at'] = new Date(item['created_at']);
 			
-			if ($scope.opp.rejectEntryIDList.indexOf(item.tweet_id) >= 0) {
+			if ($scope.opp.rejectEntryIDList.indexOf(item.id) >= 0) {
 				$scope['rejectEntryList'].push(item);
-			} else if ($scope.opp.entryIDList.indexOf(item.tweet_id) < 0) {
-				$scope['pendingEntryList'].push(item);
+			} else if ($scope.opp.entryIDList.indexOf(item.id) < 0) {
+				if (item.source == 'twitter') {
+					$scope['pendingEntryList'].push(item);
+				} else if (item.source == 'instagram') {
+					$scope['pendingEntryListInstagram'].push(item);
+				} else {
+					console.log("item.source", item.source)
+				}
 			} // else its in the opp.entryList
 		}
 	}
+	var searchParams = function(source) {
+		return {'hashtag': opp.title, 
+				'since': $scope.opp.start.toISOString(), 
+				'max_id': (next_max_id[source] || null),
+				'source': source,
+			};
+	}
 
-	var searchEntries = function(callback) {
-		$scope.moreEntries = false;
-		var params = {'hashtag': opp.title, 'since': opp.start.toISOString(), 'max_id': (max_id || null)};
-		
+	var searchEntries = function(source, callback) {
+		var params = searchParams(source);
 		APIservice.GET('/opp/' + opp.id + '/search', params).then(function(ret) {
-			filterEntries2(ret.data);
-			max_id = ret.max_id;
 			if (callback) { callback(); }
-			/*  max_id of <= 0 signifies no more to search for  */
-			if (max_id > 0) { $scope.moreEntries = true; }
+			next_max_id[source] = ret.next_max_id;
+			filterEntries(ret.data, source);
 		});
 	}
 	$scope.loadMoreEntries = function() {
 		$scope.loadingMoreEntries = true;
-		searchEntries(function() { 
-			$scope.loadingMoreEntries = false;
+		$scope.moreEntries = false;
+
+		searchEntries('twitter', function() {
+			searchEntries('instagram', function() {
+				/*  max_id of <= 0 signifies no more to search for  */
+				if (next_max_id['twitter'] > 0 || next_max_id['instagram'] > 0) { $scope.moreEntries = true; }
+				$scope.loadingMoreEntries = false;
+			});
 		});
 	}
 
@@ -223,21 +178,13 @@ function UpdateCntl($scope, APIservice, OPPservice, FormService, WidgetService, 
 	var init = function() {
 		console.log('opp', $scope.opp)
 		$scope.allEntries = [];
-		$scope.pendingEntryList = [];
 		$scope.rejectEntryList = [];
+		$scope.pendingEntryList = [];
+		$scope.pendingEntryListInstagram = [];
 		$scope.entryList = $scope.opp.entryList;
-		queues = {
-			'pendingEntryList': [],
-			'rejectEntryList': [],
-			'entryList': [],
-		}
-		$scope.listLengths = {
-					'pendingEntryList': 0,
-					'rejectEntryList': 0,
-					'entryList': 0,
-		}
-		max_id = null;
-		searchEntries();
+
+		next_max_id = {'twitter': 0, 'instagram': 0};
+		$scope.loadMoreEntries();
 	}
 	init();
 }

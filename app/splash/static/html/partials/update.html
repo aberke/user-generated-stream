@@ -52,7 +52,7 @@
 
 				<form name="updateForm">
 					<label>Share Link</label>
-					<p>Put in a shortened URL for sharing to twitter</p>
+					<p>Put in a shortened URL of the page you embedded on so that when slides are shared to twitter, the tweet is not cut off</p>
 					<input placeholder="http://" ng-class="{'error':updateForm.$error.url}" ng-model="opp.share_link" type="url">
 					<button ng-disabled="!updateForm.$valid" ng-click="saveOPP()" class='btn btn-default btn-xs'>SAVE</button>
 				</form>
@@ -69,8 +69,12 @@
 		<div entry-list="rejectEntryList" class='row entry-container' ng-repeat="e in rejectEntryList"></div>
 	</div>
 
-	<div ng-show="showTab=='pending-twitter'" class='tab-content entry-list-container pending-entries'>
+	<div ng-show="showTab=='pending-twitter'" class='tab-content entry-list-container pending-entries-twitter'>
 		<div entry-list="pendingEntryList" class='row entry-container' ng-repeat="e in pendingEntryList"></div>
+	</div>
+
+	<div ng-show="showTab=='pending-instagram'" class='tab-content entry-list-container pending-entries-instagram'>
+		<div entry-list="pendingEntryListInstagram" class='row entry-container' ng-repeat="e in pendingEntryListInstagram"></div>
 	</div>
 
 	<div class='showing-entries'>

@@ -33,12 +33,15 @@ if HEROKU_MONGODB_URL:
 # ---------------------------------- MONGO -
 
 
-DEBUG = os.getenv('TESTING', True)
+DEBUG 					= os.getenv('TESTING', True)
 
-SECRET_KEY = os.getenv('SESSION_SECRET', 'OPP')
+SECRET_KEY 				= os.getenv('SESSION_SECRET', 'OPP')
 
-TWITTER_CONSUMER_KEY = os.environ['TWITTER_CONSUMER_KEY']
+TWITTER_CONSUMER_KEY 	= os.environ['TWITTER_CONSUMER_KEY']
 TWITTER_CONSUMER_SECRET = os.environ['TWITTER_CONSUMER_SECRET']
+
+INSTAGRAM_CLIENT_ID 	= os.environ['INSTAGRAM_CLIENT_ID']
+INSTAGRAM_CLIENT_SECRET = os.environ['INSTAGRAM_CLIENT_SECRET']
 
 # twitter screen_names of users that have access to all routes and api calls
 # see app.auth.route_wrappers or documentation in README

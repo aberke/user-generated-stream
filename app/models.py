@@ -52,9 +52,9 @@ class Stat(db.Document):
 
 
 class Entry(db.EmbeddedDocument):
-	id = db.StringField(required=True) # EmbeddedDocuments don't get Id's
+	id = db.StringField(required=True) # id from twitter/instagram - EmbeddedDocuments don't get Id's
 	stat = db.ReferenceField(Stat, required=True)
-	tweet_id = db.StringField()
+	source = db.StringField() # twitter/instagram
 	created_at = db.DateTimeField(default=datetime.now)
 	text = db.StringField()
 	screen_name = db.StringField()
@@ -66,8 +66,6 @@ class Entry(db.EmbeddedDocument):
 		""" OPP is ObjectId to get passed to Stat """
 		super(Entry, self).__init__(*args, **kwargs)
 		
-		if not self.id:
-			self.id = self.tweet_id
 		if not self.stat:
 			self.stat = Stat(_OPP=OPP)
 			self.stat.save()
@@ -76,7 +74,6 @@ class Entry(db.EmbeddedDocument):
 	def jsonify(self):
 		return {
 			'id': 					self.id,
-		    'tweet_id': 			self.tweet_id,
 		    'screen_name': 			self.screen_name,
 		    'text': 				self.text,
 		    'img_url': 				self.img_url,
@@ -89,7 +86,7 @@ class Entry(db.EmbeddedDocument):
 
 class OPP(db.Document):
 	_user 				= db.ReferenceField('User', default=None)
-	title 				= db.StringField(required=True, unique=True)
+	title 				= db.StringField(required=True)
 	start 				= db.DateTimeField(default=datetime.now)
 	entryList 			= db.ListField(db.EmbeddedDocumentField(Entry))
 	rejectEntryIDList 	= db.ListField(db.StringField())
@@ -132,19 +129,19 @@ class OPP(db.Document):
 
 	def acceptEntry(self, entry_data):
 		# take out of the rejectEntryIDList if it was there
-		OPP.objects(id=self.id).update(pull__rejectEntryIDList=entry_data['tweet_id'])
+		OPP.objects(id=self.id).update(pull__rejectEntryIDList=entry_data['id'])
 		
 		bad_data_error = Exception('Must create Entry with text as string and created_at as isoformatted string')
 		try:
 			created_at = dateutil.parser.parse(entry_data['created_at'])
-			entry = Entry(OPP=self.id, tweet_id=entry_data['tweet_id'], screen_name=entry_data['screen_name'], text=entry_data['text'], img_url=entry_data['img_url'], created_at=created_at)
+			entry = Entry(OPP=self.id, id=entry_data['id'], screen_name=entry_data['screen_name'], text=entry_data['text'], img_url=entry_data['img_url'], created_at=created_at)
 		except:
 			raise bad_data_error
 		OPP.objects(id=self.id).update(push__entryList=entry)
 
-	def rejectEntry(self, tweet_id):
-		OPP.objects(id=self.id).update(pull__entryList__tweet_id=tweet_id)
-		OPP.objects(id=self.id).update(add_to_set__rejectEntryIDList=tweet_id) # add value to a list only if its not in the list already
+	def rejectEntry(self, id):
+		OPP.objects(id=self.id).update(pull__entryList__id=id)
+		OPP.objects(id=self.id).update(add_to_set__rejectEntryIDList=id) # add value to a list only if its not in the list already
 
 	def remove(self):
 		""" OPP responsible for removing all Stats of its Entries """
@@ -168,7 +165,7 @@ class OPP(db.Document):
 		    'title': self.title,
 		    'start': self.start.isoformat(),
 		    'entryList': [e.jsonify() for e in self.entryList],
-		    'entryIDList': [e.jsonify()['tweet_id'] for e in self.entryList], 
+		    'entryIDList': [e.jsonify()['id'] for e in self.entryList], 
 		    'rejectEntryIDList': self.rejectEntryIDList,
 		    'share_link': self.share_link,
 		}

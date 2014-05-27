@@ -1,5 +1,6 @@
 from urllib import urlencode
 import dateutil.parser
+from datetime import datetime
 
 import config
 from app.auth import twitter
@@ -26,7 +27,6 @@ def filter_data(statuses):
 		filtered_data = {}
 		# if no photo - not interested in entry.  else: parse out the url of the photo
 		if (('entities' not in status) or ('media' not in status['entities'])):
-			print('-----NOT------------')
 			continue
 		for m in status['entities']['media']:
 			if m['type'] == 'photo':
@@ -35,10 +35,11 @@ def filter_data(statuses):
 		if 'img_url' not in filtered_data:
 			continue
 
-		filtered_data['text'] = status['text']
-		filtered_data['tweet_id'] = status['id_str']
-		filtered_data['screen_name'] = status['user']['screen_name']
-		filtered_data['created_at'] = status['created_at']
+		filtered_data['id'] 		   = status['id_str']
+		filtered_data['text'] 		   = status['text']
+		filtered_data['source'] 	   = 'twitter'
+		filtered_data['created_at']    = status['created_at'] # isoformatted string
+		filtered_data['screen_name']   = status['user']['screen_name']
 		filtered_data['retweet_count'] = status['retweet_count']
 
 		filtered_statuses.append(filtered_data)
@@ -53,7 +54,6 @@ def search(query):
 
 	Returns (filtered_statuses, next_max_id)
 	"""
-	print('----------- search query--------------', query)
 	if not query: return (None, None)
 
 	response = twitter.get('search/tweets.json?' + query)
@@ -61,8 +61,6 @@ def search(query):
 	if 'errors' in data:
 		raise Exception(str(data['errors']))
 		
-	metadata = response.data['search_metadata']
-	next_query = metadata['next_results'] if 'next_results' in metadata else None
 	(filtered_statuses, min_id) = filter_data(response.data['statuses'])
 
 	return (filtered_statuses, min_id - 1)
@@ -78,6 +76,7 @@ def searchHashtag(hashtag, since=None, max_id=None, filter_links=True, exclude_r
 	query['q'] = ('#' + hashtag)
 	if since:
 		# since should be an iso formatted date string
+		if isinstance(since, datetime): since = since.isoformat()
 		since = dateutil.parser.parse(since).strftime(date_format)
 		query['q'] += ('+since:' + since)
 	if max_id:
