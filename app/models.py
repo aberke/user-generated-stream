@@ -4,6 +4,8 @@ from pymongo import ReadPreference
 from datetime import datetime
 import dateutil.parser
 
+from mongoengine.connection import _connection_settings
+
 import config
 
 #from app import app
@@ -12,14 +14,16 @@ from util import yellERROR
 """
 With Mongo
 """
+print('********* _connection_settings', _connection_settings)
 
 connect(
 		config.MONGODB_DB, 
 		host=config.MONGODB_HOST,
 		read_preference=ReadPreference.SECONDARY,
-		replicaSet='rs',
+		replicaSet='set-5384a00401d11a55b7003af2',
 	)
 
+print('********* _connection_settings', _connection_settings)
 
 
 class Stat(Document):
