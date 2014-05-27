@@ -16,7 +16,8 @@ With Mongo
 connect(
 		config.MONGODB_DB, 
 		host=config.MONGODB_HOST,
-		read_preference=ReadPreference.SECONDARY
+		read_preference=ReadPreference.SECONDARY,
+		replicaSet=True,
 	)
 
 
