@@ -1,5 +1,6 @@
 #from flask.ext.mongoengine import MongoEngine
 from mongoengine import *
+from pymongo import ReadPreference
 from datetime import datetime
 import dateutil.parser
 
@@ -12,7 +13,11 @@ from util import yellERROR
 With Mongo
 """
 
-connect(config.MONGODB_DB, host=config.MONGODB_HOST)
+connect(
+		config.MONGODB_DB, 
+		host=config.MONGODB_HOST,
+		read_preference=ReadPreference.SECONDARY
+	)
 
 
 
