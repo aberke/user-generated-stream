@@ -23,8 +23,6 @@ if MONGOHQ_URL:
 if ENVIRONMENT == 'TESTING':
 	MONGODB_DB 	= "testing"
 
-print('***************** MONGODB_HOST = ',MONGODB_HOST)
-
 # ---------------------------------- MONGO -
 
 

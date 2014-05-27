@@ -29,11 +29,11 @@ $ source venv/bin/activate
 * Make sure you have mongodb installed ```$ brew install mongodb```
 * Make sure mongodb is started ```$ mongod```
 * Obtain and set the environment variables that do not have defaults
-	- Note: The twitter variables can be found in our user-generated-stream twitter app, or you can create a new twitter app.  They're used for user signin and querying the twitter API
+	- The twitter variables can be found in our user-generated-stream twitter app, or you can create a new twitter app.  They're used for user signin and querying the twitter API
+	- The instagram variables can be found in the user-generated-stream instagram app, or you can create a new instagram app.  They're used for querying instagram API
 
 ```
-$ source TWITTER_CONSUMER_KEY='XXXXXXXXXXXXX'
-$ source TWITTER_CONSUMER_SECRET='XXXXXXXXXXXXX'
+$ source TWITTER_CONSUMER_KEY='XXX',TWITTER_CONSUMER_SECRET='XXX', INSTAGRAM_CLIENT_ID='XXX',INSTAGRAM_CLIENT_SECRET='XXX'
 ```
 
 * Run 'er: ```python run.py```
@@ -61,7 +61,7 @@ Production Notes
 	- AngularJS frontend
 - 2 Web dynos
 - MongoHQ database (using MongoEngine as driver)
-	- view logs: <https://partners.mongohq.com/app24775728-heroku-com/mongo/app24775728/monitoring>
+	- view logs/info: <https://partners.mongohq.com/app24775728-heroku-com/mongo/app24775728/monitoring>
 	- Read preference set to ReadPreference.SECONDARY
 
 
@@ -69,11 +69,6 @@ TODO
 ---
 
 - center widget
-
-- pull from instagram as well
-
-- get a replica set (MongoHQ) and configure app to read from replica set
-	- see Randall's help below
 
 
 Necessary Tests
