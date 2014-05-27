@@ -8,7 +8,7 @@ PORT = os.getenv('PORT', 3000)
 # - MONGO ----------------------------------
 
 # set Development defaults
-MONGODB_DB 			= "OPP"
+MONGODB_DB 			= "OPP" # required parameter of mongoengine.connect()
 # THE CHANGE	
 #MONGODB_HOST 		= "localhost"
 MONGODB_HOST		= "mongodb://localhost:27017/OPP"

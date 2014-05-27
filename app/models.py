@@ -1,24 +1,27 @@
-from flask.ext.mongoengine import MongoEngine
+#from flask.ext.mongoengine import MongoEngine
+from mongoengine import *
 from datetime import datetime
 import dateutil.parser
 
-from app import app
+import config
+
+#from app import app
 from util import yellERROR
 
 """
 With Mongo
 """
 
-db = MongoEngine(app)
+connect(config.MONGODB_DB, host=config.MONGODB_HOST)
 
 
 
-class Stat(db.Document):
+class Stat(Document):
 	""" _OPP id allows deletion of stat when OPP deleted """
-	_OPP 	 		= db.ObjectIdField(default=None)
-	fb_count 		= db.IntField(default=0)
-	email_count 	= db.IntField(default=0)
-	twitter_count 	= db.IntField(default=0)
+	_OPP 	 		= ObjectIdField(default=None)
+	fb_count 		= IntField(default=0)
+	email_count 	= IntField(default=0)
+	twitter_count 	= IntField(default=0)
 
 
 	@staticmethod
@@ -51,16 +54,16 @@ class Stat(db.Document):
 
 
 
-class Entry(db.EmbeddedDocument):
-	id = db.StringField(required=True) # id from twitter/instagram - EmbeddedDocuments don't get Id's
-	stat = db.ReferenceField(Stat, required=True)
-	source = db.StringField() # twitter/instagram
-	created_at = db.DateTimeField(default=datetime.now)
-	text = db.StringField()
-	screen_name = db.StringField()
-	text = db.StringField()
-	img_url = db.URLField()
-	retweet_count = db.IntField(default=0)
+class Entry(EmbeddedDocument):
+	id = StringField(required=True) # id from twitter/instagram - EmbeddedDocuments don't get Id's
+	stat = ReferenceField(Stat, required=True)
+	source = StringField() # twitter/instagram
+	created_at = DateTimeField(default=datetime.now)
+	text = StringField()
+	screen_name = StringField()
+	text = StringField()
+	img_url = URLField()
+	retweet_count = IntField(default=0)
 
 	def __init__(self, OPP=None, *args, **kwargs):
 		""" OPP is ObjectId to get passed to Stat """
@@ -84,13 +87,13 @@ class Entry(db.EmbeddedDocument):
 		}
 
 
-class OPP(db.Document):
-	_user 				= db.ReferenceField('User', default=None)
-	title 				= db.StringField(required=True)
-	start 				= db.DateTimeField(default=datetime.now)
-	entryList 			= db.ListField(db.EmbeddedDocumentField(Entry))
-	rejectEntryIDList 	= db.ListField(db.StringField())
-	share_link 			= db.URLField()
+class OPP(Document):
+	_user 				= ReferenceField('User', default=None)
+	title 				= StringField(required=True)
+	start 				= DateTimeField(default=datetime.now)
+	entryList 			= ListField(EmbeddedDocumentField(Entry))
+	rejectEntryIDList 	= ListField(StringField())
+	share_link 			= URLField()
 
 
 	def __init__(self, user=None, json_data=None, start=None, title=None, **kwargs):
@@ -171,10 +174,10 @@ class OPP(db.Document):
 		}
 
 
-class User(db.Document):
-	twitter_id 			= db.StringField(required=True, unique=True)
-	twitter_screen_name = db.StringField(required=True)
-	OPPlist 			= db.ListField(db.ReferenceField(OPP))
+class User(Document):
+	twitter_id 			= StringField(required=True, unique=True)
+	twitter_screen_name = StringField(required=True)
+	OPPlist 			= ListField(ReferenceField(OPP))
 
 
 	@staticmethod
