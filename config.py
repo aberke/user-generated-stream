@@ -26,11 +26,11 @@ HEROKU_MONGODB_URL 	= os.environ.get("MONGOHQ_URL", None)
 if HEROKU_MONGODB_URL:
 	db_info 		= urlparse(HEROKU_MONGODB_URL)
 
-	MONGODB_DB		= db_info.path.replace('/', '')
-	MONGODB_HOST 	= db_info.hostname
-	MONGODB_PORT 	= db_info.port
-	MONGODB_USERNAME= db_info.username
-	MONGODB_PASSWORD= db_info.password
+	# MONGODB_DB		= db_info.path.replace('/', '')
+	# MONGODB_HOST 	= db_info.hostname
+	# MONGODB_PORT 	= db_info.port
+	# MONGODB_USERNAME= db_info.username
+	# MONGODB_PASSWORD= db_info.password
 
 	# THE CHANGE
 	MONGODB_HOST 	= HEROKU_MONGODB_URL
