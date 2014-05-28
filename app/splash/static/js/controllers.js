@@ -27,7 +27,6 @@ function MainCntl($scope, $location, UserFactory) {
 	var init = function(){
 		UserFactory.then(function(user) {
 			$scope.user = user;
-			console.log('user', $scope.user)
 		});
 	}
 	init();
@@ -40,7 +39,6 @@ function IndexCntl($scope, $rootScope, APIservice, WidgetService) {
 		APIservice.GET('/opp/all').then(function(data) {
 			$scope.OPPlist = data;
 			WidgetService.loadOscript();
-			console.log('OPPlist', $scope.OPPlist)
 		});
 	}
 	$scope.deleteOPP = function(OPP) {
@@ -187,7 +185,6 @@ function UpdateCntl($scope, APIservice, OPPservice, FormService, WidgetService, 
 	}
 
 	var init = function() {
-		console.log('opp', $scope.opp)
 		$scope.allEntries = [];
 		$scope.rejectEntryList = [];
 		$scope.pendingEntryList = [];

@@ -3,9 +3,7 @@
 	Here is what it does:  looks for any item with the 'data-huffpostlabs-btn'
 
 */
-
 var HuffpostLabsBtnMaster = function(context) {
-
 	this.context = (context || document);
 	this.btns = [];
 
@@ -33,15 +31,21 @@ var HuffpostLabsBtnMaster = function(context) {
 
 
 
-
 var HuffpostLabsBtn = function(element, handler) {
-  this.element = element;
-  this.handler = handler;
+	this.element = element;
+	this.handler = handler;
 
-  element.addEventListener('touchstart', this, false);
-  element.addEventListener('click', this, false);
+	element.addEventListener('touchstart', this, false);
+	element.addEventListener('click', this, false);
 };
+/* :hover lingers on iOS safari, so using .hover class to fake :hover styles */
+HuffpostLabsBtn.prototype.addFakeHover = function() {
+	this.element.className += " hover";
+}
+HuffpostLabsBtn.prototype.removeFakeHover = function() { // called by reset()
+	this.element.className = this.element.className.replace(/\bhover\b/g, '');
 
+}
 HuffpostLabsBtn.prototype.handleEvent = function(event) {
 	switch (event.type) {
 		case 'touchstart': this.onTouchStart(event); break;
@@ -61,9 +65,7 @@ HuffpostLabsBtn.prototype.onTouchStart = function(event) {
 	/* Save reference to the touchstart and listen to touchmove and touchend events. 
 	Call stopPropagation so that event only handled once */
 	event.stopPropagation();
-
-	// add .hover class
-	this.element.className += " hover";
+	this.addFakeHover();
 
 	this.element.addEventListener('touchend', this, false);
 	document.body.addEventListener('touchmove', this, false);
@@ -78,13 +80,12 @@ HuffpostLabsBtn.prototype.onClick = function(event) {
 
 	if (event.type == 'touchend') {
 		HuffpostLabsClickBuster.preventGhostClick(this.startX, this.startY);
-		// remove .hover class
-		this.element.className = this.element.className.replace(/\bhover\b/, '');
 	}
 };
 HuffpostLabsBtn.prototype.reset = function() {
 	this.element.removeEventListener('touchend', this, false);
 	document.body.removeEventListener('touchmove', this, false);
+	this.removeFakeHover();
 };
 
 
@@ -93,7 +94,7 @@ window.HuffpostLabsClickBuster = new function() {
 	/* code heavily borrowed from google.clickbuster 
 		
 		Reason for this object:
-			Don't fire onclick events that have already be handled.
+			Don't fire onclick events that have already been handled.
 			Catch onclicks that are dangerously close to touchend events that previously occured
 	*/
 	var coordinates = [];

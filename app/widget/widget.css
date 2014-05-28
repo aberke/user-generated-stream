@@ -96,6 +96,9 @@
 	display: inline-block;
 	vertical-align: middle;
 }
+.huffpostlabs-opp .share-container .share{
+	cursor: pointer;
+}
 .huffpostlabs-opp .share-container .fb-share,
 .huffpostlabs-opp .share-container .twitter-share,
 .huffpostlabs-opp .share-container .email-share{
@@ -104,19 +107,18 @@
 .huffpostlabs-opp .share-container .share-btn-swap{
 	display: none;
 }
-.huffpostlabs-opp .share-container .share:hover .share-btn-swap{
+.huffpostlabs-opp.non-mobile .share-container .share:hover .share-btn-swap,
+.huffpostlabs-opp.mobile .share-container .share.hover .share-btn-swap{
 	display: inline-block;
 }
-.huffpostlabs-opp .share-container .share:hover .share-btn{
+.huffpostlabs-opp.non-mobile .share-container .share:hover .share-btn,
+.huffpostlabs-opp.mobile .share-container .share.hover .share-btn{
 	display: none;
 }
-.huffpostlabs-opp .share-container .share{
-	cursor: pointer;
-}
-.huffpostlabs-opp .share-container .email-share-btn:hover{
+.huffpostlabs-opp.mobile .share-container .share.hover .email-share-btn,
+.huffpostlabs-opp.non-mobile .share-container .share:hover .email-share-btn{
 	opacity: 0.8;
 }
-
 
 .huffpostlabs-opp .touch {
 	cursor: pointer;
