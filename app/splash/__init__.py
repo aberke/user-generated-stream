@@ -11,13 +11,13 @@ splash = Blueprint('splash', __name__, static_url_path='', static_folder='static
 
 @splash.route('/')
 @splash.route('/opp/<oppID>')
-def unprotected_view(oppID=None):
-	return send_file('splash/static/html/base.html')
-
-
 @splash.route('/update/<oppID>')
-@opp_ownership_required
-def protected_view(opp):
+def send_base(oppID=None):
+	"""
+	View protection handled client side
+		- if user not logged in, redirected to '/'
+	"""
 	return send_file('splash/static/html/base.html')
+
 
 
