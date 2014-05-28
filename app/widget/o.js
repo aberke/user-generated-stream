@@ -16,8 +16,10 @@
 			- if on our own host or in development, we care to see changes right away, not cache
 	 */
 	var static_domain = 'http://opp.huffingtonpost.com';
-	if (window.location.origin == domain || window.location.origin.match(new RegExp('http://localhost', 'g'))) {
-		static_domain = domain;
+	if (window.location.origin) { /* ie doesn't have window.location.origin - but this is just for using the tool*/
+		if (window.location.origin == domain || window.location.origin.match(new RegExp('http://localhost', 'g'))) {
+			static_domain = domain;
+		}
 	}
 
 
