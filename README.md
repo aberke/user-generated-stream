@@ -72,8 +72,6 @@ TODO
 
 - in create -- unclear ui with # in placeholder
 
-- make sure works well on phones
-
 - cross browser testing
 
 
