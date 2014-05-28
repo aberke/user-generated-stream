@@ -70,6 +70,8 @@ TODO
 
 - center widget
 
+- in create -- unclear ui with # in placeholder
+
 
 Necessary Tests
 ---

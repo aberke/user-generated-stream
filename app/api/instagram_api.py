@@ -52,11 +52,10 @@ def filter_data(results, since):
 	since = since.replace(tzinfo=None) # need to make datetime naive to compare with other naive date
 
 	next_max_id = results['pagination']['next_max_tag_id'] if 'next_max_tag_id' in results['pagination'] else 0
-	entries = results['data']
+	raw_entries = results['data']
 
 	filtered_entries = []
-
-	for e in entries:
+	for e in raw_entries:
 		filtered_e = {'source': 'instagram'}
 		
 		# as soon as post older than since date found, stop looking
@@ -71,13 +70,13 @@ def filter_data(results, since):
 			continue
 
 		filtered_e['id'] 		  = e['id']
-		filtered_e['text'] 		  = e['caption']['text'] if 'text' in e['caption'] else None
+		# e['caption'] sometimes null -- avoid error
+		filtered_e['text'] 		  = e['caption']['text'] if (e['caption'] and 'text' in e['caption']) else None
 		filtered_e['source'] 	  = 'instagram'
 		filtered_e['img_url']     = e['images']['low_resolution']['url']
 		filtered_e['screen_name'] = e['user']['username']
-
+		
 		filtered_entries.append(filtered_e)
-
 	return (filtered_entries, next_max_id)
 
 

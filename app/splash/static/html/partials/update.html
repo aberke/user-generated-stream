@@ -25,7 +25,13 @@
 	</div>
 
 	<ul ng-class="(showTab||'widget')" class="nav nav-tabs tab-control">
-		<li class='data-tab widget-tab' ng-click="showTab='widget'" ng-class="{'active':!showTab||showTab=='widget'}" ng-click="showTab='widget'">
+		<li class='data-tab pending-instagram-tab' ng-class="{'active':!showTab||showTab=='pending-instagram'}" ng-click="showTab='pending-instagram'">
+			<a>Pending: Instagram</a>
+		</li>
+		<li class='data-tab pending-twitter-tab' ng-class="{'active':showTab=='pending-twitter'}" ng-click="showTab='pending-twitter'">
+			<a>Pending: Twitter</a>
+		</li>
+		<li class='data-tab widget-tab' ng-click="showTab='widget'" ng-class="{'active':showTab=='widget'}" ng-click="showTab='widget'">
 			<a>Widget</a>
 		</li>
 		<li class='data-tab accepted-tab' class='data-tab widget-tab' ng-click="showTab='accepted'" ng-class="{'active':showTab=='accepted'}" >
@@ -34,15 +40,17 @@
 		<li class='data-tab rejected-tab' ng-class="{'active':showTab=='rejected'}" ng-click="showTab='rejected'">
 			<a>Rejected</a>
 		</li>
-		<li class='data-tab pending-twitter-tab' ng-class="{'active':showTab=='pending-twitter'}" ng-click="showTab='pending-twitter'">
-			<a>Pending: Twitter</a>
-		</li>
-		<li class='data-tab pending-instagram-tab' ng-class="{'active':showTab=='pending-instagram'}" ng-click="showTab='pending-instagram'">
-			<a>Pending: Instagram</a>
-		</li>
 	</ul>
 
-	<div ng-show="!showTab||showTab=='widget'" class='tab-content widget-row'>
+	<div ng-show="!showTab||showTab=='pending-instagram'" class='tab-content entry-list-container pending-entries-instagram'>
+		<div entry-list="pendingEntryListInstagram" class='row entry-container' ng-repeat="e in pendingEntryListInstagram"></div>
+	</div>
+
+	<div ng-show="showTab=='pending-twitter'" class='tab-content entry-list-container pending-entries-twitter'>
+		<div entry-list="pendingEntryList" class='row entry-container' ng-repeat="e in pendingEntryList"></div>
+	</div>
+
+	<div ng-show="showTab=='widget'" class='tab-content widget-row'>
 		<div class='row'>
 			<div class='widget-container col-md-6'>
 				<div class="huffpostlabs-opp" id="{{opp.id}}"></div>
@@ -53,6 +61,9 @@
 				<div class='info'>
 					<p><strong>Entries Accepted: </strong>{{opp.entryList.length}}</p>
 					<p><strong>Entries Rejected: </strong>{{opp.rejectEntryIDList.length}}</p>
+
+					<p><strong>Embed Code</strong></p>
+					<pre class="embed-code">&lt;div class="huffpostlabs-opp" id="{{opp.id}}"&gt;&lt;/div&gt;&lt;script src="http://opp.huffingtonpost.com/widget/o.js"&gt;&lt;/script&gt;&lt;p id="labs-credit"&gt;&lt;a href="http://code.huffingtonpost.com"&gt;Product by &lt;img height="23px" src="http://quiz.huffingtonpost.com/img/huffpostLABS_outline.png" /&gt;&lt;/a&gt;&lt;/p&gt;</pre>
 				</div>
 
 				<form name="updateForm">
@@ -72,14 +83,6 @@
 
 	<div ng-show="showTab=='rejected'" class='tab-content entry-list-container rejected-entries'>
 		<div entry-list="rejectEntryList" class='row entry-container' ng-repeat="e in rejectEntryList"></div>
-	</div>
-
-	<div ng-show="showTab=='pending-twitter'" class='tab-content entry-list-container pending-entries-twitter'>
-		<div entry-list="pendingEntryList" class='row entry-container' ng-repeat="e in pendingEntryList"></div>
-	</div>
-
-	<div ng-show="showTab=='pending-instagram'" class='tab-content entry-list-container pending-entries-instagram'>
-		<div entry-list="pendingEntryListInstagram" class='row entry-container' ng-repeat="e in pendingEntryListInstagram"></div>
 	</div>
 
 	<div class='showing-entries'>

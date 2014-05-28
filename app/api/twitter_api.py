@@ -41,8 +41,8 @@ def filter_data(statuses):
 		filtered_data['created_at']    = status['created_at'] # isoformatted string
 		filtered_data['screen_name']   = status['user']['screen_name']
 		filtered_data['retweet_count'] = status['retweet_count']
-
 		filtered_statuses.append(filtered_data)
+
 	return (filtered_statuses, min_id)
 
 
@@ -62,7 +62,6 @@ def search(query):
 		raise Exception(str(data['errors']))
 		
 	(filtered_statuses, min_id) = filter_data(response.data['statuses'])
-
 	return (filtered_statuses, min_id - 1)
 
 # format in which twitter wants to accept dates in query

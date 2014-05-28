@@ -74,6 +74,7 @@ function IndexCntl($scope, $rootScope, APIservice, WidgetService) {
 	init();
 }
 function UpdateCntl($scope, APIservice, OPPservice, FormService, WidgetService, opp) {
+	$scope.showTab = 'pending-instagram';
 	$scope.opp = opp;
 
 	// initialized in init
@@ -118,9 +119,13 @@ function UpdateCntl($scope, APIservice, OPPservice, FormService, WidgetService, 
 	}
 
 	var searchEntries = function(source, callback) {
+		// don't search if there's nothing more to get
+		if (next_max_id[source] && next_max_id[source] <= 0) { return callback(); }
+
 		var params = searchParams(source);
 		APIservice.GET('/opp/' + opp.id + '/search', params).then(function(ret) {
-			if (callback) { callback(); }
+			// ready for next call to server
+			callback();
 			next_max_id[source] = ret.next_max_id;
 			filterEntries(ret.data, source);
 		});
@@ -128,9 +133,9 @@ function UpdateCntl($scope, APIservice, OPPservice, FormService, WidgetService, 
 	$scope.loadMoreEntries = function() {
 		$scope.loadingMoreEntries = true;
 		$scope.moreEntries = false;
-
-		searchEntries('twitter', function() {
-			searchEntries('instagram', function() {
+		// search instagram first since that tab shown first
+		searchEntries('instagram', function() {
+			searchEntries('twitter', function() {
 				/*  max_id of <= 0 signifies no more to search for  */
 				if (next_max_id['twitter'] > 0 || next_max_id['instagram'] > 0) { $scope.moreEntries = true; }
 				$scope.loadingMoreEntries = false;
