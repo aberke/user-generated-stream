@@ -134,6 +134,7 @@ def GETopp(oppID):
 def POSTopp(userID):
 	"""  """
 	data = json.loads(request.data)
+	print('POSTopp -----------------', data)
 	try:
 		user = User.find(userID)
 		opp = OPP(user=user, json_data=data)

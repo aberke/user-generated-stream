@@ -12,6 +12,10 @@ function MainCntl($scope, $location, UserFactory) {
 	$scope.createNew = function() {
 		$scope.showNew = true;
 	}
+	$scope.cancelNew = function() {
+		// called from within scope of NewCntl
+		$scope.showNew = false;
+	}
 
 
 	$scope.goTo = function(path) {
@@ -197,18 +201,28 @@ function UpdateCntl($scope, APIservice, OPPservice, FormService, WidgetService, 
 	init();
 }
 function NewCntl($scope, $location, APIservice, FormService) {
-	$scope.error;
 	$scope.opp;
+	$scope.step;
 
 	$scope.create = function(opp) {
-		$scope.error = {};
+		if (!FormService.validOPP) { 
+			return false; 
+		}
 		APIservice.POST('/opp', opp).then(function(data) {
 			console.log('POST returned data',data)
 			$location.path('/update/' + data.id);
 		});
 	}
 	var init = function() {
-		$scope.opp = {};
+		$scope.opp = {'widget_type': null};
+		$scope.step = 0;
+
+		$scope.$watch('opp.widget_type', function(n,o) {
+			if (n) { $scope.step = 1; }
+		});
+		$scope.$watch('opp.via', function(n,o) {
+			if (n) { $scope.step = 2; }
+		});
 	}
 	init();
 }

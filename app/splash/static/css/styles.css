@@ -51,12 +51,72 @@ input.error {
 }
 
 /********* new partial ***********/
-#new-partial {
+#new-partial .panel {
+	max-width: 900px;
+	margin: auto;
 }
-#new-partial .title {
-	display: inline;
-	margin: 0 30px;
+#new-partial .panel-body {
+	padding: 0px 40px 20px 40px;
 }
+#new-partial .cancel-new-btn {
+	color: red;
+	padding: 10px;
+}
+#new-partial .show-group,
+#new-partial .create-btn-container {
+	float: left;
+	width: 100%;
+	margin: 5px 0px;
+}
+
+#new-partial .show-group,
+#new-partial .input-group {
+	padding: 15px;
+}
+#new-partial .show-group .start { /* special case - lumped with title */
+	margin-top: 20px;
+	float: left;
+	width: 100%;
+}
+#new-partial .show-group.selected,
+#new-partial .input-group,
+#new-partial .show-group:hover {
+	background-color: cornsilk;
+	cursor: pointer;
+}
+#new-partial .input-side {
+	padding: 0px 10px 0 40px;
+}
+#new-partial .input-side input {
+	margin: 0 7px;
+}
+#new-partial .input-side p.explainer {
+	color: gray;
+}
+#new-partial .group-title,
+#new-partial .group-value {
+	height: 30px;
+}
+#new-partial .group-title {
+	float: left;
+}
+#new-partial .group-value {
+	float: right;
+	padding: 0px 10px;
+	border-bottom: 2px solid black;
+	min-width: 160px;
+	display: inline-block;
+}
+#new-partial .group-side .new,
+#new-partial .group-side .type {
+	display: inline-block;
+}
+#new-partial .show-side .type {
+	min-width: 160px;
+	padding: 0px 10px;
+	border-bottom: 2px solid black;
+}
+
 
 /********* new partial above ***********/
 

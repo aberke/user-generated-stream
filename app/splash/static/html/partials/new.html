@@ -1,0 +1,75 @@
+<div ng-controller='NewCntl' id='new-partial' class='container'>
+    <div class="panel panel-default">
+        <a ng-click="cancelNew()" href="" class='cancel-new-btn'>X</a>
+        <div class="panel-body row">
+            <div class='col-md-6 show-side'>
+                <h3 ng-click='step=0' ng-class="{'selected':step==0}" class='show-group'>
+                    <span class='group-title'>New</span>
+                    <span class='group-value'>{{opp.widget_type}}</span>
+                </h3>
+                <h3 ng-click='step=1' ng-class="{'selected':step==1}" ng-show="opp.widget_type" class='show-group'>
+                    <span class='group-title'>via</span>
+                    <span class='group-value'>{{opp.via}}</span>
+                </h3>
+                <h3 ng-click='step=2' ng-class="{'selected':step==2}" ng-show="opp.widget_type&&opp.via" class='show-group'>
+                    <span class='group-title'>Title</span>
+                    <span class='group-value'>
+                        <span ng-show="opp.via=='social'">#</span>
+                        {{opp.title}}</span>
+
+                    <span class='start' ng-show="opp.via=='social'&&opp.title">
+                        <span class='group-title'>Start</span>
+                        <span class='group-value'>{{opp.start | date:'MM/dd/yyyy'}}</span>
+                    </span>
+                </h3>
+                <div ng-show="opp.widget_type&&opp.via&&opp.title&&(opp.via=='editor'||opp.start)" class='create-btn-container'>
+                    <button ng-click="create(opp)" class='btn btn-default'>create</button>
+                </div>
+            </div>
+
+            <form name='newOPPform' class='col-md-6 input-side'>
+                <div ng-show="step==0" class='type input-group'>
+                    <label>slideshow</label>
+                    <input ng-model="opp.widget_type" value="slideshow" type='radio'>
+                    <p class='explainer'>A slideshow swipes from one entry slide to the next.  Users can slide back.  Slides are ordered by how often they've been shared.</p>
+
+                    <label>poll</label>
+                    <input ng-model="opp.widget_type" value="poll" type='radio'>
+                    <p class='explainer'>A poll slides to the next slide whether the user swiped left or right.  A swipe left indicates a down-vote, a swipe right indicates an up-vote.  Poll results shown to user after they've voted on all slides.</p>
+                </div>
+                <div ng-show="step==1" class='via input-group'>
+                    <label>#social</label>
+                    <input ng-model="opp.via" value="social" type='radio'>
+                    <p class='explainer'>
+                        Slide entries will be images pulled from instagram and twitter that were posted with your {{opp.widget_type}}'s title as a #hashtag
+                    </p>
+                    <label>editor</label>
+                    <input ng-model="opp.via" value="editor" type='radio'>
+                    <p class='explainer'>
+                        You will create each slide with an image, header, and text rather than pulling slide entries from twitter and instagram.
+                    </p>
+                </div>
+                <div ng-show="step==2" class='title input-group'>
+                    <label>title</label>
+                    <input maxlength="25" ng-model="opp.title" type='text'>
+                    (25 character limit)
+                    <p ng-show="opp.via=='social'" class='explainer'>
+                        Entries for {{opp.widget_type}} will be pulled from twitter and instagram as posts with images that were tagged with the #title.
+                    </p>
+                    <p ng-show="opp.via=='editor'" class='explainer'>
+                        Title will be shown at the top of the widget.  Example: VMA's Best Dressed
+                    </p>
+                </div>
+                <div ng-show="step==2&&opp.via=='social'&&opp.title" class='start input-group'>
+                    <label>start</label>
+                    <start-date-selection edit="true" opp='opp'></start-date-selection>
+                    <p class='explainer'>
+                        Earliest date from which twitter and instagram posts will be pulled.  Eg, for start 3/4/2014, {{opp.widget_type}} will not pull posts from twitter and instagram that were tagged before 3/4/2014.
+                    </p>
+                </div>
+
+            </form>
+        
+        </div>
+    </div>
+</div>

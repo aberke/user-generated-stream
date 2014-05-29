@@ -70,8 +70,6 @@ TODO
 
 - center widget
 
-- in create -- unclear ui with # in placeholder
-
 - cross browser testing
 
 
@@ -85,13 +83,20 @@ Necessary Tests
 
 - reject/accept entries
 
+- Front end tests:
+	- Form service
 
 
 Types
 ---
-Slideshow
-	- from social campaign
-	- from editor
+
+widget-type:
+	slideshow
+	poll
+via:
+	social
+	editor
+
 
 
 

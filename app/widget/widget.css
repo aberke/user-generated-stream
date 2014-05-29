@@ -40,15 +40,16 @@
 .huffpostlabs-opp .slide-info .campaign-name,
 .huffpostlabs-opp .slide-info .slide-count {
 	display: inline-block;
-	width: 49%;
 } 
 .huffpostlabs-opp .slide-info .campaign-name{
 	text-align: left;
 	font-size: 16px;
 	font-weight: bold;
+	width: 80%;
 }
 .huffpostlabs-opp .slide-info .slide-count {
 	text-align: right;
+	width: 18%;
 }
 .huffpostlabs-opp .slide-info .slide-change-arrow{
 	display: inline;

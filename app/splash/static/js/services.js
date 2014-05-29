@@ -1,7 +1,24 @@
 
 var FormService = function() {
-
-
+  
+  this.validOPP = function(opp) {
+    /* returns true if OPP valid, false if not
+       used by createOPP in new form
+    */
+    if (!(opp.widget_type=='poll'||opp.widget_type=='slideshow')) {
+      return false;
+    }
+    if (!(opp.via=='editor'||opp.via=='social')) {
+      return false;
+    }
+    if (!opp.title.length) {
+      return false;
+    }
+    if (opp.via=='social'&&(!opp.start || !opp.start instanceof Date)) {
+      return false;
+    }
+    return true;
+  }
 }
 var OPPservice = function() {
   /* handles backend to javascript front end data type transition */

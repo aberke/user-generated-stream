@@ -17,7 +17,9 @@ SCHEMAS:
 		twitter_screen_name 
 
 	OPP
-		_user 		
+		_user
+		widget_type: slideshow/poll
+		via: 		 social/editor 		
 		title 		
 		start 				
 		entryList: [ { (embedded document)	
@@ -25,17 +27,18 @@ SCHEMAS:
 						stat (Stat)
 						source
 						created_at
-						text
 						screen_name
 						text
 						img_url
 						retweet_count
 		}, ...] 	
-		rejectEntryIDList: [ list of twitter/instagram post ids ]
+		rejectEntryIDList: [ list of twitter/instagram post ids ] (empty if via=='editor')
 		share_link
 
 	STAT 
 		_OPP 			(ObjectId of OPP for deleting stats with OPP deletion)
+		upvote
+		downvote
 		fb_count 	
 		email_count 
 		twitter_count
@@ -131,14 +134,15 @@ class Entry(EmbeddedDocument):
 
 class OPP(Document):
 	_user 				= ReferenceField('User', default=None)
-	title 				= StringField(required=True)
-	start 				= DateTimeField(default=datetime.now)
-	entryList 			= ListField(EmbeddedDocumentField(Entry))
-	rejectEntryIDList 	= ListField(StringField())
+	widget_type 		= StringField(default='slideshow', choices=('slideshow', 'poll')) # default for backwards compatibility
+	via			 		= StringField(default='social', choices=('social', 'editor')) # default for backwards compatibility
+	title 				= StringField(required=True, max_length=25)
+	start 				= DateTimeField(default=datetime.now) # only used when via=='social'
+	entryList 			= ListField(EmbeddedDocumentField(Entry), default=list)
+	rejectEntryIDList 	= ListField(StringField(), default=list) # only used when via=='social'
 	share_link 			= URLField()
 
-
-	def __init__(self, user=None, json_data=None, start=None, title=None, **kwargs):
+	def __init__(self, user=None, json_data=None, **kwargs):
 		""" Constructor called from API with json_data or called internally by Mongo
 				to retrieve document (not instantiating new document and without json_data)
 			If start or title not provided, expects them in json_data dictionary:
@@ -148,13 +152,16 @@ class OPP(Document):
 		super(OPP, self).__init__(**kwargs)
 		if user: self._user = user # watch out for Mongo calling __init__ without user set
 		
-		bad_data_error = Exception('Must create OPP title string and start as isoformatted string')
-		try:
-			self.title = json_data['title'] if not title else title
-			self.start = dateutil.parser.parse(json_data['start']) if not start else start
-		except Exception as e:
-			yellERROR(e)
-			raise bad_data_error
+		if (json_data): # creating new OPP from API with json data
+			bad_data_error = Exception("Must create OPP with widget type ('slideshow'/'poll'), via ('social'/'editor'), title string and start as isoformatted string")
+			try:
+				self.widget_type= json_data['widget_type']
+				self.via 		= json_data['via']
+				self.title 		= json_data['title']
+				self.start 		= dateutil.parser.parse(json_data['start'])
+			except Exception as e:
+				yellERROR(e)
+				raise bad_data_error
 
 	def update(self, data):
 		""" Expects data as dictionary
@@ -177,14 +184,12 @@ class OPP(Document):
 		print('acceptEntry ****', self, entry_data)
 		# take out of the rejectEntryIDList if it was there
 		OPP.objects(id=self.id).update(pull__rejectEntryIDList=entry_data['id'])
-		print('------')
 		bad_data_error = Exception('Must create Entry with text as string and created_at as isoformatted string')
 		try:
 			created_at = dateutil.parser.parse(entry_data['created_at'])
 			entry = Entry(OPP=self.id, id=entry_data['id'], screen_name=entry_data['screen_name'], text=entry_data['text'], img_url=entry_data['img_url'], created_at=created_at)
 		except:
 			raise bad_data_error
-		print('------')
 		OPP.objects(id=self.id).update(push__entryList=entry)
 
 	def rejectEntry(self, id):
@@ -210,6 +215,8 @@ class OPP(Document):
 			'_user_name': self._user.twitter_screen_name if self._user else None,
 			
 			'id': str(self.id),
+			'widget_type': self.widget_type,
+			'via': self.via,
 		    'title': self.title,
 		    'start': self.start.isoformat(),
 		    'entryList': [e.jsonify() for e in self.entryList],
