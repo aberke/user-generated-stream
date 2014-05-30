@@ -41,10 +41,14 @@ var HTMLbuilder = function() {
 		return html;
 	}
 	
-	function addImg(container, img_url, callback) {
+	function setImg(img, img_url, callback) {
+		/* Parameters: image element (img)
+					   URL of image to set img src to (img_url)
+					   callback for when done
+			sets the empty img element's src and aligns the img in its frame
+		*/
 	 	if (!img_url) { return callback(); }
 
-		var img = document.createElement('img');
 		img.onload = function() {
 			if (!img.height) { console.log('ERROR: !img.height'); return callback(); }
 
@@ -63,11 +67,10 @@ var HTMLbuilder = function() {
 			img.style.marginTop = (extra_space/2).toString() + "px";
 			callback();
 		};
-		container.appendChild(img);
 		img.src=img_url;
 	}
-	this.addImages = function(callback) {
-		var imageContainers = this.container.getElementsByClassName('image-container');
+	this.setImages = function(callback) {
+		var imageElements = this.container.getElementsByClassName('entry-image');
 		var called = 0;
 		var waitingOn = this.entryList.length;
 		var call = function() {
@@ -75,7 +78,7 @@ var HTMLbuilder = function() {
 			if (called >= waitingOn) { callback(); }
 		}
 		for (var i=0; i<this.entryList.length; i++) {
-			addImg(imageContainers[i], this.entryList[i].img_url, call);
+			setImg(imageElements[i], this.entryList[i].img_url, call);
 		}
 	}
 	this.buildPicture = function() {
@@ -83,7 +86,9 @@ var HTMLbuilder = function() {
 			html+= "	<div class='picture swipe'>";
 			html+= "		<div class='swipe-wrap'>";
 		for (var i=0; i<this.entryList.length; i++) {
-			html+= "			<div class='image-container image-container-" + i + "'></div>";
+			html+= "			<div class='image-container image-container-" + i + "'>"
+			html+= " 				<img class='entry-image'>"; // filled in by setImages
+			html+= "			</div>";
 		}
 			html+= "		</div>";
 			html+= "	</div>";
@@ -137,7 +142,7 @@ var HTMLbuilder = function() {
 		this.container.innerHTML = html;
 		
 		// add the images to the image-containers
-		this.addImages(callback);
+		this.setImages(callback);
 
 		// pick up the important reusable pieces
 		this.tweetBody = this.container.getElementsByClassName('tweet-body')[0];

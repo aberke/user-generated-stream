@@ -1,4 +1,5 @@
 /* widget directive 
+Mimics HTML-builder 
 
 <huffpostlabs-opp-widget opp=opp entryList=[]></huffpostlabs-opp-widget>
 
@@ -8,26 +9,11 @@ opp and entry should be included as attributes
 */
 
 var oppWidget = function() {
-	/*
-	h, w 
-
-	newH = 50 = h*f
-	newW = w*g 
-
-	newW/newH = w/h
-
-	newW/50 = w/h 
-	newW 	= (w/h)*50
-	*/
 	var pictureFrameDimension = 290;
 
-	function addImg(scope, element) {
-		/* mimics addImg function in HTML-builder
-			-- adds image to the image-container and sizes/aligns image properly
-		*/
-		var container = element.context.getElementsByClassName('image-container')[0];
-
-		var img = document.createElement('img');
+	function setImg(img, img_url) {
+		if (!img_url) { return; }
+		/* mimics setImg function in HTML-builder */
 		img.onload = function() {
 			if (!img.height) { console.log('ERROR: !img.height'); return; }
 
@@ -45,10 +31,8 @@ var oppWidget = function() {
 			var extra_space = pictureFrameDimension - img.height;
 			img.style.marginTop = (extra_space/2).toString() + "px";
 		};
-		img.src = scope.entry.img_url;
-		container.appendChild(img);
+		img.src = img_url;
 	}
-
 	return {
 		restrict: 'E',
 		scope: {
@@ -58,7 +42,17 @@ var oppWidget = function() {
 		replace: true,
 		templateUrl: '/directives/widget-template.html',
 		link: function(scope, element, attrs) {
-			addImg(scope, element);
+			var img = element.context.getElementsByClassName('entry-image')[0];
+			setImg(img, scope.entry.img_url);
+			scope.$watch('entry.img_url', function(newValue, oldValue) {
+				setImg(img, newValue);
+			});
 		}
 	}
 }
+
+
+
+
+
+
