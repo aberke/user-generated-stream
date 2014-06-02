@@ -32,13 +32,13 @@ var HTMLbuilder = function() {
 		var onclickPrev = this.onclickPrefix + ".SwipeCntl.prev()";
 		var onclickNext = this.onclickPrefix + ".SwipeCntl.next()";
 		var html = "<div class='slide-info'>"
+			html+= "	<img onclick=" + onclickPrev + " class='touch slide-change-arrow left' width='10px' src='" + static_domain + "/widget/icon/left-arrow.png'>";
 			html+= "	<p class='title'>" + (this.data.via == 'social' ? '#' : '') + this.data.title + "</p>";
 			html+= "	<p class='slide-count'>";
 			/* slide-index is 0 until setSlide called */
 			html+= "		<span class='slide-index'>0</span>/" + this.entryList.length;
-			html+= "		<img onclick=" + onclickPrev + " class='touch slide-change-arrow' width='10px' src='" + static_domain + "/widget/icon/left-arrow.png'>";
-			html+= "		<img onclick=" + onclickNext + " class='touch slide-change-arrow' width='10px' src='" + static_domain + "/widget/icon/right-arrow.png'>";
 			html+= "	</p>";
+			html+= "	<img onclick=" + onclickNext + " class='touch slide-change-arrow right' width='10px' src='" + static_domain + "/widget/icon/right-arrow.png'>";
 			html+= "</div>";
 		return html;
 	}
@@ -120,7 +120,7 @@ var HTMLbuilder = function() {
 			html+= "	<span class='entry-header'></span>";	
 			html+= "	<span class='entry-text'></span>";	
 			html+= "	<div class='share-container'>";
-			html+= "		<p>Upvote via sharing</p>";
+			html+= "		<p>Share this photo</p>";
 			html+= "		<div data-huffpostlabs-btn onclick=" + onclickShareFB + " class='fb-share share'>";
 			html+= "			<img width='30px' height='30px' class='share-btn' src='" + static_domain + "/widget/icon/fb-icon.png'>";
 			html+= "			<img class='share-btn-swap' width='30px' height='30px' src='" + static_domain + "/widget/icon/fb-icon-blue.png'>";

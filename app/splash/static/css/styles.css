@@ -83,7 +83,6 @@ input.error {
 #new-partial .input-group,
 #new-partial .show-group:hover {
 	background-color: cornsilk;
-	cursor: pointer;
 }
 #new-partial .input-side {
 	padding: 0px 10px 0 40px;
