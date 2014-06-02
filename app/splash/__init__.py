@@ -20,5 +20,7 @@ def send_base(oppID=None):
 	"""
 	return send_file('splash/static/html/base.html')
 
-
+@splash.route('/test')
+def test():
+	return send_file('splash/static/html/test.html')
 

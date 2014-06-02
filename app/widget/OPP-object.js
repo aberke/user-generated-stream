@@ -1,5 +1,71 @@
 
+var Poll = function(container, data) {
+	console.log('Poll', container, data)
+	var entryList = data.entryList;
+	var slides = container.getElementsByClassName('image-container');
+	console.log('slides', slides, 'entryList', entryList)
+	var len = entryList.length;
+	var e;
+	var s;
+
+	var slideIndexElem = container.getElementsByClassName('slide-index')[0];
+	var slideCountElem = container.getElementsByClassName('slide-count')[0];
+	slideCountElem.innerHTML = len;
+
+	var fillSlide = function(s, e) {
+		slides[s].innerHTML += ("<br/>SLIDE " + s + " - ENTRY " + e);
+	}
+	var slideTransition = function(index, element) {
+		console.log('slideTransition', index, element)
+		if (index == (s + 1)%len) {
+			console.log('upvote')
+		} else {
+			console.log('downvote')
+		}
+		s = index;
+		slideIndexElem.innerHTML = s + 1;
+
+		var s_less = (s==0 ? len-1 : s-1);
+
+		fillSlide(s_less, e+1);
+		fillSlide((s+1)%len, e+1);
+		e += 1;
+	}
+	var setup = function() {
+		e = 0;
+		s = 0;
+		fillSlide(0, 0)
+		slideTransition(0)
+	}
+
+	var swipeContainer = container.getElementsByClassName('swipe')[0];
+	var SwipeCntl = new Swipe(swipeContainer, {
+		frameWidth: 290,
+		startSlide: 0,
+		speed: 400,
+		auto: false,
+		continuous: true,
+		disableScroll: false,
+		stopPropagation: false,
+		callback: function(index, elem) {},
+		transitionEnd: slideTransition
+	});
+	setup();
+
+	window.downvote = function() {
+		SwipeCntl.prev();
+	}
+	window.upvote = function() {
+		SwipeCntl.next();
+	}
+}
+
+
 var HuffpostLabsOPP = function(container, data) {
+	if (data.widget_type == 'poll') {
+		return new Poll(container, data);
+	}
+
 	console.log('HuffpostLabsOPP', data)
 	this.container = container;
 	this.OPPdata;

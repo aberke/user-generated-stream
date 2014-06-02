@@ -82,6 +82,41 @@ TODO
 - cross browser testing
 
 
+for sharing invidual slides on polls - don't click back to that slide
+	- still start from i=0
+
+
+
+slide2 | slide1 | slide2
+->
+slide3 | slide2 | slide3
+
+entry: e  --> entryList[c]: entry
+slide: s  --> slides[s]   : slide
+
+currIndex
+slide[currIndex + 1] = nextSlide
+slide[currIndex - 1] = nextSlide
+
+setup:
+
+len = entryList.length
+e = 0 -- index of current entry in entryList
+s = 0
+onSlide(s)
+
+onSlide(s):
+	s_less = ((s == 0) ? (len - 1) : s - 1)
+	// slide[s] = entry[e]
+slide[s_less] = entry[e + 1]
+slide[s + 1] = entry[e + 1]
+e += 1
+
+
+
+
+
+
 Necessary Tests
 ---
 - saving date
