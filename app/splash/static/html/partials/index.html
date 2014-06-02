@@ -1,17 +1,27 @@
 
 
 <div class='container' id='index-partial'>
-
+	<h2>
+		<span ng-if="!user">All</span>
+		<div ng-if="user" class="btn-group">
+			<button ng-click="showUserOPP()" ng-class="{'active':!showAll}" class="btn btn-default">{{user.twitter_screen_name}}</button>
+			<button ng-click="showAllOPP()" ng-class="{'active':showAll}" class="btn btn-default">All</button>
+		</div> 
+	Slideshows and Polls</h2>
+	<hr />
 
 	<div class='opp-list-container'>
-
-		<div class='row opp-and-embed-container' ng-repeat="o in OPPlist | filter:{$:searchText} | orderBy:'date_created':true" >
+		<!-- TODO - be more angular and write a filter instead of this ng-show -->
+		<div ng-show="!user||showAll||o._user==user.id" class='row opp-and-embed-container' ng-repeat="o in OPPlist | orderBy:'date_created':true" >
 			<div class='col-sm-8 opp-container'>
 				<div class="huffpostlabs-opp" id="{{o.id}}"></div>
 			</div>
 
 			<div class='col-sm-4'>
 			<ul class="nav nav-pills nav-stacked">
+				<li>
+					<span>{{o.widget_type}}</span>
+				</li>
 				<li>
 					<span ng-if="o._user">Owner: {{o._user_name}}</span>
 					<a ng-click="claimOPP(o)" ng-if="user.id&&!o._user" href="">Claim Ownership</a>
@@ -20,7 +30,7 @@
 					<a ng-href="/opp/{{o.id}}">View Page</a>
 				</li>
 				<li>
-					<a owner-only-element opp='o' user='user' ng-href="/update/{{o.id}}">Update</a>
+					<a owner-only-element opp='o' user='user' ng-href="/update/via-{{o.via}}/{{o.id}}">Update</a>
 				</li>
 				<li>
 					<a ng-show="!o.showEmbed" ng-click="o.showEmbed=true" href="">Embed in HTML</a>

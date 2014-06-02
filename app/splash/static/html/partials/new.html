@@ -22,7 +22,8 @@
                         <span class='group-value'>{{opp.start | date:'MM/dd/yyyy'}}</span>
                     </span>
                 </h3>
-                <div ng-show="opp.widget_type&&opp.via&&opp.title&&(opp.via=='editor'||opp.start)" class='create-btn-container'>
+                <!-- show create button only for valid form -->
+                <div ng-show="opp.widget_type&&opp.via&&opp.title&&(opp.via=='editor'||opp.start)&&!error.title" class='create-btn-container'>
                     <button ng-click="create(opp)" class='btn btn-default'>create</button>
                 </div>
             </div>
@@ -34,7 +35,8 @@
                     <p class='explainer'>A slideshow swipes from one entry slide to the next.  Users can slide back.  Slides are ordered by how often they've been shared.</p>
 
                     <label>poll</label>
-                    <input ng-model="opp.widget_type" value="poll" type='radio'>
+                    <input ng-disabled='true' ng-model="opp.widget_type" value="poll" type='radio'>
+                    (coming soon)
                     <p class='explainer'>A poll slides to the next slide whether the user swiped left or right.  A swipe left indicates a down-vote, a swipe right indicates an up-vote.  Poll results shown to user after they've voted on all slides.</p>
                 </div>
                 <div ng-show="step==1" class='via input-group'>
@@ -51,7 +53,8 @@
                 </div>
                 <div ng-show="step==2" class='title input-group'>
                     <label>title</label>
-                    <input maxlength="25" ng-model="opp.title" type='text'>
+                    <span ng-show="opp.via=='social'">  #</span>
+                    <input ng-class="{'error':error.title}" maxlength="25" ng-model="opp.title" type='text'>
                     (25 character limit)
                     <p ng-show="opp.via=='social'" class='explainer'>
                         Entries for {{opp.widget_type}} will be pulled from twitter and instagram as posts with images that were tagged with the #title.

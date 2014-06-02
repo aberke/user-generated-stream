@@ -14,6 +14,21 @@ OPPapp.config(function($routeProvider) {
 			return data; /* success: return user object */
 		});
 	};
+	var oppVia = function(via) {
+		/* routes /update/via-social/:id and /update/via-editor/:id use this helper in resolve function
+			returns function checking that via matches opp.via
+				if they don't match, redirects to correct opp/via-opp.via/:id
+		*/
+		return function(APIservice, OPPservice, $location, $route) {
+			return APIservice.GET('/opp/' + $route.current.params.id).then(function(data) { 
+				if (data.via != via) {
+					$location.path('/update/via-' + data.via + '/'  + data.id);
+					return null;
+				}
+				return OPPservice.frontEndFormat(data); 
+			});
+		}
+	}
 
 	
 	$routeProvider.when('/contact', {
@@ -23,8 +38,8 @@ OPPapp.config(function($routeProvider) {
 		templateUrl: '/html/partials/opp.html',
 		controller: OPPCntl,
 		resolve: {
-			opp: function(APIservice, OPPservice, $location) {
-					return APIservice.GET('/opp/' + $location.path().split('/')[2]).then(function(data) { 
+			opp: function(APIservice, OPPservice, $route) {
+					return APIservice.GET('/opp/' + $route.current.params.id).then(function(data) { 
 						return OPPservice.frontEndFormat(data); 
 				});
 			}
@@ -34,16 +49,23 @@ OPPapp.config(function($routeProvider) {
 		templateUrl: '/html/partials/index.html',
 		controller: IndexCntl,
 	})
-	.when('/update/:id', {
+	.when('/update/via-social/:id', {
 		templateUrl: '/html/partials/update.html',
 		controller: UpdateCntl,
 		resolve: {
 			user: userOrRedirect,
-			opp: function(APIservice, OPPservice, $location) {
-					return APIservice.GET('/opp/' + $location.path().split('/')[2]).then(function(data) { 
-						return OPPservice.frontEndFormat(data); 
-				});
-			}
+			opp: oppVia('social'),
 		}
-	});
+	})
+	.when('/update/via-editor/:id', {
+		templateUrl: '/html/partials/update.html',
+		controller: UpdateViaEditorCntl,
+		resolve: {
+			user: userOrRedirect,
+			opp: oppVia('editor'),
+		}
+	})
+	.otherwise({
+		redirectTo: '/'
+	});;
 });

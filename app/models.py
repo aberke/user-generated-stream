@@ -1,5 +1,6 @@
 from mongoengine import *
 from pymongo import ReadPreference
+from bson.objectid import ObjectId
 from datetime import datetime
 import dateutil.parser
 
@@ -100,14 +101,14 @@ class Stat(Document):
 
 
 class Entry(EmbeddedDocument):
-	id = StringField(required=True) # id from twitter/instagram - EmbeddedDocuments don't get Id's
-	stat = ReferenceField(Stat, required=True)
-	source = StringField() # twitter/instagram
-	created_at = DateTimeField(default=datetime.now)
-	text = StringField()
-	screen_name = StringField()
-	text = StringField()
-	img_url = URLField()
+	id 				= StringField(required=True, default=str(ObjectId())) # id from twitter/instagram - EmbeddedDocuments don't get Id's
+	stat 			= ReferenceField(Stat, required=True)
+	source 			= StringField() # twitter/instagram
+	created_at 		= DateTimeField(default=datetime.now)
+	screen_name 	= StringField()
+	header 			= StringField()
+	text 			= StringField()
+	img_url 		= URLField()
 	retweet_count = IntField(default=0)
 
 	def __init__(self, OPP=None, *args, **kwargs):
@@ -123,6 +124,7 @@ class Entry(EmbeddedDocument):
 		return {
 			'id': 					self.id,
 		    'screen_name': 			self.screen_name,
+		    'header': 				self.header,
 		    'text': 				self.text,
 		    'img_url': 				self.img_url,
 		    'created_at': 			self.created_at.isoformat(),
@@ -134,8 +136,8 @@ class Entry(EmbeddedDocument):
 
 class OPP(Document):
 	_user 				= ReferenceField('User', default=None)
-	widget_type 		= StringField(default='slideshow', choices=('slideshow', 'poll')) # default for backwards compatibility
-	via			 		= StringField(default='social', choices=('social', 'editor')) # default for backwards compatibility
+	widget_type 		= StringField(required=True, default='slideshow', choices=('slideshow', 'poll')) # default for backwards compatibility
+	via			 		= StringField(required=True, default='social', choices=('social', 'editor')) # default for backwards compatibility
 	title 				= StringField(required=True, max_length=25)
 	start 				= DateTimeField(default=datetime.now) # only used when via=='social'
 	entryList 			= ListField(EmbeddedDocumentField(Entry), default=list)
@@ -158,14 +160,14 @@ class OPP(Document):
 				self.widget_type= json_data['widget_type']
 				self.via 		= json_data['via']
 				self.title 		= json_data['title']
-				self.start 		= dateutil.parser.parse(json_data['start'])
+				if self.via == 'social':
+					self.start 		= dateutil.parser.parse(json_data['start'])
 			except Exception as e:
 				yellERROR(e)
 				raise bad_data_error
 
 	def update(self, data):
-		""" Expects data as dictionary
-			{u'start': isoformatted date string, u'share_link': 'URL'}
+		""" Expects data as dictionary {u'start': isoformatted date string, u'share_link': 'URL'}
 			throws error for invalid data
 		"""
 		bad_data_error = Exception('expected OPP data with share_link as URL and start with isoformatted string')
@@ -178,13 +180,44 @@ class OPP(Document):
 			raise bad_data_error
 		return self
 
+	# - via=='editor' ----------------------------------------------------------------
+	#				  (entries are manually created rather than from twitter/instagram) 
+	def deleteEntry(self, entryID):
+		OPP.objects(id=self.id).update(pull__entryList__id=entryID)
 
+	def updateEntry(self, entryID, entry_data):
+		""" Atomic update with pymongo """
+		collection = OPP._get_collection()
+		query = {"_id": self.id, "entryList.id": entryID}
+		# build update
+		update = {}
+		if 'header' in entry_data:
+			update["entryList.$.header"] = entry_data['header']
+		if 'img_url' in entry_data:
+			update["entryList.$.img_url"]= entry_data['img_url']
+		if 'text' in entry_data:
+			update["entryList.$.text"] 	 = 	entry_data['text']
+		# make update
+		res = collection.update(query, { "$set" :  update})
+
+	def createEntry(self, entry_data):
+		bad_data_error = Exception('Expected entry data with header, text, img_url as strings')
+		try:
+			entry = Entry(OPP=self.id, header=entry_data['header'], text=entry_data['text'], img_url=entry_data['img_url'])
+		except Exception as e:
+			yellERROR(e)
+			raise bad_data_error
+		OPP.objects(id=self.id).update(push__entryList=entry)
+		return entry
+	# ---------------------------------------------------------------- via=='editor' -
+
+	# - via=='social' ----------------------------------------------------------------
+	# 				  (entry data is from twitter/instagram post)
 	def acceptEntry(self, entry_data):
 		""" Create new Entry from entry_data and add it to the entryList """
-		print('acceptEntry ****', self, entry_data)
 		# take out of the rejectEntryIDList if it was there
 		OPP.objects(id=self.id).update(pull__rejectEntryIDList=entry_data['id'])
-		bad_data_error = Exception('Must create Entry with text as string and created_at as isoformatted string')
+		bad_data_error = Exception('Must create Entry with text, screen_name, id, img_url as strings and created_at as isoformatted string')
 		try:
 			created_at = dateutil.parser.parse(entry_data['created_at'])
 			entry = Entry(OPP=self.id, id=entry_data['id'], screen_name=entry_data['screen_name'], text=entry_data['text'], img_url=entry_data['img_url'], created_at=created_at)
@@ -192,10 +225,11 @@ class OPP(Document):
 			raise bad_data_error
 		OPP.objects(id=self.id).update(push__entryList=entry)
 
-	def rejectEntry(self, id):
-		OPP.objects(id=self.id).update(pull__entryList__id=id)
-		OPP.objects(id=self.id).update(add_to_set__rejectEntryIDList=id) # add value to a list only if its not in the list already
-	
+	def rejectEntry(self, entryID):
+		OPP.objects(id=self.id).update(pull__entryList__id=entryID)
+		OPP.objects(id=self.id).update(add_to_set__rejectEntryIDList=entryID) # add_to_set adds value to a list only if its not in the list already	
+	# ---------------------------------------------------------------- via=='social' -
+
 	def remove(self):
 		""" OPP responsible for removing all Stats of its Entries """
 		Stat.objects(_OPP=self.id).delete()

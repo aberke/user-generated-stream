@@ -68,6 +68,15 @@ Production Notes
 TODO
 ---
 
+- make sure no one creates via social title with spaces 
+
+- edit tests for new opp type
+	- and for postEntry
+
+- entry-container directive >> social-entry-container?
+
+- update-via-social.html?
+
 - center widget
 
 - cross browser testing

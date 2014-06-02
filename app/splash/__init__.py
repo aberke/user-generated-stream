@@ -11,7 +11,8 @@ splash = Blueprint('splash', __name__, static_url_path='', static_folder='static
 
 @splash.route('/')
 @splash.route('/opp/<oppID>')
-@splash.route('/update/<oppID>')
+@splash.route('/update/via-social/<oppID>')
+@splash.route('/update/via-editor/<oppID>')
 def send_base(oppID=None):
 	"""
 	View protection handled client side

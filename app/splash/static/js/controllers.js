@@ -38,6 +38,15 @@ function MainCntl($scope, $location, UserFactory) {
 function IndexCntl($scope, $rootScope, APIservice, WidgetService) {
 	$scope.showNew = false;
 	$scope.OPPlist;
+	$scope.showAll = true; // vs show only user's OPPs
+	$scope.showAllOPP = function() {
+		$scope.showAll = true;
+	}
+	$scope.showUserOPP = function() {
+		$scope.showAll = false;
+	}
+
+	console.log('user', $scope.user)
 
 	var getOPPlist = function() {
 		APIservice.GET('/opp/all').then(function(data) {
@@ -68,8 +77,6 @@ function IndexCntl($scope, $rootScope, APIservice, WidgetService) {
 		});
 
 	}
-
-
 	var init = function() {
 		getOPPlist();
 	}
@@ -78,14 +85,13 @@ function IndexCntl($scope, $rootScope, APIservice, WidgetService) {
 function UpdateCntl($scope, APIservice, OPPservice, FormService, WidgetService, opp) {
 	$scope.showTab = 'pending-instagram';
 	$scope.opp = opp;
+	console.log('opp', $scope.opp)
 
 	// initialized in init
 	$scope.pendingEntryList;
 	$scope.pendingEntryListInstagram;
 	$scope.rejectEntryList;
 	$scope.entryList;
-	$scope.listLengths;
-	var queues;
 	var next_max_id; // {'twitter': next_max_id, 'instagram': next_max_id};
 
 	/* 
@@ -95,6 +101,7 @@ function UpdateCntl($scope, APIservice, OPPservice, FormService, WidgetService, 
 	$scope.moreEntries = function() { searchEntries(); }
 
 	var filterEntries = function(list, source) {
+		console.log('filterEntries', list, source)
 		for (var i=0; i<list.length; i++) {
 			var item = list[i];
 			item['created_at'] = new Date(item['created_at']);
@@ -200,9 +207,73 @@ function UpdateCntl($scope, APIservice, OPPservice, FormService, WidgetService, 
 	}
 	init();
 }
+function UpdateViaEditorCntl($scope, APIservice, OPPservice, FormService, WidgetService, opp) {
+	$scope.showTab;
+	$scope.opp;
+	$scope.entryList;
+
+	$scope.addEntry = function() {
+		/* insert empty entry at start of entryList */
+		$scope.entryList.splice(0, 0, {'state': 'unsaved'});
+	}
+	$scope.deleteEntry = function(entry) {
+		var index = $scope.entryList.indexOf(entry);
+		var callback = function() {
+			$scope.entryList.splice(index, 1);
+		}
+		if (!entry.id) { // not saved server side, needs not be deleted server side
+			return callback();
+		}
+		APIservice.DELETE('/opp/' + opp.id + '/entry/' + entry.id).then(callback);
+	}
+	$scope.saveEntry = function(entry) {
+		entry.state = 'saving';
+		var callback = function() {
+			entry.state = 'saved';
+		}
+		if (entry.id) { // it's been saved before -- not new so PUT
+			APIservice.PUT('/opp/' + opp.id + '/entry/' + entry.id, entry).then(callback);
+		} else {
+			APIservice.POST('/opp/' + opp.id + '/entry', entry).then(function(retEntry) {
+				console.log('POST entry', retEntry);
+				entry.id = retEntry.id;
+				callback();
+			});
+		}
+	}
+	
+
+	var reloadOPP = function() {
+		APIservice.GET('/opp/' + opp.id).then(function(data) { 
+			WidgetService.reloadOPP(data);
+			$scope.opp.rejectEntryIDList = data.rejectEntryIDList;
+			$scope.opp.entryIDList = data.entryIDList;
+		});
+	}
+
+	// to save title and share_link
+	$scope.saveOPP = function() {
+		APIservice.PUT('/opp/' + opp.id, $scope.opp).then(function(data) {
+			/* Don't set $scope.opp = data, start over with fetching data since date changed */
+			init();
+		});
+	}
+
+	var init = function() {
+		$scope.showTab = 'slides';
+		$scope.opp = opp;
+		$scope.entryList = $scope.opp.entryList;
+		if (!$scope.entryList.length) {
+			$scope.addEntry();
+		}
+		console.log('opp', $scope.opp)
+	}
+	init();
+}
 function NewCntl($scope, $location, APIservice, FormService) {
 	$scope.opp;
 	$scope.step;
+	$scope.error = {};
 
 	$scope.create = function(opp) {
 		if (!FormService.validOPP) { 
@@ -210,7 +281,7 @@ function NewCntl($scope, $location, APIservice, FormService) {
 		}
 		APIservice.POST('/opp', opp).then(function(data) {
 			console.log('POST returned data',data)
-			$location.path('/update/' + data.id);
+			$location.path('/update/via-' + data.via + '/' + data.id);
 		});
 	}
 	var init = function() {
@@ -222,6 +293,13 @@ function NewCntl($scope, $location, APIservice, FormService) {
 		});
 		$scope.$watch('opp.via', function(n,o) {
 			if (n) { $scope.step = 2; }
+		});
+		$scope.$watch('opp.title', function(n,o) {
+			/* ensure no title for social with non-letter characters */
+			$scope.error.title = false;
+			if ($scope.opp.via == 'social' && $scope.opp.title && $scope.opp.title.match(/[^a-z|A-Z]/)) {
+				$scope.error.title = true;
+			}
 		});
 	}
 	init();

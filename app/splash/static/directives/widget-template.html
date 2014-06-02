@@ -1,8 +1,10 @@
-<div class='huffpostlabs-opp edit'>
+<div class='huffpostlabs-opp edit via-{{opp.via}}'>
 
 	<div class='opp-frame'>
 		<div class='slide-info'>
-			<p class='campaign-name'>#{{opp.title}}</p>
+			<p class='title'>
+				<span ng-show="opp.via=='social'">#</span>
+				{{opp.title}}</p>
 			<p class='slide-count'>
 				1/{{opp.entryList.length}}
 				<img onclick='swipe.prev()' class='touch slide-change-arrow' width='10px' src='/widget/icon/left-arrow.png'>
@@ -19,7 +21,17 @@
 			</div>
 		</div>
 		<div class='picture-caption'>
-			<p class='tweet-body'><em>@{{entry.screen_name}}: </em>{{entry.text}}</p>
+
+			<span class='entry-header'>
+				<span ng-show="opp.via=='social'">@</span>
+				{{entry.screen_name || entry.header}}
+			</span>
+			<span class='entry-text'>{{entry.text}}</span>
+
+			
+			<!-- <p ng-if="opp.via=='social'" class='entry-body'><em>@{{entry.screen_name}} </em>{{entry.text}}</p> -->
+			
+			
 			<div class='share-container'>
 				<p>Upvote via sharing</p>
 				<div class='fb-share share'>

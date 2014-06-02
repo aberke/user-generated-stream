@@ -24,13 +24,15 @@ var HTMLbuilder = function() {
 		} else {
 			this.container.className += " non-mobile";
 		}
+		// add opp via for style sheets
+		this.container.className += (" via-" + this.data.via);
 	}
 
 	this.buildSlideInfo = function() {
 		var onclickPrev = this.onclickPrefix + ".SwipeCntl.prev()";
 		var onclickNext = this.onclickPrefix + ".SwipeCntl.next()";
 		var html = "<div class='slide-info'>"
-			html+= "	<p class='campaign-name'>#" + this.data.title + "</p>";
+			html+= "	<p class='title'>" + (this.data.via == 'social' ? '#' : '') + this.data.title + "</p>";
 			html+= "	<p class='slide-count'>";
 			/* slide-index is 0 until setSlide called */
 			html+= "		<span class='slide-index'>0</span>/" + this.entryList.length;
@@ -96,9 +98,12 @@ var HTMLbuilder = function() {
 		return html;
 	}
 	this.setCaption = function(entry) {
-		var html = "<em>@" + entry.screen_name + ": </em>";
-			html+= entry.text;
-		this.tweetBody.innerHTML = html;
+		if (this.data.via == 'social') {
+			this.entryHeader.innerHTML = ('@' + entry.screen_name);
+		} else {
+			this.entryHeader.innerHTML = entry.header;
+		}
+		this.entryText.innerHTML = entry.text;
 	}
 	this.setSlide = function(index) {
 		var entry = this.entryList[index];
@@ -112,7 +117,8 @@ var HTMLbuilder = function() {
 		var onclickShareEmail = this.onclickPrefix + ".shareEmail()";
 
 		var html = "<div class='picture-caption'>";
-			html+= "<p class='tweet-body'></p>";	
+			html+= "	<span class='entry-header'></span>";	
+			html+= "	<span class='entry-text'></span>";	
 			html+= "	<div class='share-container'>";
 			html+= "		<p>Upvote via sharing</p>";
 			html+= "		<div data-huffpostlabs-btn onclick=" + onclickShareFB + " class='fb-share share'>";
@@ -145,8 +151,9 @@ var HTMLbuilder = function() {
 		this.setImages(callback);
 
 		// pick up the important reusable pieces
-		this.tweetBody = this.container.getElementsByClassName('tweet-body')[0];
-		this.slideIndex = this.container.getElementsByClassName('slide-index')[0];
+		this.entryHeader = this.container.getElementsByClassName('entry-header')[0];
+		this.entryText   = this.container.getElementsByClassName('entry-text')[0];
+		this.slideIndex  = this.container.getElementsByClassName('slide-index')[0];
 	}
 }
 	

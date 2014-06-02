@@ -24,3 +24,8 @@ def respond500(err='ERROR'):
 	data = json.dumps({'message': 'Error: {0}'.format(str(err))})
 	response_headers = {'Content-Type': 'application/json'}
 	return Response(data, 500, response_headers)
+
+def respond200():
+	return Response(status=200)
+
+

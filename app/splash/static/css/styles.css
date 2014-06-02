@@ -54,6 +54,7 @@ input.error {
 #new-partial .panel {
 	max-width: 900px;
 	margin: auto;
+	padding: 6px 0;
 }
 #new-partial .panel-body {
 	padding: 0px 40px 20px 40px;
@@ -148,6 +149,15 @@ footer {
 	border: 3px solid gray;
 	border-bottom-color: transparent;
 }
+.nav-tabs.slides {
+	border-color: #FF8100;
+}
+.nav-tabs.slides>li.active>a,
+.nav-tabs.slides>li.active>a:hover,
+.nav-tabs.slides>li.active>a:focus {
+	border: 3px solid #FF8100;
+	border-bottom-color: transparent;
+}
 .nav-tabs.accepted {
 	border-color: green;
 }
@@ -209,6 +219,9 @@ footer {
 	border-top: none;
 	padding: 20px;
 }
+.tab-content.slides {
+	border-color: #FF8100;
+}
 .tab-content.accepted-entries {
 	border-color: green;
 }
@@ -253,16 +266,39 @@ footer {
 	font-weight: bold;
 	font-size: 16px;
 }
+#update-partial .edit-entry-btn-container {
+	padding: 0;
+	margin-top: 10px;
+	text-align: right;
+}
+#update-partial .delete-entry-btn {
+	color: red;
+}
+#update-partial .entry-form input {
+	width: 75%;
+	padding: 4px;
+}
+#update-partial .entry-form label {
+	display: block;
+	margin-top: 10px;
+}
+#update-partial .entry-form .btn {
+	margin: 10px;
+	margin-left: 0;
+}
+#update-partial .entry-state {
+	color: gray;
+}
 #update-partial .info,
-#update-partial form {
+#update-partial .opp-form {
 	max-width: 400px;
 	margin: 10px auto;
 
 }
-#update-partial form p{
+#update-partial .opp-form p{
 	color: gray;
 }
-#update-partial form input{
+#update-partial .opp-form input{
 	width: 80%;
 }
 

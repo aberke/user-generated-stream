@@ -17,6 +17,10 @@ var FormService = function() {
     if (opp.via=='social'&&(!opp.start || !opp.start instanceof Date)) {
       return false;
     }
+    /* ensure no title for social with non-letter characters */
+    if ($scope.opp.via == 'social' && $scope.opp.title && $scope.opp.title.match(/[^a-z|A-Z]/)) {
+      return false;
+    }
     return true;
   }
 }

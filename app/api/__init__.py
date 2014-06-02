@@ -1,11 +1,11 @@
-from flask import Blueprint, session, request, Response
+from flask import Blueprint, session, request
 import json
 
 import twitter_api
 import instagram_api
 
 from app.auth.route_wrappers import login_required, opp_ownership_required
-from app.util import dumpJSON, respond500
+from app.util import dumpJSON, respond500, respond200
 from app.decorators import jsonp
 from app.models import User, OPP, Stat
 
@@ -35,7 +35,7 @@ def PUTstatIncrement(statID, count):
 	""" PUT's made with JSONP on widget pages - need GET """
 	try:
 		Stat.increment(statID, count)
-		return Response(status=200)
+		return respond200()
 	except Exception as e:
 		return respond500(e)
 
@@ -134,7 +134,6 @@ def GETopp(oppID):
 def POSTopp(userID):
 	"""  """
 	data = json.loads(request.data)
-	print('POSTopp -----------------', data)
 	try:
 		user = User.find(userID)
 		opp = OPP(user=user, json_data=data)
@@ -155,14 +154,42 @@ def DELETEopp(opp):
 	except Exception as e:
 		return respond500(e)
 
+@api.route('/opp/<oppID>/entry', methods=['POST'])
+@opp_ownership_required
+def POSTentry(opp):
+	entry_data = json.loads(request.data)
+	try:
+		entry = opp.createEntry(entry_data)
+		return dumpJSON(entry.jsonify())
+	except Exception as e:
+		return respond500(e)
+
+@api.route('/opp/<oppID>/entry/<entryID>', methods=['DELETE'])
+@opp_ownership_required
+def DELETEentry(opp, entryID):
+	try:
+		opp.deleteEntry(entryID)
+		return respond200()
+	except Exception as e:
+		return respond500(e)
+
+@api.route('/opp/<oppID>/entry/<entryID>', methods=['PUT'])
+@opp_ownership_required
+def PUTentry(opp, entryID):
+	entry_data = json.loads(request.data)
+	try:
+		entry = opp.updateEntry(entryID, entry_data)
+		return respond200()
+	except Exception as e:
+		return respond500(e)
+
 @api.route('/opp/<oppID>/accept/<entryID>', methods=['PUT'])
 @opp_ownership_required
 def PUTacceptEntry(opp, entryID):
 	entry_data = json.loads(request.data)
-	print('*** entry_data', entry_data)
 	try:
 		opp.acceptEntry(entry_data)
-		return Response(status=200)
+		return respond200()
 	except Exception as e:
 		return respond500(e)
 
@@ -171,7 +198,7 @@ def PUTacceptEntry(opp, entryID):
 def PUTrejectEntry(opp, entryID):
 	try:
 		opp.rejectEntry(entryID)
-		return Response(status=200)
+		return respond200()
 	except Exception as e:
 		return respond500(e)
 
