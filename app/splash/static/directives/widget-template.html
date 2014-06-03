@@ -2,14 +2,14 @@
 
 	<div class='opp-frame'>
 		<div class='slide-info'>
+			<img onclick='swipe.prev()' class='touch slide-change-arrow left' width='10px' src='/widget/icon/left-arrow.png'>
 			<p class='title'>
 				<span ng-show="opp.via=='social'">#</span>
 				{{opp.title}}</p>
 			<p class='slide-count'>
 				1/{{opp.entryList.length}}
-				<img onclick='swipe.prev()' class='touch slide-change-arrow' width='10px' src='/widget/icon/left-arrow.png'>
-				<img onclick='swipe.next()' class='touch slide-change-arrow' width='10px' src='/widget/icon/right-arrow.png'>
 				</p>
+			<img onclick='swipe.next()' class='touch slide-change-arrow right' width='10px' src='/widget/icon/right-arrow.png'>
 		</div>
 		<div class='picture-frame'>
 			<div class='picture swipe'>
@@ -29,11 +29,8 @@
 			<span class='entry-text'>{{entry.text}}</span>
 
 			
-			<!-- <p ng-if="opp.via=='social'" class='entry-body'><em>@{{entry.screen_name}} </em>{{entry.text}}</p> -->
-			
-			
 			<div class='share-container'>
-				<p>Upvote via sharing</p>
+				<p>Share this photo</p>
 				<div class='fb-share share'>
 					<img width='30px' height='30px' class='share share-btn' src='/widget/icon/fb-icon.png'>
 					<img class='share share-btn-swap' width='30px' height='30px' src='/widget/icon/fb-icon-blue.png'>
