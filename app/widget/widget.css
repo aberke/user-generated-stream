@@ -74,6 +74,19 @@
 	max-width: 290px;
 	display: inline-block;
 }
+.huffpostlabs-opp .opp-frame .image-credit {
+	margin: -16px 0 0 0;
+	background-color: black;
+	color: white;
+	position: absolute;
+	text-align: left;
+	padding: 0px 4px;
+	opacity: 0;
+	font-size: 12px;
+}
+.huffpostlabs-opp .opp-frame:hover .image-credit {
+	opacity: 0.4;
+}
 .huffpostlabs-opp .picture-caption {
 	width: 280px;
 	padding: 4px;

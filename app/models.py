@@ -112,6 +112,7 @@ class Entry(EmbeddedDocument):
 	retweet_count = IntField(default=0)
 
 	def __init__(self, OPP=None, *args, **kwargs):
+		print('new entry', kwargs)
 		""" OPP is ObjectId to get passed to Stat """
 		super(Entry, self).__init__(*args, **kwargs)
 		
@@ -127,6 +128,7 @@ class Entry(EmbeddedDocument):
 		    'header': 				self.header,
 		    'text': 				self.text,
 		    'img_url': 				self.img_url,
+		    'source': 				self.source,
 		    'created_at': 			self.created_at.isoformat(),
 		    # stat relevant
 		    'retweet_count':		self.retweet_count,
@@ -197,13 +199,16 @@ class OPP(Document):
 			update["entryList.$.img_url"]= entry_data['img_url']
 		if 'text' in entry_data:
 			update["entryList.$.text"] 	 = 	entry_data['text']
+		if 'source' in entry_data:
+			update["entryList.$.source"] = 	entry_data['source']
 		# make update
 		res = collection.update(query, { "$set" :  update})
 
 	def createEntry(self, entry_data):
-		bad_data_error = Exception('Expected entry data with header, text, img_url as strings')
+		bad_data_error = Exception('Expected entry data with header, text, img_url, source as strings')
 		try:
-			entry = Entry(OPP=self.id, header=entry_data['header'], text=entry_data['text'], img_url=entry_data['img_url'])
+			source = entry_data['source'] if 'source' in entry_data else ''
+			entry = Entry(OPP=self.id, header=entry_data['header'], text=entry_data['text'], img_url=entry_data['img_url'], source=source)
 		except Exception as e:
 			yellERROR(e)
 			raise bad_data_error
@@ -217,10 +222,10 @@ class OPP(Document):
 		""" Create new Entry from entry_data and add it to the entryList """
 		# take out of the rejectEntryIDList if it was there
 		OPP.objects(id=self.id).update(pull__rejectEntryIDList=entry_data['id'])
-		bad_data_error = Exception('Must create Entry with text, screen_name, id, img_url as strings and created_at as isoformatted string')
+		bad_data_error = Exception('Must create Entry with text, screen_name, id, img_url, source as strings and created_at as isoformatted string')
 		try:
 			created_at = dateutil.parser.parse(entry_data['created_at'])
-			entry = Entry(OPP=self.id, id=entry_data['id'], screen_name=entry_data['screen_name'], text=entry_data['text'], img_url=entry_data['img_url'], created_at=created_at)
+			entry = Entry(OPP=self.id, id=entry_data['id'], screen_name=entry_data['screen_name'], text=entry_data['text'], img_url=entry_data['img_url'], created_at=created_at, source=entry_data['source'])
 		except:
 			raise bad_data_error
 		OPP.objects(id=self.id).update(push__entryList=entry)

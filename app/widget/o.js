@@ -160,7 +160,7 @@
 		withScripts(scripts, callback);
 	}
 	function disablePinterestBullshit(container) {
-		/* Huffpost decided it was a great idea to make EVERY IMAGE PINABLE - no thanks, especially not on the images that are actually my facebook buttons... awkward.. */
+		/* Huffpost decided it was a great idea to make EVERY IMAGE PINABLE - no thanks, especially not on the images that are actually my facebook share buttons... awkward.. */
 		container.className += " no-pin";
 	}
 	function showLoading(container) {
@@ -183,13 +183,16 @@
 		}
 	}
 
-	function createOPP(id, container, callback){
+	function createOPP(id, container){
 		if (!id) { return null; }
 		/* load quiz data - create quiz widet object, replace loading display with widget */
         GET("/api/opp/" + id, function(data) {
-			this.OPPwidgets[id] = new HuffpostLabsOPP(container, data);//, mobile, quizStartedCallback, quizCompletedCallback, quizRestartedCallback);
+        	if (data.widget_type == 'poll') {
+        		this.OPPwidgets[id] = new HuffpostLabsPoll(container, data);
+        	} else {
+				this.OPPwidgets[id] = new HuffpostLabsSlideshow(container, data);
+        	}
 			doneLoadingCallback(container);
-        	if (callback) { callback(); }
 		});
 	};
 

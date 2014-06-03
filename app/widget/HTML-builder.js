@@ -10,6 +10,19 @@ var HTMLbuilder = function() {
 	var pictureFrameDimension = 290;
 	var static_domain = OPPglobals.static_domain;
 
+	/* for Polls ------------------------------------------------- 
+	var slides;
+	var len = this.entryList.length;
+	this.setupPoll = function() {
+		slides = container.getElementsByClassName('image-container');
+		console.log('setupPoll slides', slides)
+	}
+	this.fillSlide = function(s, e) {
+		slides[s].innerHTML += ("<br/>SLIDE " + s + " - ENTRY " + e);
+	}
+
+	/* ------------------------------------------------- for Polls */
+
 	this.init = function(container, data, callback) {
 		this.container = container;
 		this.data = data;
@@ -24,8 +37,12 @@ var HTMLbuilder = function() {
 		} else {
 			this.container.className += " non-mobile";
 		}
+		// TODO -- MOVE TO CLASS INIT
 		// add opp via for style sheets
 		this.container.className += (" via-" + this.data.via);
+		if (this.data.widget_type == 'poll') {
+			this.setupPoll();
+		}
 	}
 
 	this.buildSlideInfo = function() {
@@ -90,11 +107,13 @@ var HTMLbuilder = function() {
 		for (var i=0; i<this.entryList.length; i++) {
 			html+= "			<div class='image-container image-container-" + i + "'>"
 			html+= " 				<img class='entry-image'>"; // filled in by setImages
+			
 			html+= "			</div>";
 		}
 			html+= "		</div>";
 			html+= "	</div>";
 			html+= "</div>";
+			html+= "<p class='image-credit'>credit</p>";
 		return html;
 	}
 	this.setCaption = function(entry) {
@@ -107,6 +126,7 @@ var HTMLbuilder = function() {
 	}
 	this.setSlide = function(index) {
 		var entry = this.entryList[index];
+		this.imgCredit.innerHTML = (entry.source || '');
 		this.setCaption(entry);
 		this.slideIndex.innerHTML = index + 1;
 	}
@@ -151,6 +171,7 @@ var HTMLbuilder = function() {
 		this.setImages(callback);
 
 		// pick up the important reusable pieces
+		this.imgCredit = this.container.getElementsByClassName('image-credit')[0];
 		this.entryHeader = this.container.getElementsByClassName('entry-header')[0];
 		this.entryText   = this.container.getElementsByClassName('entry-text')[0];
 		this.slideIndex  = this.container.getElementsByClassName('slide-index')[0];

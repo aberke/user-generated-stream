@@ -63,12 +63,14 @@
 				<opp-widget opp='opp' entry='e'></opp-widget>
 			</div>
 			<form name='entryForm' class='col-md-6 entry-form'>
-				<label>Header</label>
+				<label>Header *</label>
 				<input ng-change="e.state='unsaved'" type="text" placeholder="HEADER" ng-model="e.header" />
-				<label>Text</label>
+				<label>Text *</label>
 				<input ng-change="e.state='unsaved'" type="text" placeholder="text text text text ..." ng-model="e.text" />
-				<label>Image/GIF URL</label>
+				<label>Image/GIF URL *</label>
 				<input ng-change="e.state='unsaved'" type="url" placeholder="http://" ng-class="{'error':entryForm.$error.url}" ng-model="e.img_url" />
+				<label>Photo credit</label>
+				<input ng-change="e.state='unsaved'" type="text" ng-model="e.source" />
 				<div class='create-btn-container'>
 					<button ng-disabled="!(e.header&&e.text&&e.img_url&&e.state=='unsaved')" ng-click="saveEntry(e)" class='btn btn-sm btn-default create-btn'>Save</button>
 					<span class='entry-state' ng-show="e.state">{{e.state}}</span>
