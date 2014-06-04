@@ -142,6 +142,8 @@ class OPP(Document):
 	start 				= DateTimeField(default=datetime.now) # only used when via=='social'
 	entryList 			= ListField(EmbeddedDocumentField(Entry), default=list)
 	rejectEntryIDList 	= ListField(StringField(), default=list) # only used when via=='social'
+	share_title 		= StringField()
+	share_caption 		= StringField()
 	share_link 			= URLField()
 
 	def __init__(self, user=None, json_data=None, **kwargs):
@@ -165,20 +167,46 @@ class OPP(Document):
 			except Exception as e:
 				yellERROR(e)
 				raise bad_data_error
+		self.set_sharing()
+
+	def set_sharing(self):
+		""" Set default sharing fields """
+		if not self.share_title:
+			self.share_title = "Slideshow: "
+			if self.widget_type == 'poll':
+				self.share_title = "Poll: "
+			if self.via == "social":
+				self.share_title += "#"
+			self.share_title += self.title
+
+		if not self.share_caption:
+			self.share_caption = ("The best of " + self.title)
+
 
 	def update(self, data):
 		""" Expects data as dictionary {u'start': isoformatted date string, u'share_link': 'URL'}
 			throws error for invalid data
+		
+			Atomic update with pymongo
 		"""
-		bad_data_error = Exception('expected OPP data with share_link as URL and start with isoformatted string')
+		collection = OPP._get_collection()
+		bad_data_error = Exception('OPP update expects data with share_link as URL and start with isoformatted string')
 		try:
+			update = {}
 			if 'start' in data:
-				self.start = dateutil.parser.parse(data['start'])
+				update["start"] = dateutil.parser.parse(data['start'])
 			if 'share_link' in data:
-				self.share_link = data['share_link']
-		except:
+				update["share_link"] = data['share_link']
+			if 'share_title' in data:
+				update["share_title"] = data['share_title']
+			if 'share_caption' in data:
+				update["share_caption"] = data['share_caption']
+			# make update
+			res = collection.update({"_id": self.id}, { "$set" :  update})
+
+		except Exception as e:
+			yellERROR(e)
 			raise bad_data_error
-		return self
 
 	# - via=='editor' ----------------------------------------------------------------
 	#				  (entries are manually created rather than from twitter/instagram) 
@@ -257,6 +285,8 @@ class OPP(Document):
 		    'entryIDList': [e.jsonify()['id'] for e in self.entryList], 
 		    'rejectEntryIDList': self.rejectEntryIDList,
 		    'share_link': self.share_link,
+		    'share_title': self.share_title,
+		    'share_caption': self.share_caption,
 		}
 
 

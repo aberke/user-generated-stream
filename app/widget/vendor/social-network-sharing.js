@@ -4,7 +4,7 @@ var HuffpostLabsSocialNetworks = function() {
 		window.HuffpostLabsShareTwitter = function(text, url, callback) {
 			var twitterURL = 'https://twitter.com/share?';
 				twitterURL+= ('url=' + (url || window.location.href));
-				twitterURL+= ('&text=' + (text || ''));
+				twitterURL+= ('&text=' + (encodeURIComponent(text) || ''));
 				twitterURL+= '&via=HuffPostLabs';
 			window.open(twitterURL, 'targetWindow','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=300,height=300');
 			if (callback) { callback(); }

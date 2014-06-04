@@ -45,18 +45,19 @@ var HuffpostLabsOPP = function(container, data) {
 	this.shareFB = function() {
 		var entry = this.OPPdata.entryList[current_slide];
 		OPPglobals.shareFB({
-			'name': ('#' + this.OPPdata.title),
+			'name': this.OPPdata.share_title,
 			'picture': entry.img_url,
 			'link': this.buildShareLink(entry),
-			'caption': entry.text,
-			'description': 'TODO',
+			'caption': this.OPPdata.share_caption,
+			'description': '',
 			'statID': entry.stat.id,
 		});
 	}
 	this.shareTwitter = function() {
 		var entry = this.OPPdata.entryList[current_slide];
+		console.log('shareTwitter', this.OPPdata.share_title)
 		OPPglobals.shareTwitter({
-			'text': "Look at this widget!",
+			'text': this.OPPdata.share_title,
 			'link': this.buildShareLink(entry),
 			'statID': entry.stat.id,
 		});
@@ -64,8 +65,8 @@ var HuffpostLabsOPP = function(container, data) {
 	this.shareEmail = function() {
 		var entry = this.OPPdata.entryList[current_slide];
 
-		var subject = "[HuffpostLabs] #" + this.OPPdata.title;
-		var body 	= (this.buildShareLink(entry));
+		var subject = "[HuffpostLabs] " + this.OPPdata.share_title;
+		var body 	= (this.OPPdata.share_caption + '\n' + this.buildShareLink(entry));
 		var mailto 	= ("mailto:?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body));
 
 		location.href = mailto;

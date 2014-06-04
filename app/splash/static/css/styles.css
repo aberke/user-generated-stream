@@ -294,11 +294,13 @@ footer {
 	margin: 10px auto;
 
 }
+
 #update-partial .opp-form p{
 	color: gray;
 }
 #update-partial .opp-form input{
-	width: 80%;
+	width: 100%;
+	margin-bottom: 10px;
 }
 
 #update-partial .showing-entries {

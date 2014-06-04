@@ -251,12 +251,9 @@ function UpdateViaEditorCntl($scope, APIservice, OPPservice, FormService, Widget
 		});
 	}
 
-	// to save title and share_link
 	$scope.saveOPP = function() {
-		APIservice.PUT('/opp/' + opp.id, $scope.opp).then(function(data) {
-			/* Don't set $scope.opp = data, start over with fetching data since date changed */
-			init();
-		});
+		/* Don't set $scope.opp = data, start over with fetching data since date changed */
+		APIservice.PUT('/opp/' + opp.id, $scope.opp).then(init);
 	}
 
 	var init = function() {
