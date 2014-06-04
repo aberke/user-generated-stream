@@ -36,6 +36,7 @@
 }
 .huffpostlabs-opp .slide-info {
 	color: gray;
+	margin-bottom: 4px;
 }
 .huffpostlabs-opp .slide-info .title,
 .huffpostlabs-opp .slide-info .slide-count {
@@ -103,11 +104,12 @@
 	display: inline-block;
 	vertical-align: middle;
 }
-.huffpostlabs-opp .share-container p {
+.huffpostlabs-opp .opp-frame .picture-caption .share-container p { /*need strong rule*/
 	margin: 0;
 }
 .huffpostlabs-opp .share-container .share{
 	cursor: pointer;
+	height: 30px;
 }
 .huffpostlabs-opp .share-container .fb-share,
 .huffpostlabs-opp .share-container .twitter-share,
