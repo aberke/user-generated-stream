@@ -36,10 +36,11 @@
 }
 .huffpostlabs-opp .slide-info {
 	color: gray;
+	padding: 0 0 10px 0;
 }
-.huffpostlabs-opp .slide-info .title,
-.huffpostlabs-opp .slide-info .slide-count {
+.huffpostlabs-opp .slide-info p {
 	display: inline-block;
+	margin: 3px 0 0 0;
 } 
 .huffpostlabs-opp .slide-info .title{
 	text-align: left;

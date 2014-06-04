@@ -101,7 +101,7 @@ class Stat(Document):
 
 
 class Entry(EmbeddedDocument):
-	id 				= StringField(required=True, default=str(ObjectId())) # id from twitter/instagram - EmbeddedDocuments don't get Id's
+	id 				= StringField(required=True) # id from twitter/instagram - EmbeddedDocuments don't get Id's
 	stat 			= ReferenceField(Stat, required=True)
 	source 			= StringField() # twitter/instagram
 	created_at 		= DateTimeField(default=datetime.now)
@@ -112,11 +112,12 @@ class Entry(EmbeddedDocument):
 	retweet_count = IntField(default=0)
 
 	def __init__(self, OPP=None, *args, **kwargs):
-		print('new entry', kwargs)
 		""" OPP is ObjectId to get passed to Stat """
 		super(Entry, self).__init__(*args, **kwargs)
 		
-		if not self.stat:
+		if not self.stat: # hasn't yet been instiated
+			if not self.id: # entries via social take post id, entries via editor need unique id
+				self.id = str(ObjectId())
 			self.stat = Stat(_OPP=OPP)
 			self.stat.save()
 		
@@ -185,7 +186,8 @@ class OPP(Document):
 	# - via=='editor' ----------------------------------------------------------------
 	#				  (entries are manually created rather than from twitter/instagram) 
 	def deleteEntry(self, entryID):
-		OPP.objects(id=self.id).update(pull__entryList__id=entryID)
+		print('deleteEntry', entryID)
+		OPP.objects(id=self.id).update(pull__entryList__id=str(entryID))
 
 	def updateEntry(self, entryID, entry_data):
 		""" Atomic update with pymongo """
@@ -203,6 +205,9 @@ class OPP(Document):
 			update["entryList.$.source"] = 	entry_data['source']
 		# make update
 		res = collection.update(query, { "$set" :  update})
+		print('update ----------------------', entryID)
+		print('update ---- ', update)
+		print('entry_data', entry_data)
 
 	def createEntry(self, entry_data):
 		bad_data_error = Exception('Expected entry data with header, text, img_url, source as strings')
@@ -213,6 +218,7 @@ class OPP(Document):
 			yellERROR(e)
 			raise bad_data_error
 		OPP.objects(id=self.id).update(push__entryList=entry)
+		print('------------------- create', entry)
 		return entry
 	# ---------------------------------------------------------------- via=='editor' -
 

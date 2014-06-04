@@ -68,7 +68,9 @@ Production Notes
 TODO
 ---
 
-- make sure no one creates via social title with spaces 
+- handle when poll has zero/one entry
+
+- reload OPP widget for via editor on update page
 
 - edit tests for new opp type
 	- and for postEntry

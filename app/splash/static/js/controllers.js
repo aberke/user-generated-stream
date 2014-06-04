@@ -232,6 +232,7 @@ function UpdateViaEditorCntl($scope, APIservice, OPPservice, FormService, Widget
 			entry.state = 'saved';
 		}
 		if (entry.id) { // it's been saved before -- not new so PUT
+			print('______ PUT', entry.id, entry)
 			APIservice.PUT('/opp/' + opp.id + '/entry/' + entry.id, entry).then(callback);
 		} else {
 			APIservice.POST('/opp/' + opp.id + '/entry', entry).then(function(retEntry) {
