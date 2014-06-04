@@ -68,7 +68,7 @@ Production Notes
 TODO
 ---
 
-- reject after accept not working
+- reject after accept not working?
 
 - edit tests for new opp type
 	- and for postEntry
