@@ -113,7 +113,7 @@ HuffpostLabsSlideshow.prototype.init = function(data) {
 	this.HTMLbuilder.init(this.container, this.OPPdata, function() {
 		var swipeContainer = self.container.getElementsByClassName('swipe')[0];
 		self.SwipeCntl = new Swipe(swipeContainer, {
-    		frameWidth: 290,
+    		frameWidth: 265,
 			startSlide: startSlide,
 			speed: 400,
 			auto: 7000,
@@ -162,7 +162,7 @@ HuffpostLabsPoll.prototype.init = function(data) {
 	this.HTMLbuilder.init(this.container, this.OPPdata, function() {
 		var swipeContainer = self.container.getElementsByClassName('swipe')[0];
 		self.SwipeCntl = new Swipe(swipeContainer, {
-			frameWidth: 290,
+			frameWidth: 265,
 			startSlide: 0,
 			speed: 400,
 			auto: false,

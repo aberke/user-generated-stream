@@ -24,8 +24,13 @@
 .huffpostlabs-opp{
 	margin: 10px auto;
 	display: block;
+	width: 395px;
+}
+.huffpostlabs-opp,
+.huffpostlabs-opp.mobile,
+.huffpostlabs-opp .opp-frame,
+.huffpostlabs-opp.mobile .opp-frame{
 	font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
-	width: 316px;
 }
 .huffpostlabs-opp .opp-frame{
 	display: inline-block;
@@ -46,11 +51,11 @@
 	text-align: left;
 	font-size: 16px;
 	font-weight: bold;
-	width: 68%;
+	width: 64%;
 }
 .huffpostlabs-opp .slide-info .slide-count {
 	text-align: right;
-	width: 12%;
+	width: 16%;
 }
 .huffpostlabs-opp .slide-info .slide-change-arrow{
 	display: inline;
@@ -67,12 +72,12 @@
 	border: 2px solid gray;
 }
 .huffpostlabs-opp .picture{
-	width: 290px;
-	height: 290px;
+	width: 265px;
+	height: 265px;
 	text-align: center;
 }
 .huffpostlabs-opp .picture img{
-	max-width: 290px;
+	max-width: 265px;
 	display: inline-block;
 }
 .huffpostlabs-opp .opp-frame .image-credit {
@@ -89,7 +94,7 @@
 	opacity: 0.4;
 }
 .huffpostlabs-opp .picture-caption {
-	width: 280px;
+	width: 268px;
 	padding: 4px;
 	text-align: left;
 }
