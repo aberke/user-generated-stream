@@ -49,7 +49,7 @@ var HuffpostLabsOPP = function(container, data) {
 			'picture': entry.img_url,
 			'link': this.buildShareLink(entry),
 			'caption': this.OPPdata.share_caption,
-			'description': '',
+			'description': ' ',
 			'statID': entry.stat.id,
 		});
 	}
