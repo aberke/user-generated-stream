@@ -68,7 +68,7 @@ Production Notes
 TODO
 ---
 
-- make sure no one creates via social title with spaces 
+- reject after accept not working
 
 - edit tests for new opp type
 	- and for postEntry

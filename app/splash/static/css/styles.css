@@ -273,34 +273,26 @@ footer {
 #update-partial .delete-entry-btn {
 	color: red;
 }
-#update-partial .entry-form input {
-	width: 75%;
-	padding: 4px;
-}
-#update-partial .entry-form label {
-	display: block;
-	margin-top: 10px;
-}
-#update-partial .entry-form .btn {
-	margin: 10px;
-	margin-left: 0;
-}
 #update-partial .entry-state {
 	color: gray;
 }
 #update-partial .info,
-#update-partial .opp-form {
+#update-partial .opp-form,
+#update-partial .entry-form {
 	max-width: 400px;
 	margin: 10px auto;
 
 }
 
-#update-partial .opp-form p{
+#update-partial .opp-form p,
+#update-partial .entry-form p{
 	color: gray;
 }
-#update-partial .opp-form input{
+#update-partial .opp-form input,
+#update-partial .entry-form input{
 	width: 100%;
 	margin-bottom: 10px;
+	padding: 3px 5px;
 }
 
 #update-partial .showing-entries {
