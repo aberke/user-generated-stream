@@ -29,7 +29,7 @@
 .huffpostlabs-opp,
 .huffpostlabs-opp.mobile,
 .huffpostlabs-opp .opp-frame,
-.huffpostlabs-opp.mobile .opp-frame{
+.huffpostlabs-opp.mobile .opp-frame p{
 	font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
 }
 .huffpostlabs-opp .opp-frame{
