@@ -54,7 +54,6 @@
 			});
 		}
 		this.OPPglobals.shareFB = function(shareData) {
-			console.log('shareFB', shareData)
 			/* using HuffpostLabs social-network-sharing library */
 			HuffpostLabsShareFB(shareData, function() {
 				PUT("/api/stat/" + shareData.statID + "/increment/facebook", null);
@@ -64,8 +63,12 @@
 			/* just log it */
 			PUT("/api/stat/" + shareData.statID + "/increment/email", null);
 		}
+		this.OPPglobals.completeCallback = function(upvotes, downvotes) {
+			/* on completion of a poll */
+			PUT("/api/stat/upvote/" + upvotes.join("-"), null);
+			PUT("/api/stat/downvote/" + downvotes.join("-"), null);
+		}
 	}
-
 
 
 

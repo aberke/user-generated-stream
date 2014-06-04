@@ -65,21 +65,60 @@ else:
 class Stat(Document):
 	""" _OPP id allows deletion of stat when OPP deleted """
 	_OPP 	 		= ObjectIdField(default=None)
+	# for polls
+	up_count 		= IntField(default=0)
+	down_count 		= IntField(default=0)
+	# social
 	fb_count 		= IntField(default=0)
 	email_count 	= IntField(default=0)
 	twitter_count 	= IntField(default=0)
 
+	@staticmethod
+	def upvote(id_list):
+		""" Takes list of stat ids as argument """
+		Stat.increment(id_list, "up_count")
+		# query_list = []
+		# for s in statID_list:
+		# 	try:
+		# 		query_list.append(ObjectId(s))
+		# 	except Exception as e: continue
+
+		# collection = Stat._get_collection()
+		# query   = { "_id" : { "$in": query_list } }
+		# update  = { "$inc": { "up_count": 1 } }
+		# res = collection.update(query, update, upsert=False, multi=True)
+
 
 	@staticmethod
-	def increment(id, count):
-		if count == 'facebook':
-			Stat.objects(id=id).update_one(inc__fb_count=1)
-		elif count == 'twitter':
-			Stat.objects(id=id).update_one(inc__twitter_count=1)
-		elif count == 'email':
-			Stat.objects(id=id).update_one(inc__email_count=1)
-		else:
+	def increment(id_list, count):
+		""" Parameters: 
+				id_list -- list of string ids of stats to udpate
+				count 	-- field to increment 
+		"""
+		objectId_list = []
+		for i in id_list:
+			try:
+				objectId_list.append(ObjectId(i))
+			except Exception as e: continue
+
+		collection = Stat._get_collection()
+		query   = { "_id" : { "$in": objectId_list } }
+		update  = { "$inc": { count: 1 } }
+		try:
+			res = collection.update(query, update, upsert=False, multi=True)
+		except Exception as e:
+			yellERROR(e)
 			raise Exception("Invalid count: {0}".format(count))
+
+		# TODO -- BETTER NAMING CONVENTIONS WITH INCREMENT_UPVOTE
+		# if count == 'facebook':
+		# 	Stat.objects(id=id).update_one(inc__fb_count=1)
+		# elif count == 'twitter':
+		# 	Stat.objects(id=id).update_one(inc__twitter_count=1)
+		# elif count == 'email':
+		# 	Stat.objects(id=id).update_one(inc__email_count=1)
+		# else:
+		# 	raise Exception("Invalid count: {0}".format(count))
 
 	@classmethod
 	def all(cls):
@@ -93,6 +132,8 @@ class Stat(Document):
 		return {
 			'id': str(self.id),
 			'_OPP': str(self._OPP),
+			'up_count': self.up_count,
+			'down_count': self.down_count,
 			'fb_count': self.fb_count,
 			'email_count':self.email_count,
 			'twitter_count': self.twitter_count,

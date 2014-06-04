@@ -1,7 +1,6 @@
 
 
 var HTMLbuilder = function() {
-	console.log('HTMLbuilder')
 	this.container;
 	this.BtnMaster;
 	this.data;
@@ -13,7 +12,7 @@ var HTMLbuilder = function() {
 }
 
 HTMLbuilder.prototype.init = function(container, data, callback) {
-	console.log('HTMLbuilder init')
+	console.log('HTMLbuilder init', data)
 	this.container = container;
 	this.data = data;
 	this.entryList = data.entryList;
@@ -76,7 +75,7 @@ HTMLbuilder.prototype.setImages = function(callback) {
 	// overridden by PollBuilder
 	this.imageElements = this.container.getElementsByClassName('entry-image');
 	var called = 0;
-	var waitingOn = imageElements.length;
+	var waitingOn = this.imageElements.length;
 	var call = function() {
 		called += 1;
 		if (called >= waitingOn) { callback(); }
@@ -84,11 +83,8 @@ HTMLbuilder.prototype.setImages = function(callback) {
 	for (var i=0; i<this.imageElements.length; i++) {
 		this.setImg(this.imageElements[i], this.entryList[i].img_url, call);
 	}
-	console.log('this.imageElements', this.imageElements)
 }
 HTMLbuilder.prototype.setImage = function(slideIndex, entryIndex) {
-	console.log('this.imageElements', this.imageElements)
-
 	this.setImg(this.imageElements[slideIndex], this.entryList[entryIndex].img_url, function(){});
 }
 HTMLbuilder.prototype.buildPicture = function() {
@@ -208,7 +204,6 @@ PollBuilder.prototype.setImages = function(callback) {
 	this.setImg(this.imageElements[2], this.entryList[1].img_url, call);
 }
 PollBuilder.prototype.buildPicture = function() {
-	console.log('PollBuilder buildPicture')
 	var html = "<div class='picture-frame'>";
 		html+= "	<div class='picture swipe'>";
 		html+= "		<div class='swipe-wrap'>";
@@ -222,6 +217,19 @@ PollBuilder.prototype.buildPicture = function() {
 		html+= "</div>";
 		html+= "<p class='image-credit'>credit</p>";
 	return html;
+}
+PollBuilder.prototype.complete = function() {
+	console.log('complete')
+	var onclickRefresh = this.onclickPrefix + ".refresh()";
+	var html = "<div class='opp-frame'>";
+		html += "<img onclick=" + onclickRefresh + " class='touch refresh' width='15px' src='/widget/icon/refresh.png'>";
+	for (var i=0; i<this.data.entryList.length; i++) {
+		html+= "<div>";
+		html+= (this.data.entryList[i].screen_name + ": " + this.data.entryList[i].stat.up_count + ":" + this.data.entryList[i].stat.down_count);
+		html+= "</div>";
+	}
+		html+="</div>";
+	this.container.innerHTML = html;
 }
 	
 

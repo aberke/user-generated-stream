@@ -1,6 +1,5 @@
 
 var HuffpostLabsOPP = function(container, data) { // Base Class -- HuffpostLabsPoll inherits from it
-	console.log('HuffpostLabsOPP', this, container, data)
 	this.container = container;
 
 	/* configured in init() */
@@ -99,7 +98,7 @@ HuffpostLabsSlideshow.prototype = new HuffpostLabsOPP();
 HuffpostLabsSlideshow.prototype.constructor = HuffpostLabsSlideshow;
 
 HuffpostLabsSlideshow.prototype.init = function(data) {
-	HuffpostLabsOPP.init.call(this, data);
+	HuffpostLabsOPP.prototype.init.call(this, data);
 
 	var self = this;
 	// when slideTransition called, this is transition event
@@ -123,14 +122,20 @@ HuffpostLabsSlideshow.prototype.init = function(data) {
 			stopPropagation: false,
 			callback: function(index, elem) {},
 			transitionEnd: slideTransition
-		if (numEntries > 0) { self.HTMLbuilder.setSlide(startSlide) };
+		});
+		if (self.numEntries > 0) { self.HTMLbuilder.setSlide(startSlide) };
 	});
 }
 
 var HuffpostLabsPoll = function(container, data) {
+	/* At Poll completion, shows results and PUTs users votes */
     // Call the parent constructor
     HuffpostLabsOPP.call(this, container, data);
     this.slideIndex;
+    this.nextEntryIndex;
+    this.complete;
+    this.upvotes; // list of statIDs for entries upvoted
+    this.downvotes; // list of statIDs for entries downvoted
     this.init(data);
 }
 // inherit HuffpostLabsOPP and correct the constructor pointer
@@ -139,17 +144,20 @@ HuffpostLabsPoll.prototype.constructor = HuffpostLabsPoll;
 
 HuffpostLabsPoll.prototype.init = function(data) {
 	HuffpostLabsOPP.prototype.init.call(this, data);
-	this.slideIndex = 0;
-    this.nextEntryIndex = 1;
+	this.entryIndex = -1;
+    this.nextEntryIndex = 0;
+	this.complete = false;
+    this.upvotes = []; // list of statIDs for entries upvoted
+    this.downvotes = []; // list of statIDs for entries downvoted
 
 	var self = this;
 	// when slideTransition called, this is transition event
-	var slideTransition = function(index, elem){ self.slideTransition(index, elem); }
+	var slideEnd = function(index, elem){ self.slideEnd(index, elem); }
+	var slideStart = function(index, elem){ self.slideStart(index, elem); }
 	
 	// might be a reload - if so reuse HTMLbuilder
 	this.HTMLbuilder= new PollBuilder();
 
-	
 	/* must add all slides/setup images before can create Swipe */
 	this.HTMLbuilder.init(this.container, this.OPPdata, function() {
 		var swipeContainer = self.container.getElementsByClassName('swipe')[0];
@@ -161,37 +169,51 @@ HuffpostLabsPoll.prototype.init = function(data) {
 			continuous: true,
 			disableScroll: false,
 			stopPropagation: false,
-			callback: function(index, elem) {},
-			transitionEnd: slideTransition
+			callback: slideStart,
+			transitionEnd: slideEnd,
 		});
-		if (self.numEntries > 0) { self.HTMLbuilder.setSlide(0) };
+		if (self.numEntries > 1) { self.slideEnd(0) };
 	});
 }
-HuffpostLabsPoll.prototype.slideTransition = function(index, element) {
-	console.log("slideTransition", index, 'this.entryIndex', this.entryIndex)
-		// console.log('slideTransition', index, element)
-		if (index == (this.slideIndex + 1)%3) {
-			console.log('upvote')
+HuffpostLabsPoll.prototype.tallyVote = function(prevSlideIndex, newSlideIndex) {
+	if (this.entryIndex >= 0) {
+		var stat = this.OPPdata.entryList[this.entryIndex].stat;
+		if (newSlideIndex == (prevSlideIndex + 1)%3) {
+			this.upvotes.push(stat.id);
 		} else {
-			console.log('downvote')
+			this.downvotes.push(stat.id);
 		}
-		this.slideIndex = index;
+	}
+}
+HuffpostLabsPoll.prototype.slideStart = function(index) {
+	if (this.complete) {
+		this.tallyVote(this.slideIndex, index); // won't get to slideEnd
+		this.HTMLbuilder.complete();
+		OPPglobals.completeCallback(this.upvotes, this.downvotes);
+	}
+}
+HuffpostLabsPoll.prototype.slideEnd = function(index) {
+	if (this.complete) { return; } // should/will NOT be called
 
-	var slideIndexLeft = (this.slideIndex==0 ? 2 : this.slideIndex-1);
-	var slideIndexRight = ((this.slideIndex + 1)%3);
-	console.log('slideIndex', this.slideIndex, slideIndexLeft, slideIndexRight)
+	this.tallyVote(this.slideIndex, index);
 
-
-	this.HTMLbuilder.setSlide(this.nextEntryIndex);
+	this.slideIndex = index;
 	this.entryIndex += 1;
 	this.nextEntryIndex += 1;
-	console.log('this.nextEntryIndex', this.nextEntryIndex, this.OPPdata.entryList.length)
-	if (this.nextEntryIndex < this.OPPdata.entryList.length) {
-		// setup next slide
-		this.HTMLbuilder.setImage(slideIndexLeft, this.nextEntryIndex)
-		this.HTMLbuilder.setImage(slideIndexRight, this.nextEntryIndex)
-	} else {
-		console.log('DONE -- TODO')
+	this.HTMLbuilder.setSlide(this.entryIndex);
+
+	if (this.nextEntryIndex == this.OPPdata.entryList.length) {
+		// this is the last slide
+		this.complete = true;
+		return;
 	}
+	// otherwise set up next slide
+	var slideIndexLeft = (this.slideIndex==0 ? 2 : this.slideIndex-1);
+	var slideIndexRight = ((this.slideIndex + 1)%3);
+	this.HTMLbuilder.setImage(slideIndexLeft, this.nextEntryIndex)
+	this.HTMLbuilder.setImage(slideIndexRight, this.nextEntryIndex)
+}
+HuffpostLabsPoll.prototype.refresh = function() {
+	this.init(this.OPPdata);
 }
 

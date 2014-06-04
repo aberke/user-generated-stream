@@ -129,7 +129,9 @@ footer {
 }
 
 /******* opp-partial **********/
-#opp-partial .huffpostlabs-opp {
+#opp-partial .embed-container {
+	max-width: 500px;
+	margin: 50px auto;
 }
 
 /******* update-partial *******/

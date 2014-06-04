@@ -30,11 +30,32 @@ def GETstat(statID):
 		stat = stat.jsonify()
 	return dumpJSON(stat)
 
+# ***** The following PUTs made with JSONP on widget pages -- need GET ****
 @api.route('/stat/<statID>/increment/<count>', methods=['GET', 'PUT'])
 def PUTstatIncrement(statID, count):
-	""" PUT's made with JSONP on widget pages - need GET """
 	try:
-		Stat.increment(statID, count)
+		Stat.increment([statID], count)
+		return respond200()
+	except Exception as e:
+		return respond500(e)
+
+# on completion of a poll, opp makes requests:
+# 	/stat/upvote/statID-statID-
+# 	/stat/downvote/statID-statID-
+@api.route('/stat/upvote/<statIDs>', methods=['GET', 'PUT'])
+def PUTstatUpvote(statIDs):
+	statID_list = statIDs.split('-')
+	try:
+		Stat.increment(statID_list, "up_count")
+		return respond200()
+	except Exception as e:
+		return respond500(e)
+
+@api.route('/stat/downvote/<statIDs>', methods=['GET', 'PUT'])
+def PUTstatDownvote(statIDs):
+	statID_list = statIDs.split('-')
+	try:
+		Stat.increment(statID_list, "down_count")
 		return respond200()
 	except Exception as e:
 		return respond500(e)

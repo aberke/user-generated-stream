@@ -7,15 +7,136 @@
     <meta name="description" content="Quiz Widget App: Create custom quizzes and embed them on your page.">
     <meta name="author" content="Alex Berke at Huffpost Labs">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+	<link href="/widget/widget.css" rel="stylesheet">
 </head>
 
 <body>
 
+<div style="width:45%;display:inline-block">
+MAIN VIEW
+
+<div class='huffpostlabs-opp edit via-poll'>
+
+	<div class='opp-frame'>
+		<div class='slide-info'>
+			<img onclick='swipe.prev()' class='touch slide-change-arrow left' width='10px' src='/widget/icon/left-arrow.png'>
+			<p class='title'>
+				<span ng-show="opp.via=='social'">#</span>
+				{{opp.title}}</p>
+			<p class='slide-count'>
+				1/{{opp.entryList.length}}
+				</p>
+			<img onclick='swipe.next()' class='touch slide-change-arrow right' width='10px' src='/widget/icon/right-arrow.png'>
+		</div>
+		<div class='picture-frame'>
+			<div class='picture swipe'>
+				<div class='swipe-wrap'>
+					<div class='image-container'>
+						<img class='entry-image'> <!-- src filled in by link function -->
+					</div>
+				</div>
+			</div>
+		</div>
+		<p class='image-credit'>{{entry.source}}</p>
+		<div class='picture-caption'>
+
+			<span class='entry-header'>
+				<span ng-show="opp.via=='social'">@</span>
+				{{entry.screen_name || entry.header}}
+			</span>
+			<span class='entry-text'>{{entry.text}}</span>
+
+			
+			<div class='share-container'>
+				<p>Share this photo</p>
+				<div class='fb-share share'>
+					<img width='30px' height='30px' class='share share-btn' src='/widget/icon/fb-icon.png'>
+					<img class='share share-btn-swap' width='30px' height='30px' src='/widget/icon/fb-icon-blue.png'>
+				</div>
+				<div class='twitter-share share'>
+					<img width='30px' height='30px' class='share share-btn' src='/widget/icon/twitter-icon.png'>
+					<img class='share share-btn-swap' width='30px' height='30px' src='/widget/icon/twitter-icon-blue.png'>
+				</div>
+				<div class='email-share share'>
+					<img width='30px' height='30px' class='share email-share-btn' src='/widget/icon/email.png'>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+
+<div style="width:45%;display:inline-block">
+RESULTS VIEW
+<div class='huffpostlabs-opp edit via-poll'>
+
+	<div class='opp-frame'>
+		<div class='slide-info'>
+			<!-- <img onclick='swipe.prev()' class='touch slide-change-arrow left' width='10px' src='/widget/icon/left-arrow.png'> -->
+			<p class='title'>
+				<span ng-show="opp.via=='social'">#</span>
+				titleofpoll</p>
+<!-- 			<p class='slide-count'>
+				1/10
+				</p> -->
+			<img onclick='refresh()' class='touch refresh' width='15px' src='/widget/icon/refresh.png'>
+			<!-- <img onclick='swipe.next()' class='touch slide-change-arrow right' width='10px' src='/widget/icon/right-arrow.png'> -->
+		</div>
+		<div class='picture-frame'>
+			<div class='picture swipe'>
+				<div class='swipe-wrap'>
+					<div class='image-container'>
+						<img class='entry-image'> <!-- src filled in by link function -->
+					</div>
+				</div>
+			</div>
+		</div>
+		<p class='image-credit'>{{entry.source}}</p>
+		<div class='picture-caption'>
+
+			<span class='entry-header'>
+				<span ng-show="opp.via=='social'">@</span>
+				{{entry.screen_name || entry.header}}
+			</span>
+			<span class='entry-text'>{{entry.text}}</span>
+
+			
+			<div class='share-container'>
+				<p>Share this photo</p>
+				<div class='fb-share share'>
+					<img width='30px' height='30px' class='share share-btn' src='/widget/icon/fb-icon.png'>
+					<img class='share share-btn-swap' width='30px' height='30px' src='/widget/icon/fb-icon-blue.png'>
+				</div>
+				<div class='twitter-share share'>
+					<img width='30px' height='30px' class='share share-btn' src='/widget/icon/twitter-icon.png'>
+					<img class='share share-btn-swap' width='30px' height='30px' src='/widget/icon/twitter-icon-blue.png'>
+				</div>
+				<div class='email-share share'>
+					<img width='30px' height='30px' class='share email-share-btn' src='/widget/icon/email.png'>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+</div>
+
+
+
 <br />
 <br />
 <br />
 
-<div class='huffpostlabs-opp' id='538793708f4a0f456aec2cc5'>
+
+
+
+
+
+<!-- testing from before -->
+
+<!-- <div class='huffpostlabs-opp' id='538793708f4a0f456aec2cc5'>
 
 	<div class='opp-container'>
 		<div class='opp-frame'>
@@ -59,9 +180,9 @@
  
 
 
-</div>
+</div> -->
 
-<script src="http://127.0.0.1:3000/widget/o.js"></script>
+<!-- <script src="http://127.0.0.1:3000/widget/o.js"></script> -->
 
 <br />
 <br />
