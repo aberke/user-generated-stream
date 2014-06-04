@@ -70,7 +70,7 @@ TODO
 
 - handle when poll has zero/one entry
 
-- reload OPP widget for via editor on update page
+- reject after accept not working?
 
 - edit tests for new opp type
 	- and for postEntry

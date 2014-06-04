@@ -40,29 +40,30 @@ HuffpostLabsOPP.prototype.buildShareLink = function(entry) {
 HuffpostLabsOPP.prototype.shareFB = function() {
 	var entry = this.OPPdata.entryList[this.entryIndex];
 	OPPglobals.shareFB({
-		'name': ('#' + this.OPPdata.title),
+		'name': this.OPPdata.share_title,
 		'picture': entry.img_url,
 		'link': this.buildShareLink(entry),
-		'caption': entry.text,
-		'description': 'TODO',
+		'caption': this.OPPdata.share_caption,
+		'description': ' ',
 		'statID': entry.stat.id,
 	});
 }
 HuffpostLabsOPP.prototype.shareTwitter = function() {
 	var entry = this.OPPdata.entryList[this.entryIndex];
 	OPPglobals.shareTwitter({
-		'text': "Look at this widget!",
+		'text': this.OPPdata.share_title,
 		'link': this.buildShareLink(entry),
 		'statID': entry.stat.id,
 	});
 }
+
 HuffpostLabsOPP.prototype.shareEmail = function() {
 	var entry = this.OPPdata.entryList[this.entryIndex];
 
-	var subject = "[HuffpostLabs] #" + this.OPPdata.title;
-	var body 	= (this.buildShareLink(entry));
+	var subject = "[HuffpostLabs] " + this.OPPdata.share_title;
+	var body 	= (this.OPPdata.share_caption + '\n' + this.buildShareLink(entry));
 	var mailto 	= ("mailto:?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body));
-
+	
 	location.href = mailto;
 	OPPglobals.shareEmail({'statID': entry.stat.id})
 }
@@ -122,11 +123,9 @@ HuffpostLabsSlideshow.prototype.init = function(data) {
 			stopPropagation: false,
 			callback: function(index, elem) {},
 			transitionEnd: slideTransition
-		});
 		if (numEntries > 0) { self.HTMLbuilder.setSlide(startSlide) };
 	});
 }
-
 
 var HuffpostLabsPoll = function(container, data) {
     // Call the parent constructor

@@ -187,12 +187,8 @@ function UpdateCntl($scope, APIservice, OPPservice, FormService, WidgetService, 
 	$scope.acceptEntry = function(from_entryList, entry) {
 		moveEntry(from_entryList, 'accept', entry);
 	}
-	// to save start and share_link
 	$scope.saveOPP = function() {
-		APIservice.PUT('/opp/' + opp.id, $scope.opp).then(function(data) {
-			/* Don't set $scope.opp = data, start over with fetching data since date changed */
-			init();
-		});
+		APIservice.PUT('/opp/' + opp.id, $scope.opp).then(init);
 	}
 
 	var init = function() {
@@ -220,6 +216,7 @@ function UpdateViaEditorCntl($scope, APIservice, OPPservice, FormService, Widget
 		var index = $scope.entryList.indexOf(entry);
 		var callback = function() {
 			$scope.entryList.splice(index, 1);
+			reloadOPP();
 		}
 		if (!entry.id) { // not saved server side, needs not be deleted server side
 			return callback();
@@ -230,13 +227,13 @@ function UpdateViaEditorCntl($scope, APIservice, OPPservice, FormService, Widget
 		entry.state = 'saving';
 		var callback = function() {
 			entry.state = 'saved';
+			reloadOPP();
 		}
 		if (entry.id) { // it's been saved before -- not new so PUT
 			print('______ PUT', entry.id, entry)
 			APIservice.PUT('/opp/' + opp.id + '/entry/' + entry.id, entry).then(callback);
 		} else {
 			APIservice.POST('/opp/' + opp.id + '/entry', entry).then(function(retEntry) {
-				console.log('POST entry', retEntry);
 				entry.id = retEntry.id;
 				callback();
 			});
@@ -252,11 +249,11 @@ function UpdateViaEditorCntl($scope, APIservice, OPPservice, FormService, Widget
 		});
 	}
 
-	// to save title and share_link
 	$scope.saveOPP = function() {
-		APIservice.PUT('/opp/' + opp.id, $scope.opp).then(function(data) {
-			/* Don't set $scope.opp = data, start over with fetching data since date changed */
-			init();
+		$scope.opp.state = 'saving';
+		APIservice.PUT('/opp/' + opp.id, $scope.opp).then(function() {
+			$scope.opp.state = 'saved';
+			reloadOPP();
 		});
 	}
 

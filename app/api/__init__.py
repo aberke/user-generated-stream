@@ -208,9 +208,8 @@ def PUTopp(opp):
 	""" saves start date """
 	data = json.loads(request.data)
 	try:
-		opp = opp.update(data)
-		opp.save()
-		return dumpJSON(opp.jsonify())
+		opp.update(data)
+		return respond200()
 	except Exception as e:
 		return respond500(e)
 
