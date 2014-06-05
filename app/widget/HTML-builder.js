@@ -68,7 +68,8 @@ HTMLbuilder.prototype.setImg = function(img, img_url, callback) {
 				   callback for when done
 		sets the empty img element's src and aligns the img in its frame
 	*/
- 	if (!img_url) { return callback(); }
+ 	//if (!img_url) { return callback(); }
+ 	if (!img_url) { return }
  	self = this;
 
 	img.onload = function() {
@@ -77,7 +78,7 @@ HTMLbuilder.prototype.setImg = function(img, img_url, callback) {
 		if (img.height > img.width) {
 			img.style.height = (self.pictureFrameDimension + "px");
 			// browser will handle the rest
-			return callback(); 
+			return;// callback(); 
 		}
 		// else width <= height: vertically center image - handle short img awkwardly sticking to top of container
 		var originalWidth = img.width;
@@ -86,21 +87,21 @@ HTMLbuilder.prototype.setImg = function(img, img_url, callback) {
 		img.height = (originalHeight/originalWidth)*self.pictureFrameDimension;
 		var extra_space = self.pictureFrameDimension - img.height;
 		img.style.marginTop = (extra_space/2).toString() + "px";
-		callback();
+		//callback();
 	};
 	img.src=img_url;
 }
 HTMLbuilder.prototype.setImages = function(callback) {
 	// overridden by PollBuilder
 	this.imageElements = this.container.getElementsByClassName('entry-image');
-	var called = 0;
-	var waitingOn = this.imageElements.length;
-	var call = function() {
-		called += 1;
-		if (called >= waitingOn) { callback(); }
-	}
+	// var called = 0;
+	// var waitingOn = this.imageElements.length;
+	// var call = function() {
+	// 	called += 1;
+	// 	if (called >= waitingOn) { callback(); }
+	// }
 	for (var i=0; i<this.imageElements.length; i++) {
-		this.setImg(this.imageElements[i], this.entryList[i].img_url, call);
+		this.setImg(this.imageElements[i], this.entryList[i].img_url);//, call);
 	}
 }
 HTMLbuilder.prototype.setImage = function(slideIndex, entryIndex) {
@@ -180,13 +181,14 @@ HTMLbuilder.prototype.buildWidget = function(callback) {
 	this.container.innerHTML = html;
 	
 	// add the images to the image-containers
-	this.setImages(callback);
-
+	//this.setImages(callback);
+	this.setImages();
 	// pick up the important reusable pieces
 	this.imgCredit   = this.container.getElementsByClassName('image-credit')[0];
 	this.entryHeader = this.container.getElementsByClassName('entry-header')[0];
 	this.entryText   = this.container.getElementsByClassName('entry-text')[0];
 	this.slideIndex  = this.container.getElementsByClassName('slide-index')[0];
+	callback();
 }
 
 /* for Polls ------------------------------------------------- */
