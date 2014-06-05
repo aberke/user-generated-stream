@@ -20,11 +20,10 @@
 }
 
 
-/* non-mobile version -- shrink with media queries */
+/* non-mobile version -- shrink with media queries? */
 .huffpostlabs-opp{
 	margin: 10px auto;
 	display: block;
-	width: 395px;
 }
 .huffpostlabs-opp,
 .huffpostlabs-opp.mobile,
