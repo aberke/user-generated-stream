@@ -1,3 +1,12 @@
+/*
+	HuffpostLabsOPP is base class extended by HuffpostLabsPoll.
+		- Slideshows instantiate HuffpostLabsOPP
+		- Polls instantiate HuffpostLabsPoll
+
+	HuffpostLabsOPP owns a HTMLbuilder (see HTML-builder.js) to handle building HTML
+					owns a SwipeCntl (see swipe.js in /vender) to handle slide transitions
+*/
+
 
 var HuffpostLabsOPP = function(container, data) { // Base Class -- HuffpostLabsPoll inherits from it
 	this.container = container;
@@ -112,22 +121,20 @@ HuffpostLabsSlideshow.prototype.init = function(data) {
 	// might be a reload - if so reuse HTMLbuilder
 	this.HTMLbuilder = (this.HTMLbuilder || new HTMLbuilder());
 	
-	/* must add all slides/setup images before can create Swipe */
-	this.HTMLbuilder.init(this.container, this.OPPdata, function() {
-		var swipeContainer = self.container.getElementsByClassName('swipe')[0];
-		self.SwipeCntl = new Swipe(swipeContainer, {
-    		frameWidth: 265,
-			startSlide: startSlide,
-			speed: 400,
-			auto: 7000,
-			continuous: true,
-			disableScroll: false,
-			stopPropagation: false,
-			callback: function(index, elem) {},
-			transitionEnd: slideTransition
-		});
-		if (self.numEntries > 0) { self.HTMLbuilder.setSlide(startSlide) };
+	this.HTMLbuilder.init(this.container, this.OPPdata);
+	var swipeContainer = this.container.getElementsByClassName('swipe')[0];
+	this.SwipeCntl = new Swipe(swipeContainer, {
+		frameWidth: 265,
+		startSlide: startSlide,
+		speed: 400,
+		auto: 7000,
+		continuous: true,
+		disableScroll: false,
+		stopPropagation: false,
+		callback: function(index, elem) {},
+		transitionEnd: slideTransition
 	});
+	if (this.numEntries > 0) { this.HTMLbuilder.setSlide(startSlide) };
 }
 
 var HuffpostLabsPoll = function(container, data) {
@@ -160,25 +167,22 @@ HuffpostLabsPoll.prototype.init = function(data) {
 	var slideEnd = function(index, elem){ self.slideEnd(index, elem); }
 	var slideStart = function(index, elem){ self.slideStart(index, elem); }
 	
-	// might be a reload - if so reuse HTMLbuilder
 	this.HTMLbuilder = new PollBuilder();
 
-	/* must add all slides/setup images before can create Swipe */
-	this.HTMLbuilder.init(this.container, this.OPPdata, function() {
-		var swipeContainer = self.container.getElementsByClassName('swipe')[0];
-		self.SwipeCntl = new Swipe(swipeContainer, {
-			frameWidth: 265,
-			startSlide: 0,
-			speed: 400,
-			auto: false,
-			continuous: true,
-			disableScroll: false,
-			stopPropagation: false,
-			callback: slideStart,
-			transitionEnd: slideEnd,
-		});
-		self.slideEnd(0);
+	this.HTMLbuilder.init(this.container, this.OPPdata);
+	var swipeContainer = this.container.getElementsByClassName('swipe')[0];
+	this.SwipeCntl = new Swipe(swipeContainer, {
+		frameWidth: 265,
+		startSlide: 0,
+		speed: 400,
+		auto: false,
+		continuous: true,
+		disableScroll: false,
+		stopPropagation: false,
+		callback: slideStart,
+		transitionEnd: slideEnd,
 	});
+	this.slideEnd(0);
 }
 /* ---- for sharing ------- */
 HuffpostLabsPoll.prototype.buildShareLink = function(entry) {

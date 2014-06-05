@@ -11,12 +11,12 @@ var HTMLbuilder = function() {
 	this.static_domain = OPPglobals.static_domain;
 }
 
-HTMLbuilder.prototype.init = function(container, data, callback) {
+HTMLbuilder.prototype.init = function(container, data){
 	this.container = container;
 	this.data = data;
 	this.entryList = data.entryList;
 	this.onclickPrefix = ("OPPwidgets['" + data.id + "']");
-	this.buildWidget(callback);
+	this.buildWidget();
 	// if mobile add mobile class to container and use HuffpostLabsBtnMaster
 	this.container.className.replace(/\bmobile\b|\bnon-mobile\b/, ''); // incase its a reload
 	if (OPPglobals.mobile) {
@@ -62,23 +62,21 @@ HTMLbuilder.prototype.buildSlideInfo = function(complete) {
 		html+= "</div>";
 	return html;
 }	
-HTMLbuilder.prototype.setImg = function(img, img_url, callback) {
+HTMLbuilder.prototype.setImg = function(img, img_url){
 	/* Parameters: image element (img)
 				   URL of image to set img src to (img_url)
-				   callback for when done
 		sets the empty img element's src and aligns the img in its frame
 	*/
- 	//if (!img_url) { return callback(); }
  	if (!img_url) { return }
  	self = this;
 
 	img.onload = function() {
-		if (!img.height) { console.log('ERROR: !img.height'); return callback(); }
+		if (!img.height) { return; }
 		// if height > width: horizontally center image
 		if (img.height > img.width) {
 			img.style.height = (self.pictureFrameDimension + "px");
 			// browser will handle the rest
-			return;// callback(); 
+			return;
 		}
 		// else width <= height: vertically center image - handle short img awkwardly sticking to top of container
 		var originalWidth = img.width;
@@ -87,21 +85,14 @@ HTMLbuilder.prototype.setImg = function(img, img_url, callback) {
 		img.height = (originalHeight/originalWidth)*self.pictureFrameDimension;
 		var extra_space = self.pictureFrameDimension - img.height;
 		img.style.marginTop = (extra_space/2).toString() + "px";
-		//callback();
 	};
 	img.src=img_url;
 }
-HTMLbuilder.prototype.setImages = function(callback) {
+HTMLbuilder.prototype.setImages = function(){
 	// overridden by PollBuilder
 	this.imageElements = this.container.getElementsByClassName('entry-image');
-	// var called = 0;
-	// var waitingOn = this.imageElements.length;
-	// var call = function() {
-	// 	called += 1;
-	// 	if (called >= waitingOn) { callback(); }
-	// }
 	for (var i=0; i<this.imageElements.length; i++) {
-		this.setImg(this.imageElements[i], this.entryList[i].img_url);//, call);
+		this.setImg(this.imageElements[i], this.entryList[i].img_url);
 	}
 }
 HTMLbuilder.prototype.setImage = function(slideIndex, entryIndex) {
@@ -170,7 +161,7 @@ HTMLbuilder.prototype.buildCaption = function() {
 	return html;
 }
 
-HTMLbuilder.prototype.buildWidget = function(callback) {
+HTMLbuilder.prototype.buildWidget = function() {
 
 	var html = "<div class='opp-frame'>";
 		html+= this.buildSlideInfo();
@@ -181,14 +172,12 @@ HTMLbuilder.prototype.buildWidget = function(callback) {
 	this.container.innerHTML = html;
 	
 	// add the images to the image-containers
-	//this.setImages(callback);
 	this.setImages();
 	// pick up the important reusable pieces
 	this.imgCredit   = this.container.getElementsByClassName('image-credit')[0];
 	this.entryHeader = this.container.getElementsByClassName('entry-header')[0];
 	this.entryText   = this.container.getElementsByClassName('entry-text')[0];
 	this.slideIndex  = this.container.getElementsByClassName('slide-index')[0];
-	callback();
 }
 
 /* for Polls ------------------------------------------------- */
@@ -200,32 +189,26 @@ var PollBuilder = function() {
 PollBuilder.prototype = new HTMLbuilder();
 PollBuilder.prototype.constructor = PollBuilder;
 
-PollBuilder.prototype.init = function(container, data, callback) {
-	HTMLbuilder.prototype.init.call(this, container, data, callback);
+PollBuilder.prototype.init = function(container, data) {
+	HTMLbuilder.prototype.init.call(this, container, data);
 	this.container.className += (" poll");
 }
 
-PollBuilder.prototype.setImages = function(callback) {
+PollBuilder.prototype.setImages = function(){
 	/* there are exactly 3 image-containers -- nextSlide | currentSlide | nextSlide
 		container[0]: entry_0
 		container[1]: entry_1
 		container[2]: entry_1 (because this is like container[-1])
 	*/
 	if (!this.entryList.length) { return; }
+
 	this.imageElements = this.container.getElementsByClassName('entry-image');
-	var called = 0;
-	var waitingOn = 3;
-	var call = function() {
-		called += 1;
-		if (called >= waitingOn) { callback(); }
-	}
-	this.setImg(this.imageElements[0], this.entryList[0].img_url, call);
+	this.setImg(this.imageElements[0], this.entryList[0].img_url);
 	if (this.entryList.length < 2) { 
-		waitingOn = 1;
 		return; 
 	}
-	this.setImg(this.imageElements[1], this.entryList[1].img_url, call);
-	this.setImg(this.imageElements[2], this.entryList[1].img_url, call);
+	this.setImg(this.imageElements[1], this.entryList[1].img_url);
+	this.setImg(this.imageElements[2], this.entryList[1].img_url);
 }
 PollBuilder.prototype.buildPicture = function() {
 	var html = "<div class='picture-frame'>";
