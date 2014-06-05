@@ -28,18 +28,44 @@ HTMLbuilder.prototype.init = function(container, data, callback) {
 	}
 	// add opp via for style sheets
 	this.container.className += (" via-" + this.data.via);
+	// TODO -- PUT IN CLASS
+	if (this.data.widget_type == 'poll') {
+		this.container.className += (" poll");
+	} else {
+		this.container.className += (" slideshow");
+	}
 }
-HTMLbuilder.prototype.buildSlideInfo = function() {
-	var onclickPrev = this.onclickPrefix + ".SwipeCntl.prev()";
-	var onclickNext = this.onclickPrefix + ".SwipeCntl.next()";
-	var html = "<div class='slide-info'>"
-		html+= "	<img onclick=" + onclickPrev + " class='touch slide-change-arrow left' width='10px' src='" + this.static_domain + "/widget/icon/left-arrow.png'>";
+HTMLbuilder.prototype.buildSlideInfo = function(complete) {
+	/* Parameter: complete (boolean)
+			complete boolean used by Poll once complete 
+				if complete: show refresh instead of prev/next
+				elements marked with showOnIncomplete will show iff complete==false
+				elements marked with showOnComplete will show iff complete==true
+	*/
+	var onclickPrev    = this.onclickPrefix + ".SwipeCntl.prev()";
+	var onclickNext    = this.onclickPrefix + ".SwipeCntl.next()";
+	var onclickRefresh = this.onclickPrefix + ".refresh()";
+	// show/hide elements build below base on whether or not to show in the complete opp-frame or not
+	var showOnComplete 	=  ("style='display:" + (complete ? "inline-block" : "none") + "'");
+	var showOnIncomplete =  ("style='display:" + (complete ? "none" : "inline-block") + "'");
+
+	// for polls there are thumbs for swipe, for slideshows there are arrows
+	var swipeLeftImg = "/widget/icon/left-arrow.png";
+	var swipeRightImg = "/widget/icon/right-arrow.png";
+	if (this.data.widget_type == 'poll') {
+		swipeLeftImg = "/widget/icon/thumbs-down.jpeg";
+		swipeRightImg = "/widget/icon/thumbs-up.jpeg";
+	}
+
+	var html = "<div class='slide-info'>";
+		html+= "	<img " + showOnIncomplete + " onclick=" + onclickPrev + " class='touch slide-change-icon left' width='10px' src='" + this.static_domain + swipeLeftImg + "'>";
 		html+= "	<p class='title'>" + (this.data.via == 'social' ? '#' : '') + this.data.title + "</p>";
-		html+= "	<p class='slide-count'>";
+		html+= "	<p " + showOnIncomplete + " class='slide-count'>";
 		/* slide-index is 0 until setSlide called */
 		html+= "		<span class='slide-index'>0</span>/" + this.entryList.length;
 		html+= "	</p>";
-		html+= "	<img onclick=" + onclickNext + " class='touch slide-change-arrow right' width='10px' src='" + this.static_domain + "/widget/icon/right-arrow.png'>";
+		html += "	<img " + showOnComplete + " onclick=" + onclickRefresh + " class='touch refresh' width='15px' src='" + this.static_domain + "/widget/icon/refresh.png'>";
+		html+= "	<img " + showOnIncomplete + " onclick=" + onclickNext + " class='touch slide-change-icon right' width='10px' src='" + this.static_domain + swipeRightImg + "'>";
 		html+= "</div>";
 	return html;
 }	
@@ -117,29 +143,33 @@ HTMLbuilder.prototype.setSlide = function(index) {
 	this.setCaption(entry);
 	this.slideIndex.innerHTML = index + 1;
 }
-HTMLbuilder.prototype.buildCaption = function() {
-	var onclickShareFB = this.onclickPrefix + ".shareFB()";
+HTMLbuilder.prototype.buildShareContainer = function() {
+	/* taken out of buildCaption since poll uses this for results building without caption */
+	var onclickShareFB 		= this.onclickPrefix + ".shareFB()";
+	var onclickShareEmail 	= this.onclickPrefix + ".shareEmail()";
 	var onclickShareTwitter = this.onclickPrefix + ".shareTwitter()";
 
-	var onclickShareEmail = this.onclickPrefix + ".shareEmail()";
-
+	var html = "<div class='share-container'>";
+		html+= "	<p class='share-text'>Share this photo</p>";
+		html+= "	<div data-huffpostlabs-btn onclick=" + onclickShareFB + " class='fb-share share'>";
+		html+= "		<img width='30px' height='30px' class='share-btn' src='" + this.static_domain + "/widget/icon/fb-icon.png'>";
+		html+= "		<img class='share-btn-swap' width='30px' height='30px' src='" + this.static_domain + "/widget/icon/fb-icon-blue.png'>";
+		html+= "	</div>";
+		html+= "	<div data-huffpostlabs-btn onclick=" + onclickShareTwitter + " class='twitter-share share'>";
+		html+= "		<img width='30px' height='30px' class='share-btn' src='" + this.static_domain + "/widget/icon/twitter-icon.png'>";
+		html+= "		<img class='share-btn-swap' width='30px' height='30px' src='" + this.static_domain + "/widget/icon/twitter-icon-blue.png'>";
+		html+= "	</div>";
+		html+= "	<div data-huffpostlabs-btn onclick=" + onclickShareEmail + " class='email-share share'>";
+		html+= "		<img width='30px' height='30px' class='email-share-btn' src='" + this.static_domain + "/widget/icon/email.png'>";
+		html+= "	</div>";
+		html+= "</div>";
+	return html;	
+}
+HTMLbuilder.prototype.buildCaption = function() {
 	var html = "<div class='picture-caption'>";
 		html+= "	<span class='entry-header'></span>";	
 		html+= "	<span class='entry-text'></span>";	
-		html+= "	<div class='share-container'>";
-		html+= "		<p>Share this photo</p>";
-		html+= "		<div data-huffpostlabs-btn onclick=" + onclickShareFB + " class='fb-share share'>";
-		html+= "			<img width='30px' height='30px' class='share-btn' src='" + this.static_domain + "/widget/icon/fb-icon.png'>";
-		html+= "			<img class='share-btn-swap' width='30px' height='30px' src='" + this.static_domain + "/widget/icon/fb-icon-blue.png'>";
-		html+= "		</div>";
-		html+= "		<div data-huffpostlabs-btn onclick=" + onclickShareTwitter + " class='twitter-share share'>";
-		html+= "			<img width='30px' height='30px' class='share-btn' src='" + this.static_domain + "/widget/icon/twitter-icon.png'>";
-		html+= "			<img class='share-btn-swap' width='30px' height='30px' src='" + this.static_domain + "/widget/icon/twitter-icon-blue.png'>";
-		html+= "		</div>";
-		html+= "		<div data-huffpostlabs-btn onclick=" + onclickShareEmail + " class='email-share share'>";
-		html+= "			<img width='30px' height='30px' class='email-share-btn' src='" + this.static_domain + "/widget/icon/email.png'>";
-		html+= "		</div>";
-		html+= "	</div>";
+		html+= 		this.buildShareContainer();
 		html+= "</div>";
 	return html;
 }
@@ -158,12 +188,13 @@ HTMLbuilder.prototype.buildWidget = function(callback) {
 	this.setImages(callback);
 
 	// pick up the important reusable pieces
-	this.imgCredit = this.container.getElementsByClassName('image-credit')[0];
+	this.imgCredit   = this.container.getElementsByClassName('image-credit')[0];
 	this.entryHeader = this.container.getElementsByClassName('entry-header')[0];
 	this.entryText   = this.container.getElementsByClassName('entry-text')[0];
 	this.slideIndex  = this.container.getElementsByClassName('slide-index')[0];
 }
 
+/* for Polls ------------------------------------------------- */
 var PollBuilder = function() {
 	// Call the parent constructor
     HTMLbuilder.call(this);
@@ -171,19 +202,6 @@ var PollBuilder = function() {
 // inherit HTHMLbuilder and correct the constructor pointer
 PollBuilder.prototype = new HTMLbuilder();
 PollBuilder.prototype.constructor = PollBuilder;
-
-/* for Polls ------------------------------------------------- 
-	var slides;
-	var len = this.entryList.length;
-	this.setupPoll = function() {
-		slides = container.getElementsByClassName('image-container');
-		console.log('setupPoll slides', slides)
-	}
-	this.fillSlide = function(s, e) {
-		slides[s].innerHTML += ("<br/>SLIDE " + s + " - ENTRY " + e);
-	}
-
-	/* ------------------------------------------------- for Polls */
 
 PollBuilder.prototype.setImages = function(callback) {
 	console.log('PollBuilder setImages')
@@ -218,20 +236,46 @@ PollBuilder.prototype.buildPicture = function() {
 		html+= "<p class='image-credit'>credit</p>";
 	return html;
 }
-PollBuilder.prototype.complete = function() {
-	console.log('complete')
+PollBuilder.prototype.complete = function(results) {
+	/* Parameter: results -- entryList sorted by upvotes */
+
 	var onclickRefresh = this.onclickPrefix + ".refresh()";
-	var html = "<div class='opp-frame'>";
-		html += "<img onclick=" + onclickRefresh + " class='touch refresh' width='15px' src='/widget/icon/refresh.png'>";
-	for (var i=0; i<this.data.entryList.length; i++) {
-		html+= "<div>";
-		html+= (this.data.entryList[i].screen_name + ": " + this.data.entryList[i].stat.up_count + ":" + this.data.entryList[i].stat.down_count);
-		html+= "</div>";
+	var html = "<div class='opp-frame complete'>";
+		html+= 		this.buildSlideInfo(true);
+
+
+		html+= "<div class='results-container'>";
+		html+= "	<p class='results-title'>Results</p>"
+	for (var i=0; i<results.length; i++) {
+		var entry = results[i];
+		console.log('result', i, entry)
+
+		html+= "	<div class='result'>";
+		html+= "		<div class='result-image-container'>";
+		html+= "			<img height='100px' src='" + entry.img_url + "'>";
+		html+= "		</div>";
+
+		html+= "		<div class='result-text'>";
+	if (this.data.via == 'social') {
+		html+= 				("<p>@" + entry.screen_name + "</p>");
+	} else {
+		html+= 		 		("<p>" + entry.header + "</p>");
 	}
-		html+="</div>";
+		html+= "			<img width='16px' src='/widget/icon/thumbs-up.jpeg'>";
+		html+= 				(entry.upvotesPercent + "%");
+		html+= "			<img width='16px' src='/widget/icon/thumbs-down.jpeg'>";
+		html+= 				(entry.downvotesPercent + "%");
+
+		html+= "		</div>";
+		html+= "	</div>";
+	}
+		html+= "</div>";
+		html+= this.buildShareContainer();
+
 	this.container.innerHTML = html;
 }
 	
+/* ------------------------------------------------- for Polls */
 
 
 

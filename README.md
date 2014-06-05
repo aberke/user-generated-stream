@@ -68,6 +68,8 @@ Production Notes
 TODO
 ---
 
+- sharing for results on poll
+
 - make better on mobile
 	- sizing
 	- show directions
@@ -85,14 +87,7 @@ TODO
 
 - update-via-social.html?
 
-- center widget
-
 - cross browser testing
-
-
-- for sharing invidual slides on polls - don't click back to that slide
-	- still start from i=0
-
 
 
 

@@ -20,14 +20,13 @@ MAIN VIEW
 
 	<div class='opp-frame'>
 		<div class='slide-info'>
-			<img onclick='swipe.prev()' class='touch slide-change-arrow left' width='10px' src='/widget/icon/left-arrow.png'>
+			<img onclick='swipe.prev()' class='touch thumb left' width='16px' src='/widget/icon/thumbs-down.jpeg'>
 			<p class='title'>
-				<span ng-show="opp.via=='social'">#</span>
-				{{opp.title}}</p>
+				<span ng-show="opp.via=='social'">#</span>titleofpoll</p>
 			<p class='slide-count'>
-				1/{{opp.entryList.length}}
+				1/28
 				</p>
-			<img onclick='swipe.next()' class='touch slide-change-arrow right' width='10px' src='/widget/icon/right-arrow.png'>
+			<img onclick='swipe.prev()' class='touch thumb right' width='15px' src='/widget/icon/thumbs-up.jpeg'>
 		</div>
 		<div class='picture-frame'>
 			<div class='picture swipe'>
@@ -71,50 +70,31 @@ MAIN VIEW
 RESULTS VIEW
 <div class='huffpostlabs-opp edit via-poll'>
 
-	<div class='opp-frame'>
+	<div class='opp-frame complete'>
 		<div class='slide-info'>
-			<!-- <img onclick='swipe.prev()' class='touch slide-change-arrow left' width='10px' src='/widget/icon/left-arrow.png'> -->
 			<p class='title'>
-				<span ng-show="opp.via=='social'">#</span>
-				titleofpoll</p>
-<!-- 			<p class='slide-count'>
-				1/10
-				</p> -->
+				<span ng-show="opp.via=='social'">#</span>titleofpoll
+			</p>
 			<img onclick='refresh()' class='touch refresh' width='15px' src='/widget/icon/refresh.png'>
-			<!-- <img onclick='swipe.next()' class='touch slide-change-arrow right' width='10px' src='/widget/icon/right-arrow.png'> -->
 		</div>
-		<div class='picture-frame'>
-			<div class='picture swipe'>
-				<div class='swipe-wrap'>
-					<div class='image-container'>
-						<img class='entry-image'> <!-- src filled in by link function -->
-					</div>
-				</div>
+<div class="results-container">	
+	<p class='results-title'>Results</p>
+
+
+	<div class="result">		<div class="result-image-container">			<img height="100px" src="http://scontent-b.cdninstagram.com/hphotos-ash/t51.2885-15/923625_787238197977120_1846351817_a.jpg">		</div>		<div class="result-text"><p>@giully84</p>			<img width="16px" src="/widget/icon/thumbs-up.jpeg">74%			<img width="16px" src="/widget/icon/thumbs-down.jpeg">26%		</div>	</div>	<div class="result">		<div class="result-image-container">			<img height="100px" src="http://scontent-b.cdninstagram.com/hphotos-frc/t51.2885-15/10401712_235505136647892_1219360017_a.jpg">		</div>		<div class="result-text"><p>@irishskin</p>			<img width="16px" src="/widget/icon/thumbs-up.jpeg">66%			<img width="16px" src="/widget/icon/thumbs-down.jpeg">34%		</div>	</div>	<div class="result">		<div class="result-image-container">			<img height="100px" src="http://scontent-a.cdninstagram.com/hphotos-ash/t51.2885-15/10354503_328105760647782_569056058_a.jpg">		</div>		<div class="result-text"><p>@whippedbakeshop</p>			<img width="16px" src="/widget/icon/thumbs-up.jpeg">66%			<img width="16px" src="/widget/icon/thumbs-down.jpeg">34%		</div>	</div>	<div class="result">		<div class="result-image-container">			<img height="100px" src="http://scontent-a.cdninstagram.com/hphotos-xfp1/t51.2885-15/10354386_649732545118149_1870184930_a.jpg">		</div>		<div class="result-text"><p>@naesheim</p>			<img width="16px" src="/widget/icon/thumbs-up.jpeg">45%			<img width="16px" src="/widget/icon/thumbs-down.jpeg">55%		</div>	</div></div>
+		
+		<div class='share-container'>
+			<p>Share results</p>
+			<div class='fb-share share'>
+				<img width='30px' height='30px' class='share share-btn' src='/widget/icon/fb-icon.png'>
+				<img class='share share-btn-swap' width='30px' height='30px' src='/widget/icon/fb-icon-blue.png'>
 			</div>
-		</div>
-		<p class='image-credit'>{{entry.source}}</p>
-		<div class='picture-caption'>
-
-			<span class='entry-header'>
-				<span ng-show="opp.via=='social'">@</span>
-				{{entry.screen_name || entry.header}}
-			</span>
-			<span class='entry-text'>{{entry.text}}</span>
-
-			
-			<div class='share-container'>
-				<p>Share this photo</p>
-				<div class='fb-share share'>
-					<img width='30px' height='30px' class='share share-btn' src='/widget/icon/fb-icon.png'>
-					<img class='share share-btn-swap' width='30px' height='30px' src='/widget/icon/fb-icon-blue.png'>
-				</div>
-				<div class='twitter-share share'>
-					<img width='30px' height='30px' class='share share-btn' src='/widget/icon/twitter-icon.png'>
-					<img class='share share-btn-swap' width='30px' height='30px' src='/widget/icon/twitter-icon-blue.png'>
-				</div>
-				<div class='email-share share'>
-					<img width='30px' height='30px' class='share email-share-btn' src='/widget/icon/email.png'>
-				</div>
+			<div class='twitter-share share'>
+				<img width='30px' height='30px' class='share share-btn' src='/widget/icon/twitter-icon.png'>
+				<img class='share share-btn-swap' width='30px' height='30px' src='/widget/icon/twitter-icon-blue.png'>
+			</div>
+			<div class='email-share share'>
+				<img width='30px' height='30px' class='share email-share-btn' src='/widget/icon/email.png'>
 			</div>
 		</div>
 	</div>

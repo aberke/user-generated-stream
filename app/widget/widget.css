@@ -24,8 +24,8 @@
 .huffpostlabs-opp{
 	margin: 10px auto;
 	display: block;
+	text-align: center; /*so that opp-frame floats in middle*/
 	font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
-	width: 316px;
 }
 .huffpostlabs-opp .opp-frame{
 	display: inline-block;
@@ -52,15 +52,19 @@
 	text-align: right;
 	width: 12%;
 }
-.huffpostlabs-opp .slide-info .slide-change-arrow{
+.huffpostlabs-opp .slide-info .slide-change-icon{
 	display: inline;
 	margin-top: 3px;
 }
-.huffpostlabs-opp .slide-info .slide-change-arrow.left {
+.huffpostlabs-opp .slide-info .slide-change-icon.left {
 	float: left;
 }
-.huffpostlabs-opp .slide-info .slide-change-arrow.right {
+.huffpostlabs-opp .slide-info .slide-change-icon.right {
 	float: right;
+}
+.huffpostlabs-opp.poll .slide-info .slide-change-icon {
+	margin-top: 3px;
+	width: 15px;
 }
 
 .huffpostlabs-opp .picture-frame{
@@ -117,7 +121,7 @@
 	display: inline-block;
 	vertical-align: middle;
 }
-.huffpostlabs-opp .opp-frame .picture-caption .share-container p { /*need strong rule*/
+.huffpostlabs-opp .opp-frame .share-container p.share-text { /*need strong rule*/
 	margin: 0;
 }
 .huffpostlabs-opp .share-container .share{
@@ -151,11 +155,51 @@
 	opacity: 0.7;
 }
 
-/*for when poll complete*/
-.huffpostlabs-opp .slide-info .refresh {
+/* ---------------- poll --------------------------------- */
+.huffpostlabs-opp .results-container {
+	width: 265px;
+	height: 385px;
+	overflow-y: auto;
+}
+.huffpostlabs-opp .opp-frame.complete .results-container p.results-title {
+	background-color: lightgrey;
+	color: gray;
+	padding: 10px;
+	margin: 0;
+}
+.huffpostlabs-opp .results-container .result {
+	float: left;
+	width: 100%;
+	border: 1px solid lightgrey;
+}
+.huffpostlabs-opp .result .result-image-container {
+	width: 100px;
+	height: 100px;
+	display: inline-block;
+	float: left;
+}
+.huffpostlabs-opp .result .result-image-container img{
+	margin: auto;
+}
+.huffpostlabs-opp .result .result-text {
+	float: left;
+}
+.huffpostlabs-opp .result .result-text p {
+	margin: 8px;
+	margin-bottom: 25px;
+}
+
+/* ---------------- for when poll complete --------------- */
+
+.huffpostlabs-opp .opp-frame.complete .slide-info {
+	padding: 0 0 10px 3px;
+	text-align: left;
+}
+.huffpostlabs-opp .opp-frame.complete .slide-info .refresh {
 	float: right;
 	margin: 5px 6px 0 0;
 }
+
 
 
 
