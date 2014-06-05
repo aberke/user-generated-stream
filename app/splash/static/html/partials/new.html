@@ -54,8 +54,8 @@
                 <div ng-show="step==2" class='title input-group'>
                     <label>title</label>
                     <span ng-show="opp.via=='social'">  #</span>
-                    <input ng-class="{'error':error.title}" maxlength="25" ng-model="opp.title" type='text'>
-                    (25 character limit)
+                    <input ng-class="{'error':error.title}" maxlength="20" ng-model="opp.title" type='text'>
+                    (20 character limit)
                     <p ng-show="opp.via=='social'" class='explainer'>
                         Entries for {{opp.widget_type}} will be pulled from twitter and instagram as posts with images that were tagged with the #title.
                     </p>

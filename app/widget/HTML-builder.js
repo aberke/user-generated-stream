@@ -7,7 +7,7 @@ var HTMLbuilder = function() {
 	this.entryList;
 	this.onclickPrefix;
 
-	this.pictureFrameDimension = 290;
+	this.pictureFrameDimension = 265;
 	this.static_domain = OPPglobals.static_domain;
 }
 
