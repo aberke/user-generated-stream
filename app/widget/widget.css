@@ -189,10 +189,11 @@
 }
 .huffpostlabs-opp .result .result-text {
 	display: inline-block;
-	padding: 10px;
+	max-width: 145px;
+	padding: 10px 0 10px 10px;
 }
 .huffpostlabs-opp .result .result-text p {
-	margin: 5px 5px 20px 0;
+	margin: 5px 5px 15px 0;
 }
 
 /* ---------------- for when poll complete --------------- */

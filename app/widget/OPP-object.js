@@ -238,7 +238,7 @@ HuffpostLabsPoll.prototype.computeResults = function() {
 	// compute upvotesPercent/downvotesPercent
 	for (var i=0; i<this.OPPdata.entryList.length; i++) {
 		var entry = this.OPPdata.entryList[i];
-		var totalVotes = entry.stat.up_count + entry.stat.down_count;
+		var totalVotes = (entry.stat.up_count + entry.stat.down_count || 1); // avoid division by 0
 
 		this.OPPdata.entryList[i].upvotesPercent = Math.round((entry.stat.up_count/totalVotes)*100);
 		this.OPPdata.entryList[i].downvotesPercent = Math.round((entry.stat.down_count/totalVotes)*100);

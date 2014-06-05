@@ -101,7 +101,6 @@ function UpdateCntl($scope, APIservice, OPPservice, FormService, WidgetService, 
 	$scope.moreEntries = function() { searchEntries(); }
 
 	var filterEntries = function(list, source) {
-		console.log('filterEntries', list, source)
 		for (var i=0; i<list.length; i++) {
 			var item = list[i];
 			item['created_at'] = new Date(item['created_at']);
