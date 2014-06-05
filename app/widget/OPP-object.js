@@ -161,7 +161,7 @@ HuffpostLabsPoll.prototype.init = function(data) {
 	var slideStart = function(index, elem){ self.slideStart(index, elem); }
 	
 	// might be a reload - if so reuse HTMLbuilder
-	this.HTMLbuilder= new PollBuilder();
+	this.HTMLbuilder = new PollBuilder();
 
 	/* must add all slides/setup images before can create Swipe */
 	this.HTMLbuilder.init(this.container, this.OPPdata, function() {
@@ -177,7 +177,7 @@ HuffpostLabsPoll.prototype.init = function(data) {
 			callback: slideStart,
 			transitionEnd: slideEnd,
 		});
-		if (self.numEntries > 1) { self.slideEnd(0) };
+		self.slideEnd(0);
 	});
 }
 /* ---- for sharing ------- */
@@ -206,8 +206,8 @@ HuffpostLabsPoll.prototype.tallyVote = function(prevSlideIndex, newSlideIndex) {
 }
 HuffpostLabsPoll.prototype.slideStart = function(index) {
 	if (this.complete) {
-		this.entryIndex = -1; // flag for getEntry
 		this.tallyVote(this.slideIndex, index); // won't get to slideEnd
+		this.entryIndex = -1; // flag for getEntry - must set after tallyVote which uses this.entryIndex
 		this.HTMLbuilder.complete(this.results);
 		OPPglobals.completeCallback(this.upvotes, this.downvotes);
 	}

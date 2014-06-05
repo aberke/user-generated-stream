@@ -68,22 +68,17 @@ Production Notes
 TODO
 ---
 
-- sharing for results on poll
+- allow editor to sort accepted entries
 
 - make better on mobile
 	- sizing
 	- show directions
 
-- handle when poll has zero/one entry
-
-- reject after accept not working?
 
 - edit tests for new opp type
 	- and for postEntry
 
 - tests for stat upvote/downvote
-
-- entry-container directive >> social-entry-container?
 
 - update-via-social.html?
 

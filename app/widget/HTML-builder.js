@@ -12,7 +12,6 @@ var HTMLbuilder = function() {
 }
 
 HTMLbuilder.prototype.init = function(container, data, callback) {
-	console.log('HTMLbuilder init', data)
 	this.container = container;
 	this.data = data;
 	this.entryList = data.entryList;
@@ -28,12 +27,6 @@ HTMLbuilder.prototype.init = function(container, data, callback) {
 	}
 	// add opp via for style sheets
 	this.container.className += (" via-" + this.data.via);
-	// TODO -- PUT IN CLASS
-	if (this.data.widget_type == 'poll') {
-		this.container.className += (" poll");
-	} else {
-		this.container.className += (" slideshow");
-	}
 }
 HTMLbuilder.prototype.buildSlideInfo = function(complete) {
 	/* Parameter: complete (boolean)
@@ -143,14 +136,16 @@ HTMLbuilder.prototype.setSlide = function(index) {
 	this.setCaption(entry);
 	this.slideIndex.innerHTML = index + 1;
 }
-HTMLbuilder.prototype.buildShareContainer = function() {
-	/* taken out of buildCaption since poll uses this for results building without caption */
+HTMLbuilder.prototype.buildShareContainer = function(complete) {
+	/* taken out of buildCaption since poll uses this for results building without caption 
+		Parameter: complete (boolean) -- if true: this is for poll results page
+	*/
 	var onclickShareFB 		= this.onclickPrefix + ".shareFB()";
 	var onclickShareEmail 	= this.onclickPrefix + ".shareEmail()";
 	var onclickShareTwitter = this.onclickPrefix + ".shareTwitter()";
 
 	var html = "<div class='share-container'>";
-		html+= "	<p class='share-text'>Share this photo</p>";
+		html+= "	<p class='share-text'>" + (complete ? "Share results" : "Share this photo") + "</p>";
 		html+= "	<div data-huffpostlabs-btn onclick=" + onclickShareFB + " class='fb-share share'>";
 		html+= "		<img width='30px' height='30px' class='share-btn' src='" + this.static_domain + "/widget/icon/fb-icon.png'>";
 		html+= "		<img class='share-btn-swap' width='30px' height='30px' src='" + this.static_domain + "/widget/icon/fb-icon-blue.png'>";
@@ -203,13 +198,18 @@ var PollBuilder = function() {
 PollBuilder.prototype = new HTMLbuilder();
 PollBuilder.prototype.constructor = PollBuilder;
 
+PollBuilder.prototype.init = function(container, data, callback) {
+	HTMLbuilder.prototype.init.call(this, container, data, callback);
+	this.container.className += (" poll");
+}
+
 PollBuilder.prototype.setImages = function(callback) {
-	console.log('PollBuilder setImages')
 	/* there are exactly 3 image-containers -- nextSlide | currentSlide | nextSlide
 		container[0]: entry_0
 		container[1]: entry_1
 		container[2]: entry_1 (because this is like container[-1])
 	*/
+	if (!this.entryList.length) { return; }
 	this.imageElements = this.container.getElementsByClassName('entry-image');
 	var called = 0;
 	var waitingOn = 3;
@@ -218,6 +218,10 @@ PollBuilder.prototype.setImages = function(callback) {
 		if (called >= waitingOn) { callback(); }
 	}
 	this.setImg(this.imageElements[0], this.entryList[0].img_url, call);
+	if (this.entryList.length < 2) { 
+		waitingOn = 1;
+		return; 
+	}
 	this.setImg(this.imageElements[1], this.entryList[1].img_url, call);
 	this.setImg(this.imageElements[2], this.entryList[1].img_url, call);
 }
@@ -248,7 +252,6 @@ PollBuilder.prototype.complete = function(results) {
 		html+= "	<p class='results-title'>Results</p>"
 	for (var i=0; i<results.length; i++) {
 		var entry = results[i];
-		console.log('result', i, entry)
 
 		html+= "	<div class='result'>";
 		html+= "		<div class='result-image-container'>";
@@ -270,7 +273,7 @@ PollBuilder.prototype.complete = function(results) {
 		html+= "	</div>";
 	}
 		html+= "</div>";
-		html+= this.buildShareContainer();
+		html+= this.buildShareContainer(true);
 
 	this.container.innerHTML = html;
 }

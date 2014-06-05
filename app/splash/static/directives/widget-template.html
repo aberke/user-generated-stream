@@ -1,15 +1,17 @@
-<div class='huffpostlabs-opp edit via-{{opp.via}}'>
+<div ng-class="opp.widget_type" class='huffpostlabs-opp edit via-{{opp.via}}'>
 
 	<div class='opp-frame'>
 		<div class='slide-info'>
-			<img onclick='swipe.prev()' class='touch slide-change-arrow left' width='10px' src='/widget/icon/left-arrow.png'>
+			<img ng-if="opp.widget_type=='slideshow'" class='touch slide-change-icon left' width='10px' src='/widget/icon/left-arrow.png'>
+			<img ng-if="opp.widget_type=='poll'" class='touch slide-change-icon left' width='10px' src='/widget/icon/thumbs-down.jpeg'>
 			<p class='title'>
 				<span ng-show="opp.via=='social'">#</span>
 				{{opp.title}}</p>
 			<p class='slide-count'>
 				1/{{opp.entryList.length}}
 				</p>
-			<img onclick='swipe.next()' class='touch slide-change-arrow right' width='10px' src='/widget/icon/right-arrow.png'>
+			<img ng-if="opp.widget_type=='slideshow'" class='touch slide-change-icon right' width='10px' src='/widget/icon/right-arrow.png'>
+			<img ng-if="opp.widget_type=='poll'" class='touch slide-change-icon right' width='10px' src='/widget/icon/thumbs-up.jpeg'>
 		</div>
 		<div class='picture-frame'>
 			<div class='picture swipe'>

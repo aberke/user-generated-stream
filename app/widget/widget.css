@@ -38,6 +38,7 @@
 	text-align: center;
 	padding: 8px 10px;
 	background-color: white;
+	width: 295px;
 }
 .huffpostlabs-opp .slide-info {
 	color: gray;
@@ -75,10 +76,8 @@
 .huffpostlabs-opp .picture-frame{
 	border: 2px solid gray;
 }
-.huffpostlabs-opp .picture{
-	width: 265px;
+.huffpostlabs-opp .picture {
 	height: 265px;
-	text-align: center;
 }
 .huffpostlabs-opp .picture img{
 	max-width: 265px;
@@ -162,9 +161,9 @@
 
 /* ---------------- poll --------------------------------- */
 .huffpostlabs-opp .results-container {
-	width: 265px;
 	height: 385px;
 	overflow-y: auto;
+	overflow-x: hidden;
 }
 .huffpostlabs-opp .opp-frame.complete .results-container p.results-title {
 	background-color: lightgrey;
@@ -173,25 +172,27 @@
 	margin: 0;
 }
 .huffpostlabs-opp .results-container .result {
-	float: left;
 	width: 100%;
 	border: 1px solid lightgrey;
+	text-align: left;
 }
 .huffpostlabs-opp .result .result-image-container {
 	width: 100px;
 	height: 100px;
 	display: inline-block;
-	float: left;
+	vertical-align: top;
 }
 .huffpostlabs-opp .result .result-image-container img{
+	max-width: 100px;
+	height: 100px;
 	margin: auto;
 }
 .huffpostlabs-opp .result .result-text {
-	float: left;
+	display: inline-block;
+	padding: 10px;
 }
 .huffpostlabs-opp .result .result-text p {
-	margin: 8px;
-	margin-bottom: 25px;
+	margin: 5px 5px 20px 0;
 }
 
 /* ---------------- for when poll complete --------------- */
