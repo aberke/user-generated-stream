@@ -5,7 +5,7 @@ user-generated-stream
 
 Other People's Photos (OPP), posted to us through twitter, consumed like a slideshow
 
-It's alive <http://user-generated-stream.herokuapp.com/>
+It's alive <http://bit.ly/huffpostlabs-opp>
 
 Running Locally
 ---
