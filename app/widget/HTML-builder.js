@@ -35,8 +35,8 @@ HTMLbuilder.prototype.buildSlideInfo = function(complete) {
 				elements marked with showOnIncomplete will show iff complete==false
 				elements marked with showOnComplete will show iff complete==true
 	*/
-	var onclickPrev    = this.onclickPrefix + ".SwipeCntl.prev()";
-	var onclickNext    = this.onclickPrefix + ".SwipeCntl.next()";
+	var onclickPrev    = this.onclickPrefix + ".prev()";
+	var onclickNext    = this.onclickPrefix + ".next()";
 	var onclickRefresh = this.onclickPrefix + ".refresh()";
 	// show/hide elements build below base on whether or not to show in the complete opp-frame or not
 	var showOnComplete 	=  ("style='display:" + (complete ? "inline-block" : "none") + "'");
@@ -89,15 +89,12 @@ HTMLbuilder.prototype.setImg = function(img, img_url){
 	img.src=img_url;
 }
 HTMLbuilder.prototype.setImages = function(){
-	console.log('HTMLbuilder setImages')
 	// overridden by PollBuilder
 	for (var i=0; i<this.imageElements.length; i++) {
 		this.setImg(this.imageElements[i], this.entryList[i].img_url);
 	}
 }
 HTMLbuilder.prototype.setImage = function(slideIndex, entryIndex) {
-	console.log('HTMLbuilder setImage')
-	console.log('setImage', slideIndex, entryIndex, this.imageElements, this.entryList)
 	this.setImg(this.imageElements[slideIndex], this.entryList[entryIndex].img_url, function(){});
 }
 HTMLbuilder.prototype.buildPicture = function() {
@@ -199,7 +196,6 @@ PollBuilder.prototype.init = function(container, data) {
 }
 
 PollBuilder.prototype.setImages = function(){
-	console.log('Pollbuilder setImages', this.entryList.length)
 	/* there are exactly 3 image-containers -- nextSlide | currentSlide | nextSlide
 		container[0]: entry_0
 		container[1]: entry_1
@@ -207,7 +203,6 @@ PollBuilder.prototype.setImages = function(){
 	*/
 	
 	if (!this.entryList.length) { return; }
-	console.log('HTMLbuilder setImages', 1)
 	this.setImg(this.imageElements[0], this.entryList[0].img_url);
 	if (this.entryList.length < 2) { 
 		return; 

@@ -181,6 +181,7 @@
 	height: 100px;
 	display: inline-block;
 	vertical-align: top;
+	text-align: center;
 }
 .huffpostlabs-opp .result .result-image-container img{
 	max-width: 100px;

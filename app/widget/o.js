@@ -7,25 +7,22 @@
 
 /* wrap in anonymous function as to not interfere with existing function and variable names */
 (function() {
+
+	var static_domain = 'http://opp.huffingtonpost.com';
 	//var domain = 'http://12b708b.ngrok.com';
-	var domain = 'http://127.0.0.1:3000';
-	//var domain = 'http://user-generated-stream.herokuapp.com';
+	//var domain = 'http://127.0.0.1:3000';
+	var domain = 'http://user-generated-stream.herokuapp.com';
 
 	 /* akamai cache domain: 'opp.huffingtonpost.com'
 			Only use it for GET requests on foreign host
 			- if on our own host or in development, we care to see changes right away, not cache
 	 */
-	var static_domain = 'http://opp.huffingtonpost.com';
 	// setup for development
 	if (window.location.origin) { /* ie doesn't have window.location.origin - but this is just for using the tool*/
 		if (window.location.origin == domain || window.location.origin.match(/http:\/\/localhost|http:\/\/127.0.0.1|.ngrok.com/)) {
 			static_domain = domain;
 		}
 	}
-
-
-	this.OPPwidgets = {};
-	this.OPPglobals = {};
 
 
 	var scripts 	= [
@@ -36,6 +33,18 @@
 					   	(static_domain + "/widget/vendor/social-network-sharing.js"),
 					   ];
 	var stylesheets = [(static_domain + "/widget/widget.css")];
+
+
+	var bustCache = function() {
+		for (var i=0; i<scripts.length; i++) {
+			scripts[i] += ("?" + Math.random());
+		}
+	}
+	/* comment out/uncomment for development */
+	//bustCache();
+
+	this.OPPwidgets = {};
+	this.OPPglobals = {};
 
 
 	var setupOPPglobals = function() {
@@ -167,7 +176,8 @@
 		container.className += " no-pin";
 	}
 	function showLoading(container) {
-		if (!container || (container.className.indexOf("quiz-edit") > -1)) { return; }
+		return;
+		if (!container || (container.className.indexOf("edit") > -1)) { return; }
 		/* show only the loading gif */
 		container.style.display = "none";
 		
@@ -179,6 +189,7 @@
 		container.parentNode.insertBefore(loadingGif, container.nextSibling);
 	}
 	function doneLoadingCallback(container) {
+		return;
 		/* undoes the work of showLoading - shows widget and removes loading gif */
 		container.style.display = 'block';
 		if (container.nextSibling.className.indexOf("huffpostlabs-loading") > -1) {
@@ -187,7 +198,7 @@
 	}
 
 	function createOPP(id, container){
-		if (!id) { return null; }
+		if (!id) { return; }
 		/* load quiz data - create quiz widet object, replace loading display with widget */
         GET("/api/opp/" + id, function(data) {
         	if (data.widget_type == 'poll') {
