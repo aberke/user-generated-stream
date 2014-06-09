@@ -89,13 +89,15 @@ HTMLbuilder.prototype.setImg = function(img, img_url){
 	img.src=img_url;
 }
 HTMLbuilder.prototype.setImages = function(){
+	console.log('HTMLbuilder setImages')
 	// overridden by PollBuilder
-	this.imageElements = this.container.getElementsByClassName('entry-image');
 	for (var i=0; i<this.imageElements.length; i++) {
 		this.setImg(this.imageElements[i], this.entryList[i].img_url);
 	}
 }
 HTMLbuilder.prototype.setImage = function(slideIndex, entryIndex) {
+	console.log('HTMLbuilder setImage')
+	console.log('setImage', slideIndex, entryIndex, this.imageElements, this.entryList)
 	this.setImg(this.imageElements[slideIndex], this.entryList[entryIndex].img_url, function(){});
 }
 HTMLbuilder.prototype.buildPicture = function() {
@@ -123,7 +125,7 @@ HTMLbuilder.prototype.setCaption = function(entry) {
 	this.entryText.innerHTML = entry.text;
 }
 HTMLbuilder.prototype.setSlide = function(index) {
-	var entry = this.entryList[index];
+	var entry = (this.entryList[index] || {});
 	this.imgCredit.innerHTML = (entry.source || '');
 	this.setCaption(entry);
 	this.slideIndex.innerHTML = index + 1;
@@ -170,14 +172,16 @@ HTMLbuilder.prototype.buildWidget = function() {
 
 		html+="</div>";
 	this.container.innerHTML = html;
+
+	// pick up the important reusable pieces
+	this.imageElements = this.container.getElementsByClassName('entry-image');
+	this.imgCredit     = this.container.getElementsByClassName('image-credit')[0];
+	this.entryHeader   = this.container.getElementsByClassName('entry-header')[0];
+	this.entryText     = this.container.getElementsByClassName('entry-text')[0];
+	this.slideIndex    = this.container.getElementsByClassName('slide-index')[0];
 	
 	// add the images to the image-containers
 	this.setImages();
-	// pick up the important reusable pieces
-	this.imgCredit   = this.container.getElementsByClassName('image-credit')[0];
-	this.entryHeader = this.container.getElementsByClassName('entry-header')[0];
-	this.entryText   = this.container.getElementsByClassName('entry-text')[0];
-	this.slideIndex  = this.container.getElementsByClassName('slide-index')[0];
 }
 
 /* for Polls ------------------------------------------------- */
@@ -195,14 +199,15 @@ PollBuilder.prototype.init = function(container, data) {
 }
 
 PollBuilder.prototype.setImages = function(){
+	console.log('Pollbuilder setImages', this.entryList.length)
 	/* there are exactly 3 image-containers -- nextSlide | currentSlide | nextSlide
 		container[0]: entry_0
 		container[1]: entry_1
 		container[2]: entry_1 (because this is like container[-1])
 	*/
+	
 	if (!this.entryList.length) { return; }
-
-	this.imageElements = this.container.getElementsByClassName('entry-image');
+	console.log('HTMLbuilder setImages', 1)
 	this.setImg(this.imageElements[0], this.entryList[0].img_url);
 	if (this.entryList.length < 2) { 
 		return; 

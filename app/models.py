@@ -77,16 +77,6 @@ class Stat(Document):
 	def upvote(id_list):
 		""" Takes list of stat ids as argument """
 		Stat.increment(id_list, "up_count")
-		# query_list = []
-		# for s in statID_list:
-		# 	try:
-		# 		query_list.append(ObjectId(s))
-		# 	except Exception as e: continue
-
-		# collection = Stat._get_collection()
-		# query   = { "_id" : { "$in": query_list } }
-		# update  = { "$inc": { "up_count": 1 } }
-		# res = collection.update(query, update, upsert=False, multi=True)
 
 
 	@staticmethod
@@ -109,16 +99,6 @@ class Stat(Document):
 		except Exception as e:
 			yellERROR(e)
 			raise Exception("Invalid count: {0}".format(count))
-
-		# TODO -- BETTER NAMING CONVENTIONS WITH INCREMENT_UPVOTE
-		# if count == 'facebook':
-		# 	Stat.objects(id=id).update_one(inc__fb_count=1)
-		# elif count == 'twitter':
-		# 	Stat.objects(id=id).update_one(inc__twitter_count=1)
-		# elif count == 'email':
-		# 	Stat.objects(id=id).update_one(inc__email_count=1)
-		# else:
-		# 	raise Exception("Invalid count: {0}".format(count))
 
 	@classmethod
 	def all(cls):
@@ -182,7 +162,7 @@ class OPP(Document):
 	_user 				= ReferenceField('User', default=None)
 	widget_type 		= StringField(required=True, default='slideshow', choices=('slideshow', 'poll')) # default for backwards compatibility
 	via			 		= StringField(required=True, default='social', choices=('social', 'editor')) # default for backwards compatibility
-	title 				= StringField(required=True, max_length=25)
+	title 				= StringField(required=True, max_length=25, unique=False)
 	start 				= DateTimeField(default=datetime.now) # only used when via=='social'
 	entryList 			= ListField(EmbeddedDocumentField(Entry), default=list)
 	rejectEntryIDList 	= ListField(StringField(), default=list) # only used when via=='social'

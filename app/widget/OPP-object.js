@@ -127,7 +127,7 @@ HuffpostLabsSlideshow.prototype.init = function(data) {
 		frameWidth: 265,
 		startSlide: startSlide,
 		speed: 400,
-		auto: 7000,
+		auto: false,
 		continuous: true,
 		disableScroll: false,
 		stopPropagation: false,
@@ -200,9 +200,11 @@ HuffpostLabsPoll.prototype.tallyVote = function(prevSlideIndex, newSlideIndex) {
 	if (this.entryIndex >= 0) {
 		var stat = this.OPPdata.entryList[this.entryIndex].stat;
 		if (newSlideIndex == (prevSlideIndex + 1)%3) {
+			console.log('upvote')
 			this.upvotes.push(stat.id);
 			this.OPPdata.entryList[this.entryIndex].stat.up_count += 1;
 		} else {
+			console.log('downvote')
 			this.downvotes.push(stat.id);
 			this.OPPdata.entryList[this.entryIndex].stat.down_count += 1;
 		}
@@ -217,8 +219,9 @@ HuffpostLabsPoll.prototype.slideStart = function(index) {
 	}
 }
 HuffpostLabsPoll.prototype.slideEnd = function(index) {
-	if (this.complete) { return; } // should/will NOT be called
-
+	console.log('slideEnd', this.OPPdata.entryList.length)
+	if (this.complete || !this.OPPdata.entryList.length) { return; } // should/will NOT be called
+	console.log('slideEnd', this.slideIndex, this.entryIndex, this.nextEntryIndex)
 	this.tallyVote(this.slideIndex, index);
 
 	this.slideIndex = index;
@@ -232,9 +235,11 @@ HuffpostLabsPoll.prototype.slideEnd = function(index) {
 		this.computeResults();
 		return;
 	}
+	console.log('slideEnd', this.slideIndex, this.entryIndex, this.nextEntryIndex)
 	// otherwise set up next slide
 	var slideIndexLeft = (this.slideIndex==0 ? 2 : this.slideIndex-1);
 	var slideIndexRight = ((this.slideIndex + 1)%3);
+	console.log('slideIndexLeft', slideIndexLeft, 'slideIndexRight', slideIndexRight)
 	this.HTMLbuilder.setImage(slideIndexLeft, this.nextEntryIndex)
 	this.HTMLbuilder.setImage(slideIndexRight, this.nextEntryIndex)
 }
