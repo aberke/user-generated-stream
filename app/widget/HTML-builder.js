@@ -17,15 +17,16 @@ HTMLbuilder.prototype.init = function(container, data){
 	this.entryList = data.entryList;
 	this.onclickPrefix = ("OPPwidgets['" + data.id + "']");
 	this.buildWidget();
+
 	// if mobile add mobile class to container and use HuffpostLabsBtnMaster
-	this.container.className.replace(/\bmobile\b|\bnon-mobile\b/, ''); // incase its a reload
+	this.container.className.replace(/\bmobile\b|\bnon-mobile\b/, ''); // in case its a reload
 	if (OPPglobals.mobile) {
 		this.container.className += " mobile";
 		this.BtnMaster = new HuffpostLabsBtnMaster(this.container);
 	} else {
 		this.container.className += " non-mobile";
 	}
-	// add opp via for style sheets
+	// add opp via for stylesheets
 	this.container.className += (" via-" + this.data.via);
 }
 HTMLbuilder.prototype.buildSlideInfo = function(complete) {
@@ -91,7 +92,7 @@ HTMLbuilder.prototype.setImg = function(img, img_url){
 HTMLbuilder.prototype.setImages = function(){
 	// overridden by PollBuilder
 	for (var i=0; i<this.imageElements.length; i++) {
-		this.setImg(this.imageElements[i], this.entryList[i].img_url);
+		this.setImage(i, i);
 	}
 }
 HTMLbuilder.prototype.setImage = function(slideIndex, entryIndex) {
@@ -104,7 +105,6 @@ HTMLbuilder.prototype.buildPicture = function() {
 	for (var i=0; i<this.entryList.length; i++) {
 		html+= "			<div class='image-container'>"
 		html+= " 				<img class='entry-image'>"; // filled in by setImages
-		
 		html+= "			</div>";
 	}
 		html+= "		</div>";
@@ -177,6 +177,7 @@ HTMLbuilder.prototype.buildWidget = function() {
 	this.entryText     = this.container.getElementsByClassName('entry-text')[0];
 	this.slideIndex    = this.container.getElementsByClassName('slide-index')[0];
 	
+	if (!this.entryList.length) { return; } 
 	// add the images to the image-containers
 	this.setImages();
 }
@@ -201,14 +202,10 @@ PollBuilder.prototype.setImages = function(){
 		container[1]: entry_1
 		container[2]: entry_1 (because this is like container[-1])
 	*/
-	
-	if (!this.entryList.length) { return; }
-	this.setImg(this.imageElements[0], this.entryList[0].img_url);
-	if (this.entryList.length < 2) { 
-		return; 
-	}
-	this.setImg(this.imageElements[1], this.entryList[1].img_url);
-	this.setImg(this.imageElements[2], this.entryList[1].img_url);
+	this.setImage(0, 0);
+	if (this.entryList.length < 2) { return; }
+	this.setImage(1, 2);
+	this.setImage(2, 1);
 }
 PollBuilder.prototype.buildPicture = function() {
 	var html = "<div class='picture-frame'>";

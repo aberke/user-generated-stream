@@ -68,7 +68,14 @@ Production Notes
 TODO
 ---
 
-- refactor widgets -- its a mess
+- showing _ entries -- not counting instagram entries?
+
+- refactor HTML builders
+	- SlideshowBuilder to inherit from HTMLbuilder
+		- setImages set only first 5
+		- on SlideshowBuilder.prototype.setSlide, if (index + 5) < entryList.length && (!imageElements[index+5].src) : _setImg
+	- private functions start with underscore
+
 
 - allow editor to sort accepted entries
 
