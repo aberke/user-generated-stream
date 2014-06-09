@@ -21,6 +21,8 @@ test_user_data = {
 test_opp_data = {
 	'title': 'test_title',
 	'start': datetime.today().isoformat(),
+	'via': 'social',
+	'widget_type': 'slideshow',
 }
 
 
@@ -264,12 +266,12 @@ class TestStats(TestAPI):
 		self.assertEqual(data['fb_count'], 0)
 		# ensure PUT works
 		for i in range(2):
-			self.app.put('/api/stat/{0}/increment/facebook'.format(str(stat.id)))
+			self.app.put('/api/stat/{0}/increment/fb_count'.format(str(stat.id)))
 		data = self.GETdata('/api/stat/{0}'.format(str(stat.id)))
 		self.assertEqual(data['fb_count'], 2)
 		# ensure GET (JSONP) works
 		for i in range(2):
-			self.app.get('/api/stat/{0}/increment/facebook'.format(str(stat.id)))
+			self.app.get('/api/stat/{0}/increment/fb_count'.format(str(stat.id)))
 		data = self.GETdata('/api/stat/{0}'.format(str(stat.id)))
 		self.assertEqual(data['fb_count'], 4)
 
@@ -280,12 +282,12 @@ class TestStats(TestAPI):
 		self.assertEqual(data['twitter_count'], 0)
 		# ensure PUT works
 		for i in range(3):
-			self.app.put('/api/stat/{0}/increment/twitter'.format(str(stat.id)))
+			self.app.put('/api/stat/{0}/increment/twitter_count'.format(str(stat.id)))
 		data = self.GETdata('/api/stat/{0}'.format(str(stat.id)))
 		self.assertEqual(data['twitter_count'], 3)
 		# ensure GET (JSONP) works
 		for i in range(3):
-			self.app.get('/api/stat/{0}/increment/twitter'.format(str(stat.id)))
+			self.app.get('/api/stat/{0}/increment/twitter_count'.format(str(stat.id)))
 		data = self.GETdata('/api/stat/{0}'.format(str(stat.id)))
 		self.assertEqual(data['twitter_count'], 6)
 
@@ -296,12 +298,12 @@ class TestStats(TestAPI):
 		self.assertEqual(data['email_count'], 0)
 		# ensure PUT works
 		for i in range(3):
-			self.app.put('/api/stat/{0}/increment/email'.format(str(stat.id)))
+			self.app.put('/api/stat/{0}/increment/email_count'.format(str(stat.id)))
 		data = self.GETdata('/api/stat/{0}'.format(str(stat.id)))
 		self.assertEqual(data['email_count'], 3)
 		# ensure GET (JSONP) works
 		for i in range(3):
-			self.app.get('/api/stat/{0}/increment/email'.format(str(stat.id)))
+			self.app.get('/api/stat/{0}/increment/email_count'.format(str(stat.id)))
 		data = self.GETdata('/api/stat/{0}'.format(str(stat.id)))
 		self.assertEqual(data['email_count'], 6)
 
@@ -336,19 +338,21 @@ class TestAuth(OPPTestCase):
 
 	def test_opp_ownership_required(self):
 		""" 
-		Some routes, such as PUT /update/<oppID> are wrapped with @opp_ownership_required 
+		Some routes, such as PUT /opp/<oppID> are wrapped with @opp_ownership_required 
 		"""
 		self.login()
 		rv = self.app.post('/api/opp', data=json.dumps(test_opp_data))
 		opp = json.loads(rv.data)
 
-		# pass through opp_ownership_required
-		rv = self.app.get('/update/{0}'.format(opp['id']))
+		# successfully pass through opp_ownership_required
+		data = test_opp_data.copy()
+		data['title'] = 'NEW-TITLE' 
+		rv = self.app.put('/api/opp/{0}'.format(opp['id']), data=json.dumps(data))
 		self.assertEqual(rv.status_code, 200)
 
 		# get blocked by opp_ownership_required
 		rv = self.app.put('/api/user/{0}/resign-opp/{1}'.format(self.user['id'], opp['id']))
-		rv = self.app.get('/update/{0}'.format(opp['id']))
+		rv = self.app.put('/api/opp/{0}'.format(opp['id']), data=json.dumps(data))
 		self.assertEqual(rv.status_code, 401)
 
 
