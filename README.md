@@ -68,6 +68,8 @@ Production Notes
 TODO
 ---
 
+- refactor widgets -- its a mess
+
 - allow editor to sort accepted entries
 
 - make better on mobile
@@ -84,6 +86,11 @@ TODO
 
 - cross browser testing
 
+
+Feature Requests
+---
+
+- Ability to batch upload photos
 
 
 
