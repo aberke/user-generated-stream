@@ -1,5 +1,5 @@
 
-<img width="200px" src="http://user-generated-stream.herokuapp.com/img/example-poll.png" alt="stream-drawing" align="right" />
+<img width="200px" style="z-index:100;position:relative;" src="http://user-generated-stream.herokuapp.com/img/example-poll.png" alt="stream-drawing" align="right" />
 
 user-generated-stream
 =====================
