@@ -1,14 +1,22 @@
-/*
-	HuffpostLabsOPP is base class extended by HuffpostLabsPoll and HuffpostLabsSlideshow.
+/*******************************************************************************
+--------------------------------------------------------------------------------
 
-	HuffpostLabsOPP owns a HTMLbuilder (see HTML-builder.js) to handle building HTML
+	Author: Alexandra Berke (aberke)
+	Written: May 2014
+
+	Notes:
+		- HuffpostLabsOPP is base class extended by HuffpostLabsPoll and HuffpostLabsSlideshow.
+		- instantiated for each OPP widget on the page by /widget/o.js
+		- HuffpostLabsOPP owns a HTMLbuilder (see HTML-builder.js) to handle building HTML
 					owns a SwipeCntl (see swipe.js in /vender) to handle slide transitions
-*/
+--------------------------------------------------------------------------------
+*********************************************************************************/
 
 
-var HuffpostLabsOPP = function(container, data) { // Base Class -- HuffpostLabsPoll inherits from it
+
+var HuffpostLabsOPP = function(container, data) { // Base Class
 	this.container = container;
-	this.HTMLbuilder;
+	this.HTMLbuilder; // instantiated as either a PollBuilder or a SlideshowBuilder class
 
 	/* configured in init() */
 	this.data;

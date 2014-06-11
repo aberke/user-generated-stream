@@ -1,3 +1,18 @@
+/*******************************************************************************
+--------------------------------------------------------------------------------
+
+	Author: Alexandra Berke (aberke)
+	Written: May 2014
+
+	Notes:
+		- HTMLbuilder is the baseclass for SlideshowBuilder and Pollbuilder classes
+		- Owned by OPP-object
+		- Job: take an empty div container and OPP data and fill it in appropriately
+
+
+--------------------------------------------------------------------------------
+*********************************************************************************/
+
 
 
 var HTMLbuilder = function() {

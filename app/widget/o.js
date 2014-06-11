@@ -1,8 +1,16 @@
-/* name is o.js: let's make the name as short as possible as for easy reference
-	
-	This is pure javascript - no jQuery
+/*******************************************************************************
+--------------------------------------------------------------------------------
 
-*/
+	Author: Alexandra Berke (aberke)
+	Written: May 2014
+
+	Notes:
+		name is o.js: let's make the name as short as possible as for easy reference
+		This is pure javascript - no jQuery
+
+--------------------------------------------------------------------------------
+*********************************************************************************/
+
 
 
 /* wrap in anonymous function as to not interfere with existing function and variable names */
