@@ -1,7 +1,6 @@
 user-generated-stream
 =====================
-<img width='270px' src="http://pool.hesperian.org/w/images/thumb/d/d5/EHB_Ch11_Page_214-2.png/550px-EHB_Ch11_Page_214-2.png"
- alt="stream-drawing" align="right" />
+<img src="http://user-generated-stream.herokuapp.com/img/example-poll.png" alt="stream-drawing" align="right" />
 
 Other People's Photos (OPP), posted to us through twitter, consumed like a slideshow
 
@@ -67,6 +66,8 @@ Production Notes
 
 TODO
 ---
+
+- Fork for HuffpostLabs
 
 - don't load in all for index page -- angular kill
 
