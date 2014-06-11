@@ -1,4 +1,5 @@
 from flask import Flask
+from flask.ext.compress import Compress
 
 
 
@@ -6,6 +7,7 @@ from flask import Flask
 
 app = Flask('app', static_url_path='/widget', static_folder='widget')
 app.config.from_object('config')
+Compress(app)
 
 # register /auth/* endpoints
 from splash import splash as splash_blueprint
