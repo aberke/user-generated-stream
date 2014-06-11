@@ -1,6 +1,8 @@
+
+<img width="200px" src="http://user-generated-stream.herokuapp.com/img/example-poll.png" alt="stream-drawing" align="right" />
+
 user-generated-stream
 =====================
-<img src="http://user-generated-stream.herokuapp.com/img/example-poll.png" alt="stream-drawing" align="right" />
 
 Other People's Photos (OPP), posted to us through twitter, consumed like a slideshow
 
