@@ -1,5 +1,5 @@
 
-<img width="200px" style="z-index:100;position:relative;" src="http://user-generated-stream.herokuapp.com/img/example-poll.png" alt="stream-drawing" align="right" />
+<img width="200px" src="http://user-generated-stream.herokuapp.com/img/example-poll.png" alt="stream-drawing" align="right" />
 
 user-generated-stream
 =====================
@@ -85,8 +85,6 @@ TODO
 
 - tests for stat upvote/downvote
 
-- update-via-social.html?
-
 - cross browser testing
 
 
@@ -114,12 +112,12 @@ Necessary Tests
 Types
 ---
 
-widget-type:
-	slideshow
-	poll
-via:
-	social
-	editor
+- widget-type:
+	- slideshow
+	- poll
+- via:
+	- social
+	- editor
 
 
 
