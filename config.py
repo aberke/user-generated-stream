@@ -1,9 +1,12 @@
 import os
 
+# test.py sets environment to TESTING, heroku has environment as PRODUCTION
+ENVIRONMENT = os.environ.get('ENVIRONMENT', 'DEVELOPMENT')
+
 HOST = os.getenv('HOST', '127.0.0.1')
 PORT = os.getenv('PORT', 3000)
+DEBUG= False if ENVIRONMENT == 'PRODUCTION' else True
 
-ENVIRONMENT = os.environ.get('ENVIRONMENT', 'DEVELOPMENT')
 
 # - MONGO ----------------------------------
 # if development: host is "mongodb://localhost:27017"
@@ -14,19 +17,15 @@ MONGODB_HOST 	= "mongodb://localhost:27017"
 # required parameter of mongoengine.connect() -- BUT Note that database name from uri has priority over name in :connect()
 MONGODB_DB 		= "OPP" 
 
-MONGOHQ_URL 	= os.environ.get("MONGOHQ_URL", None)
-if MONGOHQ_URL:
-	MONGODB_HOST=MONGOHQ_URL
-	ENVIRONMENT = "PRODUCTION"
+if ENVIRONMENT == 'PRODUCTION':
+	MONGODB_HOST=os.environ.get("MONGOHQ_URL", None)
 
-# if TESTING - set TESTING variables
-if ENVIRONMENT == 'TESTING':
+elif ENVIRONMENT == 'TESTING':
 	MONGODB_DB 	= "testing"
 
 # ---------------------------------- MONGO -
 
 
-DEBUG 					= os.getenv('TESTING', True)
 
 SECRET_KEY 				= os.getenv('SESSION_SECRET', 'OPP')
 
