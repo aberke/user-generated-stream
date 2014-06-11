@@ -15,7 +15,7 @@
 						<button ng-click="saveOPP();editStart=false" ng-show="editStart" class='btn-xs btn btn-default'>save</button>
 					</span>
 					<span class='showing-entries'>
-						Showing {{entryList.length + pendingEntryList.length + rejectEntryList.length}} Entries 
+						Showing {{entryList.length + pendingEntryListTwitter.length + pendingEntryListInstagram.length + rejectEntryList.length}} Entries 
 						<button ng-click="loadMoreEntries()" ng-show="moreEntries!=false&&!loadingMoreEntries" class='btn btn-sm btn-default'>+</button>
 						<img ng-show="loadingMoreEntries" class="loading-gif" src="/img/loading.gif">
 					</span>
@@ -91,7 +91,7 @@
 	</div>
 
 	<div ng-show="showTab=='pending-twitter'" class='tab-content entry-list-container pending-entries-twitter'>
-		<div entry-list="pendingEntryList" class='row entry-container' ng-repeat="e in pendingEntryList"></div>
+		<div entry-list="pendingEntryListTwitter" class='row entry-container' ng-repeat="e in pendingEntryListTwitter"></div>
 	</div>
 
 	<div ng-show="showTab=='widget'" class='tab-content widget-row'>

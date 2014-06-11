@@ -70,8 +70,6 @@ TODO
 
 - don't load in all for index page -- angular kill
 
-- showing _ entries -- not counting instagram entries?
-
 - allow editor to sort accepted entries
 
 - make better on mobile

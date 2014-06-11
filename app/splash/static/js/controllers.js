@@ -88,7 +88,7 @@ function UpdateCntl($scope, APIservice, OPPservice, FormService, WidgetService, 
 	console.log('opp', $scope.opp)
 
 	// initialized in init
-	$scope.pendingEntryList;
+	$scope.pendingEntryListTwitter;
 	$scope.pendingEntryListInstagram;
 	$scope.rejectEntryList;
 	$scope.entryList;
@@ -109,7 +109,7 @@ function UpdateCntl($scope, APIservice, OPPservice, FormService, WidgetService, 
 				$scope['rejectEntryList'].push(item);
 			} else if ($scope.opp.entryIDList.indexOf(item.id) < 0) {
 				if (item.source == 'twitter') {
-					$scope['pendingEntryList'].push(item);
+					$scope['pendingEntryListTwitter'].push(item);
 				} else if (item.source == 'instagram') {
 					$scope['pendingEntryListInstagram'].push(item);
 				} else {
@@ -193,7 +193,7 @@ function UpdateCntl($scope, APIservice, OPPservice, FormService, WidgetService, 
 	var init = function() {
 		$scope.allEntries = [];
 		$scope.rejectEntryList = [];
-		$scope.pendingEntryList = [];
+		$scope.pendingEntryListTwitter = [];
 		$scope.pendingEntryListInstagram = [];
 		$scope.entryList = $scope.opp.entryList;
 
