@@ -177,7 +177,7 @@ HTMLbuilder.prototype.buildCaption = function() {
 	return html;
 }
 HTMLbuilder.prototype.getPictureFrameDimension = function(callback) {
-	/* this.pictureFrame has no expanded to its correct width when its first created
+	/* this.picture has not expanded to its correct width when its first created
 		must wait for it to fully expand in order to correctly size images, slideshow container
 			and set this.pictureFrameDimension
 		seems to usually take ~2 tries
@@ -187,10 +187,10 @@ HTMLbuilder.prototype.getPictureFrameDimension = function(callback) {
 	var maxAttempts = 50;
 	function makeAttempt() {
 		attempt ++;
-		var dimension = self.pictureFrame.offsetWidth;
+		var dimension = self.picture.offsetWidth;
 		if (dimension > 0) { // success
 			self.pictureFrameDimension = dimension;
-			self.pictureFrame.height = dimension;
+			self.picture.style.height = dimension + "px";
 			return callback(dimension);
 		}
 		if (attempt == maxAttempts) {  // give up with failure
@@ -218,7 +218,8 @@ HTMLbuilder.prototype.buildWidget = function() {
 	this.entryHeader   = this._container.getElementsByClassName('entry-header')[0];
 	this.entryText     = this._container.getElementsByClassName('entry-text')[0];
 	this.entryIndexElement    = this._container.getElementsByClassName('entry-index')[0];
-	this.pictureFrame = this._container.getElementsByClassName('picture-frame')[0];
+	this.picture 	   = this._container.getElementsByClassName('picture')[0];
+	console.log('this.picture', this.picture)
 	this.mobileInstructions = this._container.getElementsByClassName('mobile-instructions')[0];
 }
 HTMLbuilder.prototype.setCaption = function(entry) {

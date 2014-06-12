@@ -96,7 +96,7 @@
 	display: inline-block;
 }
 .huffpostlabs-opp .opp-frame .image-credit {
-	margin: -16px 0 0 0;
+	margin: -19px 0 0 2px;
 	background-color: black;
 	color: white;
 	position: absolute;
@@ -106,7 +106,7 @@
 	font-size: 12px;
 }
 .huffpostlabs-opp .opp-frame:hover .image-credit {
-	opacity: 0.4;
+	opacity: 0.5;
 }
 .huffpostlabs-opp .picture-caption {
 	width: auto;
