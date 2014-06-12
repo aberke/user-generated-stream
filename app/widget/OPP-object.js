@@ -153,7 +153,7 @@ HuffpostLabsOPP.prototype.mobileInstructionsSetup = function() {
 			- cookie is set on all pages for domain of this page
 	*/
 	var noCookie = (document.cookie.indexOf(this.cookieName) == -1);
-	//noCookie = true;
+	noCookie = true;
 	if (OPPglobals.mobile && noCookie) {
 		this.HTMLbuilder.showMobileInstructions();
 	}
