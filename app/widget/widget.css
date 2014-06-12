@@ -74,6 +74,9 @@
 	text-align: right;
 	width: 16%;
 }
+.huffpostlabs-opp.mobile .slide-info .slide-count {
+	font-size: 12px;
+}
 .huffpostlabs-opp .slide-info .slide-change-icon{
 	display: inline;
 	margin-top: 3px;
@@ -174,6 +177,8 @@
 .huffpostlabs-opp .mobile-instructions {
 	position: absolute;
 	z-index: 20;
+	font-size: 20px;
+	font-weight: bold;
 	background-color: gray;
 	color: white;
 	padding: 30px;
