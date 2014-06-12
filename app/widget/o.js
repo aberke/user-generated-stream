@@ -204,7 +204,7 @@
 	}
 
 	function createOPP(id, container){
-		if (!id) { return; }
+		if (!id || !container) { return; } // could be just the template
 		/* load quiz data - create quiz widet object, replace loading display with widget */
         GET("/api/opp/" + id, function(data) {
         	if (data.widget_type == 'poll') {

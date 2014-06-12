@@ -81,6 +81,18 @@ HTMLbuilder.prototype._setImg = function(img, img_url){
 HTMLbuilder.prototype.setImage = function(slideIndex, entryIndex) {
 	this._setImg(this.imageElements[slideIndex], this._entryList[entryIndex].img_url);
 }
+
+/* - hide/show mobile instructions ------------------------------------------ */
+HTMLbuilder.prototype.showMobileInstructions = function() {
+	this.mobileInstructions.style.display = "block";
+	this.mobileInstructions.style.width = (this.pictureFrameDimension + "px");
+}
+HTMLbuilder.prototype.hideMobileInstructions = function() {
+	this.mobileInstructions.style.display = "none";
+}
+HTMLbuilder.prototype.mobileInstructionsText = "Swipe to navigate"; // overridden by PollBuilder
+/* ------------------------------------------ hide/show mobile instructions - */
+
 HTMLbuilder.prototype.buildSlideInfo = function(complete) {
 	/* Parameter: complete (boolean)
 			complete boolean used by Poll once complete 
@@ -110,8 +122,15 @@ HTMLbuilder.prototype.buildSlideInfo = function(complete) {
 	return html;
 }
 HTMLbuilder.prototype.buildPicture = function() {
-	/* put in 3 image elements that will be recycled */
+	/* put in 3 image elements that will be recycled  + mobile-instructions */
+	var onclickMobileInstructions = this._onclickPrefix + ".mobileInstructionsOnclick()";
 	var html = "<div class='picture-frame'>";
+
+		html+= "<div data-huffpostlabs-btn onclick=" + onclickMobileInstructions + " class='mobile-instructions'>";
+		html+= "	<p>" + this.mobileInstructionsText + "</p>";
+		html+= "	<p>START</p>";
+		html+= "</div>";
+
 		html+= "	<div class='picture swipe'>";
 		html+= "		<div class='swipe-wrap'>";
 	for (var i=0; i<3; i++) {
@@ -177,8 +196,8 @@ HTMLbuilder.prototype.getPictureFrameDimension = function(callback) {
 		if (attempt == maxAttempts) {  // give up with failure
 			return callback(0); 
 		}
-		// wait until css made it wide enough - try again every 1/10 second
-		window.setTimeout(makeAttempt, 100);
+		// wait until css made it wide enough - try again every 1/2 second
+		window.setTimeout(makeAttempt, 500);
 	}
 	makeAttempt();
 }
@@ -200,6 +219,7 @@ HTMLbuilder.prototype.buildWidget = function() {
 	this.entryText     = this._container.getElementsByClassName('entry-text')[0];
 	this.entryIndexElement    = this._container.getElementsByClassName('entry-index')[0];
 	this.pictureFrame = this._container.getElementsByClassName('picture-frame')[0];
+	this.mobileInstructions = this._container.getElementsByClassName('mobile-instructions')[0];
 }
 HTMLbuilder.prototype.setCaption = function(entry) {
 	if (this._data.via == 'social') {
@@ -246,6 +266,7 @@ PollBuilder.prototype = new HTMLbuilder();
 PollBuilder.prototype.constructor = PollBuilder;
 PollBuilder.prototype._swipeLeftImg = "/widget/icon/thumbs-down.jpeg";
 PollBuilder.prototype._swipeRightImg = "/widget/icon/thumbs-up.jpeg";
+PollBuilder.prototype.mobileInstructionsText = "Swipe to vote";
 
 PollBuilder.prototype.init = function(container, data) {
 	HTMLbuilder.prototype.init.call(this, container, data);

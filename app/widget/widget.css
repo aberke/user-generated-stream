@@ -171,6 +171,21 @@
 	opacity: 0.7;
 }
 
+.huffpostlabs-opp .mobile-instructions {
+	position: absolute;
+	z-index: 20;
+	background-color: gray;
+	color: white;
+	padding: 30px;
+	border-radius: 20px;
+	text-align: center;
+	margin-top: 30px;
+	opacity: 0.9;
+	/*changed by the javascript*/
+	display: none; 
+}
+
+
 /* ---------------- poll --------------------------------- */
 .huffpostlabs-opp .results-container {
 	height: 385px;

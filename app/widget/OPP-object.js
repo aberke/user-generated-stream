@@ -29,7 +29,6 @@ var HuffpostLabsOPP = function(container, data) { // Base Class
 	if (!container || !data) { return; } // only being called for inheritance definition
 	this.init(data);
 }
-
 HuffpostLabsOPP.prototype.sortEntries = function() {
 	/*  Sort entries based on how popular they are
 		also create slideMap so that if user got here via share_link, can go right to entry
@@ -127,7 +126,6 @@ HuffpostLabsOPP.prototype.init = function(data) {
 	var onSwipeEnd = function(index, elem){ self.onSwipeEnd(index, elem); }
 
 	this.HTMLbuilder.getPictureFrameDimension(function(frameDimension) {
-		console.log('getPictureFrameDimension', frameDimension)
 
 		var swipeContainer = self.container.getElementsByClassName('swipe')[0];
 		self.SwipeCntl = new Swipe(swipeContainer, {
@@ -144,7 +142,28 @@ HuffpostLabsOPP.prototype.init = function(data) {
 		self.HTMLbuilder.setupSlide(self.slideIndex, self.entryIndex);
 		self.HTMLbuilder.setupNextSlides(self.slideIndex, self.entryIndex);
 
+		self.mobileInstructionsSetup();
 	});
+}
+HuffpostLabsOPP.prototype.cookieName = "OPPmobile";
+HuffpostLabsOPP.prototype.mobileInstructionsSetup = function() {
+	/* if mobile and mobile cookie not set, show mobile instructions 
+		show the instructions once ever to the user
+			- don't show once for each OPP -- never show again for as long as cookie persists
+			- cookie is set on all pages for domain of this page
+	*/
+	var noCookie = (document.cookie.indexOf(this.cookieName) == -1);
+	if (OPPglobals.mobile && noCookie) {
+		this.HTMLbuilder.showMobileInstructions();
+	}
+}
+HuffpostLabsOPP.prototype.mobileInstructionsOnclick = function() {
+	/* function fired when the mobile instructions are clicked on 
+		- hide instructiosn because user wants to start OPP 
+		- set cookie so we don't show them again
+	*/
+	this.HTMLbuilder.hideMobileInstructions();
+	document.cookie = (this.cookieName + "; path=/"); // let cookie persist on all pages of this domain
 }
 HuffpostLabsOPP.prototype.prev = function() {
 	if (this.SwipeCntl) { this.SwipeCntl.prev(); }
