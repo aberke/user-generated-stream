@@ -302,6 +302,7 @@ class OAuthRemoteApp(object):
             raise OAuthException('Invalid token response from ' + self.name,
                                  type='token_generation_failed')
         tup = (data['oauth_token'], data['oauth_token_secret'])
+
         session[self.name + '_oauthtok'] = tup
         return tup
 

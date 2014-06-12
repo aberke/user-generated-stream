@@ -49,7 +49,8 @@
 		}
 	}
 	/* comment out/uncomment for development */
-	//bustCache();
+	bustCache(); // TODO: COMMENT
+	console.log('-----bustCache')
 
 	this.OPPwidgets = {};
 	this.OPPglobals = {};

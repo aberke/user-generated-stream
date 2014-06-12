@@ -3,7 +3,6 @@ from flask import Blueprint, send_file, url_for
 from app.auth.route_wrappers import opp_ownership_required
 
 
-
 splash = Blueprint('splash', __name__, static_url_path='', static_folder='static')
 
 
@@ -22,5 +21,16 @@ def send_base(oppID=None):
 
 @splash.route('/test')
 def test():
-	return send_file('splash/static/html/test.html')
+	return 'yo'
+
+
+
+
+
+
+
+
+
+
+
 

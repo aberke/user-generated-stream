@@ -164,7 +164,7 @@ HuffpostLabsOPP.prototype.mobileInstructionsOnclick = function() {
 		- set cookie so we don't show them again
 	*/
 	this.HTMLbuilder.hideMobileInstructions();
-	document.cookie = (this.cookieName + "; path=/"); // let cookie persist on all pages of this domain
+	document.cookie = (this.cookieName + "=1; path=/"); // let cookie persist on all pages of this domain
 }
 HuffpostLabsOPP.prototype.prev = function() {
 	if (this.SwipeCntl) { this.SwipeCntl.prev(); }
