@@ -113,6 +113,11 @@
 				</div>
 
 				<form name="oppForm" class='opp-form'>
+					<span ng-if="opp.via=='editor'">
+						<label>Title</label> (20 character limit)
+						<p>Title shown at top of widget</p>
+						<input type='text' ng-model="opp.title" maxlength="20" ng-change="opp.state='unsaved'">
+					</span>
 					<label>Share Title</label>
 					<input placeholder="{{opp.widget_type}}: {{opp.title}}" type='text' ng-change="opp.state='unsaved'" ng-model="opp.share_title">
 					<label>Share Caption</label>

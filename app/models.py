@@ -217,6 +217,8 @@ class OPP(Document):
 		bad_data_error = Exception('OPP update expects data with share_link as URL and start with isoformatted string')
 		try:
 			update = {}
+			if self.via == 'editor' and 'title' in data:
+				update['title'] = data['title']
 			if 'start' in data:
 				update["start"] = dateutil.parser.parse(data['start'])
 			if 'share_link' in data:

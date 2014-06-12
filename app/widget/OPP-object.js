@@ -122,23 +122,29 @@ HuffpostLabsOPP.prototype.init = function(data) {
 	if (!this.data.entryList.length) {  return; }
 
 	var self = this;
+
 	var onSwipe = function(index, elem){ self.onSwipe(index, elem); }
 	var onSwipeEnd = function(index, elem){ self.onSwipeEnd(index, elem); }
 
-	var swipeContainer = this.container.getElementsByClassName('swipe')[0];
-	this.SwipeCntl = new Swipe(swipeContainer, {
-		frameWidth: 265,
-		speed: 400,
-		auto: false,
-		continuous: true,
-		disableScroll: false,
-		stopPropagation: false,
-		callback: onSwipe,
-		transitionEnd: onSwipeEnd,
+	this.HTMLbuilder.getPictureFrameDimension(function(frameDimension) {
+		console.log('getPictureFrameDimension', frameDimension)
+
+		var swipeContainer = self.container.getElementsByClassName('swipe')[0];
+		self.SwipeCntl = new Swipe(swipeContainer, {
+			frameWidth: frameDimension,
+			speed: 400,
+			auto: false,
+			continuous: true,
+			disableScroll: false,
+			stopPropagation: false,
+			callback: onSwipe,
+			transitionEnd: onSwipeEnd,
+		});
+		self.HTMLbuilder.setImage(self.slideIndex, self.entryIndex);
+		self.HTMLbuilder.setupSlide(self.slideIndex, self.entryIndex);
+		self.HTMLbuilder.setupNextSlides(self.slideIndex, self.entryIndex);
+
 	});
-	this.HTMLbuilder.setImage(this.slideIndex, this.entryIndex);
-	this.HTMLbuilder.setupSlide(this.slideIndex, this.entryIndex);
-	this.HTMLbuilder.setupNextSlides(this.slideIndex, this.entryIndex);
 }
 HuffpostLabsOPP.prototype.prev = function() {
 	if (this.SwipeCntl) { this.SwipeCntl.prev(); }

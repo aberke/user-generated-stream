@@ -22,7 +22,7 @@ var HTMLbuilder = function() {
 	this._entryList;
 	this._onclickPrefix;
 
-	this.pictureFrameDimension = 265;
+	this.pictureFrameDimension = 0;
 	this.static_domain = OPPglobals.static_domain;
 }
 HTMLbuilder.prototype._swipeLeftImg = "/widget/icon/left-arrow.png";
@@ -51,13 +51,20 @@ HTMLbuilder.prototype._setImg = function(img, img_url){
 				   URL of image to set img src to (img_url)
 		sets the empty img element's src and aligns the img in its frame
 	*/
- 	if (!img_url || img.src == img_url) { return }
+ 	if (!img_url || img.src == img_url) { return; }
+ 	
+ 	// take off the previous image dimensions since this is a recycled image element
+ 	if (img.width) { img.removeAttribute('width'); }
+ 	if (img.height) { img.removeAttribute('height'); }
+ 	img.style.marginTop = "0px";
+
  	var pictureFrameDimension = this.pictureFrameDimension;
 
 	img.onload = function() {
 		if (!img.height) { return; }
 		// if height > width: horizontally center image
 		if (img.height > img.width) {
+			img.height = pictureFrameDimension;
 			img.style.height = (pictureFrameDimension + "px");
 			return; // browser will handle the rest
 		}
@@ -150,6 +157,31 @@ HTMLbuilder.prototype.buildCaption = function() {
 		html+= "</div>";
 	return html;
 }
+HTMLbuilder.prototype.getPictureFrameDimension = function(callback) {
+	/* this.pictureFrame has no expanded to its correct width when its first created
+		must wait for it to fully expand in order to correctly size images, slideshow container
+			and set this.pictureFrameDimension
+		seems to usually take ~2 tries
+	*/
+	var self = this;
+	var attempt = 0;
+	var maxAttempts = 50;
+	function makeAttempt() {
+		attempt ++;
+		var dimension = self.pictureFrame.offsetWidth;
+		if (dimension > 0) { // success
+			self.pictureFrameDimension = dimension;
+			self.pictureFrame.height = dimension;
+			return callback(dimension);
+		}
+		if (attempt == maxAttempts) {  // give up with failure
+			return callback(0); 
+		}
+		// wait until css made it wide enough - try again every 1/10 second
+		window.setTimeout(makeAttempt, 100);
+	}
+	makeAttempt();
+}
 
 HTMLbuilder.prototype.buildWidget = function() {
 
@@ -167,6 +199,7 @@ HTMLbuilder.prototype.buildWidget = function() {
 	this.entryHeader   = this._container.getElementsByClassName('entry-header')[0];
 	this.entryText     = this._container.getElementsByClassName('entry-text')[0];
 	this.entryIndexElement    = this._container.getElementsByClassName('entry-index')[0];
+	this.pictureFrame = this._container.getElementsByClassName('picture-frame')[0];
 }
 HTMLbuilder.prototype.setCaption = function(entry) {
 	if (this._data.via == 'social') {

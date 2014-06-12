@@ -5,7 +5,8 @@
 	Written: May 2014
 
 	css for just the widget
-	widget uses swipeJS library and need to incorporate those necessary styles
+	- widget uses swipeJS library and need to incorporate those necessary styles
+	- widget is responsive
 
 --------------------------------------------------------------------------------
 *********************************************************************************/
@@ -35,8 +36,8 @@
 }
 
 
-/* non-mobile version -- shrink with media queries? */
 .huffpostlabs-opp{
+	max-width: 430px;
 	margin: 10px auto;
 	display: block;
 	text-align: center; /*so that opp-frame floats in middle*/
@@ -53,7 +54,7 @@
 	text-align: center;
 	padding: 8px 10px;
 	background-color: white;
-	width: 290px;
+	width: 100%;
 }
 .huffpostlabs-opp .slide-info {
 	color: gray;
@@ -91,11 +92,7 @@
 .huffpostlabs-opp .picture-frame{
 	border: 2px solid gray;
 }
-.huffpostlabs-opp .picture {
-	height: 265px;
-}
-.huffpostlabs-opp .picture img{
-	max-width: 265px;
+.huffpostlabs-opp .picture img {
 	display: inline-block;
 }
 .huffpostlabs-opp .opp-frame .image-credit {
@@ -112,7 +109,7 @@
 	opacity: 0.4;
 }
 .huffpostlabs-opp .picture-caption {
-	width: 265px;
+	width: auto;
 	padding: 4px;
 	text-align: left;
 }
@@ -221,6 +218,19 @@
 .huffpostlabs-opp .opp-frame.complete .slide-info .refresh {
 	float: right;
 	margin: 5px 6px 0 0;
+}
+
+/************ For edit templates -- not dynamically sized by js *****/
+
+.huffpostlabs-opp.edit .opp-frame{
+	width: 290px;
+}
+.huffpostlabs-opp.edit .picture {
+	height: 265px;
+}
+.huffpostlabs-opp.edit .picture img{
+	max-width: 265px;
+	display: inline-block;
 }
 
 

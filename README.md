@@ -71,6 +71,9 @@ TODO
 
 - Fork for HuffpostLabs
 
+- test out save title
+	-- write tests
+
 - don't load in all for index page -- angular kill
 
 - allow editor to sort accepted entries
@@ -92,6 +95,8 @@ Feature Requests
 ---
 
 - Ability to batch upload photos
+
+- Widget responsive - DONE BOOM
 
 
 
