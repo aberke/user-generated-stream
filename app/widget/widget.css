@@ -151,6 +151,7 @@
 .huffpostlabs-opp .opp-frame .share-container p.share-text { /*need strong rule*/
 	margin: 0 !important;
 	color: gray !important;
+	font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif !important;
 }
 .huffpostlabs-opp .share-container .share{
 	cursor: pointer;
@@ -205,10 +206,11 @@
 	height: 385px;
 	overflow-y: auto;
 	overflow-x: hidden;
+	font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif !important;
 }
 .huffpostlabs-opp .opp-frame.complete .results-container p.results-title {
 	background-color: lightgrey;
-	color: gray;
+	color: gray !important;
 	padding: 10px;
 	margin: 0;
 }
@@ -229,8 +231,8 @@
 	opacity: 0.7;
 }
 .huffpostlabs-opp .result .result-image-container img{
-	max-width: 100px;
-	height: 100px;
+	max-width: 100px !important;
+	height: 100px !important;
 	margin: auto;
 }
 .huffpostlabs-opp .result .result-text {

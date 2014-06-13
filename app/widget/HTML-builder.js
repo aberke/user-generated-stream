@@ -343,9 +343,9 @@ PollBuilder.prototype.complete = function(results) {
 	} else {
 		html+= 		 		("<p>" + entry.header + "</p>");
 	}
-		html+= "			<img width='16px' src='/widget/icon/thumbs-up.jpeg'>";
+		html+= "			<img width='16px' src='" + this.static_domain + "/widget/icon/thumbs-up.jpeg'>";
 		html+= 				(entry.upvotesPercent + "%");
-		html+= "			<img width='16px' src='/widget/icon/thumbs-down.jpeg'>";
+		html+= "			<img width='16px' src='" + this.static_domain + "/widget/icon/thumbs-down.jpeg'>";
 		html+= 				(entry.downvotesPercent + "%");
 
 		html+= "		</div>";
