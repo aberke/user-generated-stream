@@ -36,11 +36,16 @@
 }
 
 
-.huffpostlabs-opp{
+.huffpostlabs-opp,
+.huffpostlabs-opp.poll,
+.huffpostlabs-opp.slideshow {
 	max-width: 430px;
 	margin: 10px auto;
 	display: block;
 	text-align: center; /*so that opp-frame floats in middle*/
+	width: auto;
+	border: none;
+	padding: 0;
 }
 .huffpostlabs-opp,
 .huffpostlabs-opp.mobile,
@@ -62,12 +67,14 @@
 }
 .huffpostlabs-opp .opp-frame .slide-info p {
 	display: inline-block;
-	margin: 0;
+	margin: 0 !important;
+	color: gray !important;
+	font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif !important;
 } 
 .huffpostlabs-opp .slide-info .title{
 	text-align: left;
 	font-size: 16px;
-	font-weight: bold;
+	font-weight: bold !important;
 	width: 64%;
 }
 .huffpostlabs-opp .slide-info .slide-count {
@@ -139,9 +146,11 @@
 .huffpostlabs-opp .share-container .share{
 	display: inline-block;
 	vertical-align: middle;
+	padding: 0;
 }
 .huffpostlabs-opp .opp-frame .share-container p.share-text { /*need strong rule*/
-	margin: 0;
+	margin: 0 !important;
+	color: gray !important;
 }
 .huffpostlabs-opp .share-container .share{
 	cursor: pointer;
@@ -272,4 +281,7 @@ p#labs-credit a{
 	color: gray;
 	font-style: italic;
 	vertical-align: middle;
+}
+p#labs-credit a img {
+	max-width: 120px !important;
 }

@@ -17,10 +17,14 @@ wrapped within
 	<p class='created-at'>
 		{{e.created_at | date:'MM/dd/yyyy @ h:mma'}}
 	</p>
-	<p>Retweets: {{e.retweet_count}}</p>
-	<p><strong>From Slide Show</strong></p>
-	<p>Twitter Shares: {{e.stat.twitter_count || 0}}</p>
-	<p>Facebook Shares: {{e.stat.fb_count || 0}}</p>
-	<p>Email Shares: {{e.stat.email_count || 0}}</p>
+	<p ng-show="e.source=='twitter'">Retweets: {{e.retweet_count}}</p>
+	
+	<!-- only show the below for accepted entries -->
+	<span ng-show="e.stat">
+		<p><strong>Sharing From Slide Show</strong></p>
+		<p>Twitter Shares: {{e.stat.twitter_count || 0}}</p>
+		<p>Facebook Shares: {{e.stat.fb_count || 0}}</p>
+		<p>Email Shares: {{e.stat.email_count || 0}}</p>
+	</span>
 </div>
 
