@@ -307,17 +307,12 @@ PollBuilder.prototype.init = function(container, data) {
 	HTMLbuilder.prototype.init.call(this, container, data);
 	this._container.className += (" poll");
 }
-PollBuilder.prototype.setupNextSlides = function(slideIndex, entryIndex, all) {
-	/* formation: nextnextSlide | nextSlide | thisSlide | nextSlide | nextnextSlide
-		only set up all the next slides if all (on SlideCntl init)
-			otherwise just set 2 to left, 2 to right (others already set!)
-	*/
+PollBuilder.prototype.setupNextSlides = function(slideIndex, entryIndex) {
+	/* formation: nextnextSlide | nextSlide | thisSlide | nextSlide | nextnextSlide */
 	var numEntries = this._entryList.length;
 
-	if (all) {
-		this.setImage(this.prevIndex(slideIndex, 1, this.numSlides), this.nextIndex(entryIndex, 1, numEntries));
-		this.setImage(this.nextIndex(slideIndex, 1, this.numSlides), this.nextIndex(entryIndex, 1, numEntries));
-	}
+	this.setImage(this.prevIndex(slideIndex, 1, this.numSlides), this.nextIndex(entryIndex, 1, numEntries));
+	this.setImage(this.nextIndex(slideIndex, 1, this.numSlides), this.nextIndex(entryIndex, 1, numEntries));
 	this.setImage(this.prevIndex(slideIndex, 2, this.numSlides), this.nextIndex(entryIndex, 2, numEntries));
 	this.setImage(this.nextIndex(slideIndex, 2, this.numSlides), this.nextIndex(entryIndex, 2, numEntries));
 }
