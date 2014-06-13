@@ -8,7 +8,7 @@
 		- HTMLbuilder is the baseclass for SlideshowBuilder and Pollbuilder classes
 		- Owned by OPP-object
 		- Job: take an empty div container and OPP data and fill it in appropriately
-
+		- For showing slides, creates 5 image elements and recycles them (see setupNextSlides)
 
 --------------------------------------------------------------------------------
 *********************************************************************************/
@@ -27,6 +27,7 @@ var HTMLbuilder = function() {
 }
 HTMLbuilder.prototype._swipeLeftImg = "/widget/icon/left-arrow.png";
 HTMLbuilder.prototype._swipeRightImg = "/widget/icon/right-arrow.png";
+HTMLbuilder.prototype.numSlides = 5; // recycle 5 img elements
 
 HTMLbuilder.prototype.init = function(container, data){
 	this._container = container;
@@ -64,7 +65,6 @@ HTMLbuilder.prototype._setImg = function(img, img_url){
 		if (!img.height) { return; }
 		// if height > width: horizontally center image
 		if (img.height > img.width) {
-			img.height = pictureFrameDimension;
 			img.style.height = (pictureFrameDimension + "px");
 			return; // browser will handle the rest
 		}
@@ -72,7 +72,7 @@ HTMLbuilder.prototype._setImg = function(img, img_url){
 		var originalWidth = img.width;
 		var originalHeight = img.height;
 		img.width = pictureFrameDimension;
-		img.height = (originalHeight/originalWidth)*pictureFrameDimension;
+		img.style.height = ((originalHeight/originalWidth)*pictureFrameDimension) + "px";
 		var extra_space = pictureFrameDimension - img.height;
 		img.style.marginTop = (extra_space/2).toString() + "px";
 	};
@@ -133,7 +133,7 @@ HTMLbuilder.prototype.buildPicture = function() {
 
 		html+= "	<div class='picture swipe'>";
 		html+= "		<div class='swipe-wrap'>";
-	for (var i=0; i<3; i++) {
+	for (var i=0; i<this.numSlides; i++) {
 		html+= "			<div class='image-container'>"
 		html+= " 				<img class='entry-image'>"; // filled in by setImage
 		html+= "			</div>";
@@ -219,7 +219,6 @@ HTMLbuilder.prototype.buildWidget = function() {
 	this.entryText     = this._container.getElementsByClassName('entry-text')[0];
 	this.entryIndexElement    = this._container.getElementsByClassName('entry-index')[0];
 	this.picture 	   = this._container.getElementsByClassName('picture')[0];
-	console.log('this.picture', this.picture)
 	this.mobileInstructions = this._container.getElementsByClassName('mobile-instructions')[0];
 }
 HTMLbuilder.prototype.setCaption = function(entry) {
@@ -236,6 +235,25 @@ HTMLbuilder.prototype.setupSlide = function(slideIndex, entryIndex) {
 	this.setCaption(entry);
 	this.entryIndexElement.innerHTML = entryIndex + 1;
 }
+HTMLbuilder.prototype.prevIndex = function(index, degree, max) {
+	/* helper function to setupNextSlides.
+		With given index of array, want index of index of element [degree] indices to the left
+		Parameters:
+			index (integer) -- current index
+			degree (integer) -- number of indexes back of desired result
+			max (integer) -- number of total elements in the array
+	*/
+	var newIndex = index - degree;
+	if (newIndex < 0) {
+		newIndex += max;
+	}
+	return newIndex;
+}
+HTMLbuilder.prototype.nextIndex = function(index, degree, max) {
+	/* helper function to setupNextSlides.  Converse of prevIndex */
+	return ((index + degree) % max);
+}
+
 /* - for Slideshows -------------------------------------------- */
 var SlideshowBuilder = function() {
     HTMLbuilder.call(this); // Call the parent constructor
@@ -249,12 +267,25 @@ SlideshowBuilder.prototype.init = function(container, data) {
 	this._container.className += (" slideshow");
 }	
 SlideshowBuilder.prototype.setupNextSlides = function(slideIndex, entryIndex) {
-	// formation: img_last | img_0 | img_1 ...
-	var slideIndexLeft = (slideIndex==0 ? 2 : slideIndex-1);
-	var slideIndexRight = ((slideIndex + 1)%3);
+	/*
+		load in the next set of images now.  there are [this.numSlides] image elements in total that we're cyclying through
+		formation: img_-2 | img_-1 | img_0 | img_1 |img 2...
+	 				0 		 1 		 2 		 3 		4
+	*/
+	var slideIndexLeft1 = this.prevIndex(slideIndex, 1, this.numSlides);					
+	var slideIndexLeft2 = this.prevIndex(slideIndex, 2, this.numSlides);			
+	var slideIndexRight1 = this.nextIndex(slideIndex, 1, this.numSlides);
+	var slideIndexRight2 = this.nextIndex(slideIndex, 2, this.numSlides);
 
-	this.setImage(slideIndexLeft, (entryIndex!=0 ?  entryIndex-1 : this._entryList.length-1));
-	this.setImage(slideIndexRight, (entryIndex + 1)%this._entryList.length);
+	var entryIndexLeft1 = this.prevIndex(entryIndex, 1, this._entryList.length);
+	var entryIndexLeft2 = this.prevIndex(entryIndex, 2, this._entryList.length);
+	var entryIndexRight1 = this.nextIndex(entryIndex, 1, this._entryList.length);
+	var entryIndexRight2 = this.nextIndex(entryIndex, 2, this._entryList.length);
+
+	this.setImage(slideIndexLeft1, entryIndexLeft1);
+	this.setImage(slideIndexLeft2, entryIndexLeft2);
+	this.setImage(slideIndexRight1, entryIndexRight1);
+	this.setImage(slideIndexRight2, entryIndexRight2);
 }
 /* -------------------------------------------- for Slideshows - */
 
@@ -274,12 +305,13 @@ PollBuilder.prototype.init = function(container, data) {
 	this._container.className += (" poll");
 }
 PollBuilder.prototype.setupNextSlides = function(slideIndex, entryIndex) {
-	// formation: nextSlide | thisSlide | nextSlide
-	var slideIndexLeft = (slideIndex==0 ? 2 : slideIndex-1);
-	var slideIndexRight = ((slideIndex + 1)%3);
+	// formation: nextnextSlide | nextSlide | thisSlide | nextSlide | nextnextSlide
+	var numEntries = this._entryList.length;
 
-	this.setImage(slideIndexLeft, (entryIndex + 1) % this._entryList.length);
-	this.setImage(slideIndexRight, (entryIndex + 1) % this._entryList.length);
+	this.setImage(this.prevIndex(slideIndex, 1, this.numSlides), this.nextIndex(entryIndex, 1, numEntries));
+	this.setImage(this.prevIndex(slideIndex, 2, this.numSlides), this.nextIndex(entryIndex, 2, numEntries));
+	this.setImage(this.nextIndex(slideIndex, 1, this.numSlides), this.nextIndex(entryIndex, 1, numEntries));
+	this.setImage(this.nextIndex(slideIndex, 2, this.numSlides), this.nextIndex(entryIndex, 2, numEntries));
 }
 PollBuilder.prototype.complete = function(results) {
 	/* Parameter: results -- entryList sorted by upvotes */
@@ -287,7 +319,6 @@ PollBuilder.prototype.complete = function(results) {
 	var onclickRefresh = this._onclickPrefix + ".refresh()";
 	var html = "<div class='opp-frame complete'>";
 		html+= 		this.buildSlideInfo(true);
-
 
 		html+= "<div class='results-container'>";
 		html+= "	<p class='results-title'>Results</p>"

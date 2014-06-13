@@ -68,25 +68,16 @@ Production Notes
 
 changes for youyoung
 ---
-- lightbox - like the font?
-- work on ipad?
 - by next push to production widget will show up on app
 
 TODO
 ---
-- detect ipad
-- add to mobile whitelist -- talk to sam
-- make mobile instructions show on ipad.
-	- images repeating?
-- cookie not setting on phone
 
-- use 5 images instead of 3?
+- cookie not setting on phone?
 
 - on results page - on click on image link back to that slide
 	- push that image to the front
 
-- make font size bigger and bolder for instructions
-- make font smaller for count text
 
 
 

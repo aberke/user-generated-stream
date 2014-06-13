@@ -138,6 +138,7 @@ HuffpostLabsOPP.prototype.init = function(data) {
 			callback: onSwipe,
 			transitionEnd: onSwipeEnd,
 		});
+		console.log('self.slideIndex', self.slideIndex, 'self.entryIndex', self.entryIndex)
 		self.HTMLbuilder.setImage(self.slideIndex, self.entryIndex);
 		self.HTMLbuilder.setupSlide(self.slideIndex, self.entryIndex);
 		self.HTMLbuilder.setupNextSlides(self.slideIndex, self.entryIndex);
@@ -153,7 +154,6 @@ HuffpostLabsOPP.prototype.mobileInstructionsSetup = function() {
 			- cookie is set on all pages for domain of this page
 	*/
 	var noCookie = (document.cookie.indexOf(this.cookieName) == -1);
-	noCookie = true;
 	if (OPPglobals.mobile && noCookie) {
 		this.HTMLbuilder.showMobileInstructions();
 	}
@@ -174,7 +174,7 @@ HuffpostLabsOPP.prototype.next = function() {
 }
 HuffpostLabsOPP.prototype.onSwipe = function(index, element) {
 	/* callback for swipe action */
-	if (index == (this.slideIndex + 1)%3) { // swipe right
+	if (index == (this.slideIndex + 1)%this.HTMLbuilder.numSlides) { // swipe right
 		this.entryIndex += 1;
 	} else { // swipe left
 		this.entryIndex -= 1;
@@ -238,7 +238,7 @@ HuffpostLabsPoll.prototype.onSwipe = function(index) {
 }
 HuffpostLabsPoll.prototype.tallyVote = function(prevSlideIndex, newSlideIndex) {
 	var stat = this.data.entryList[this.entryIndex].stat;
-	if (newSlideIndex == (prevSlideIndex + 1)%3) {
+	if (newSlideIndex == (prevSlideIndex + 1)%this.HTMLbuilder.numSlides) {
 		console.log('upvote')
 		this.upvotes.push(stat.id);
 		this.data.entryList[this.entryIndex].stat.up_count += 1;
@@ -255,10 +255,12 @@ HuffpostLabsPoll.prototype.tallyVote = function(prevSlideIndex, newSlideIndex) {
 	this.data.entryList[this.entryIndex].downvotesPercent = Math.round((entry.stat.down_count/totalVotes)*100);
 }
 HuffpostLabsPoll.prototype.computeResults = function() {
+	/* clone the entriesList into the results and then sort results */
 	var comparator = function(entry1, entry2) {
 		return entry2.upvotesPercent - entry1.upvotesPercent;
 	}
-	this.results = this.data.entryList.sort(comparator);
+	this.results = this.data.entryList.slice(0);
+	this.results = this.results.sort(comparator);
 }
 /* - for sharing ---------------------- */
 HuffpostLabsPoll.prototype.buildShareLink = function(entry) {
