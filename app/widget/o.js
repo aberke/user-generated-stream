@@ -17,7 +17,6 @@
 (function() {
 
 	var static_domain = 'http://opp.huffingtonpost.com';
-	//var domain = 'http://b367b65.ngrok.com';
 	//var domain = 'http://127.0.0.1:3000';
 	var domain = 'http://user-generated-stream.herokuapp.com';
 
@@ -49,8 +48,7 @@
 		}
 	}
 	/* comment out/uncomment for development */
-	bustCache(); // TODO: COMMENT
-	console.log('-----bustCache')
+	//bustCache();
 
 	this.OPPwidgets = {};
 	this.OPPglobals = {};

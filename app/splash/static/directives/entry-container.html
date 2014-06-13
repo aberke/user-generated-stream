@@ -12,19 +12,25 @@ wrapped within
 	<opp-widget opp='opp' entry='e'></opp-widget>
 </div>
 <div class='col-md-4 entry-metadata'>
-	<p class='screen_name'>@{{e.screen_name}}</p>
-	<p class='tweet-text'>{{e.tweet_text}}</p>
-	<p class='created-at'>
-		{{e.created_at | date:'MM/dd/yyyy @ h:mma'}}
-	</p>
-	<p ng-show="e.source=='twitter'">Retweets: {{e.retweet_count}}</p>
-	
+	<div class='entry-metadata-section'>
+		<p class='screen_name'>@{{e.screen_name}}</p>
+		<p class='created-at'>
+			{{e.created_at | date:'MM/dd/yyyy @ h:mma'}}
+		</p>
+		<p ng-show="e.source=='twitter'">Retweets: {{e.retweet_count}}</p>
+	</div>
 	<!-- only show the below for accepted entries -->
-	<span ng-show="e.stat">
+	<div class='entry-metadata-section' ng-show="e.stat">
 		<p><strong>Sharing From Slide Show</strong></p>
 		<p>Twitter Shares: {{e.stat.twitter_count || 0}}</p>
 		<p>Facebook Shares: {{e.stat.fb_count || 0}}</p>
 		<p>Email Shares: {{e.stat.email_count || 0}}</p>
-	</span>
+	</div>
+	<!-- show results of poll only if applicable -->
+	<div class='entry-metadata-section' ng-show="e.stat&&opp.widget_type=='poll'">
+		<p><strong>Poll results</strong></p>
+		<p>Up-votes: {{e.stat.up_count || 0}}</p>
+		<p>Down-votes: {{e.stat.down_count || 0}}</p>
+	</div>
 </div>
 

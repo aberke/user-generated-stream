@@ -66,39 +66,17 @@ Production Notes
 	- Read preference set to ReadPreference.SECONDARY
 
 
-changes for youyoung
----
-- by next push to production widget will show up on app
 
 TODO
 ---
 
-- cookie not setting on phone?
-
-- on results page - on click on image link back to that slide
-	- push that image to the front
-
-
-
-
 - Fork for HuffpostLabs
-
-- test out save title
-	-- write tests
 
 - don't load in all for index page -- angular kill
 
 - allow editor to sort accepted entries
 
-- make better on mobile
-	- sizing
-	- show directions
-
-
-- edit tests for new opp type
-	- and for postEntry
-
-- tests for stat upvote/downvote
+- tests!
 
 - cross browser testing
 
