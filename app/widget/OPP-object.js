@@ -30,7 +30,8 @@ var HuffpostLabsOPP = function(container, data) { // Base Class
 	this.init(data);
 }
 HuffpostLabsOPP.prototype.sortEntries = function() {
-	/*  Sort entries based on how popular they are
+	/*  Sort entries first on lowest order, second based on how popular they are
+			- some entries have order explicitly set - such entries come first
 		also create slideMap so that if user got here via share_link, can go right to entry
 	*/
 	for (var i=0; i<this.numEntries; i++) {
@@ -41,7 +42,10 @@ HuffpostLabsOPP.prototype.sortEntries = function() {
 		entry.points+= entry.stat.email_count;
 	}
 	var comparator = function(entry1, entry2) {
-		return entry2.points - entry1.points;
+		if (entry1.order && entry2.order) { return entry1.order - entry2.order; }
+		else if (entry1.order) { return -1; }
+		else if (entry2.order) { return 1; }
+		else { return entry2.points - entry1.points; }
 	}
 	this.data.entryList = this.data.entryList.sort(comparator);
 
@@ -138,10 +142,9 @@ HuffpostLabsOPP.prototype.init = function(data) {
 			callback: onSwipe,
 			transitionEnd: onSwipeEnd,
 		});
-		console.log('self.slideIndex', self.slideIndex, 'self.entryIndex', self.entryIndex)
 		self.HTMLbuilder.setImage(self.slideIndex, self.entryIndex);
 		self.HTMLbuilder.setupSlide(self.slideIndex, self.entryIndex);
-		self.HTMLbuilder.setupNextSlides(self.slideIndex, self.entryIndex);
+		self.HTMLbuilder.setupNextSlides(self.slideIndex, self.entryIndex, true);
 
 		self.mobileInstructionsSetup();
 	});
@@ -274,6 +277,25 @@ HuffpostLabsPoll.prototype.getEntry = function() {
 	return this.data.entryList[this.entryIndex];
 }
 /* ---------------------- for sharing - */
+HuffpostLabsPoll.prototype.showResult = function(entryID) {
+	/* callback for onclick for when from the results page, user clicks on image of a result
+		restart the poll, with their result as first slide so they can see it
+		
+		calls refresh, which calls init, which calls sortEntries
+		sortEntries sorts on lowest order first, then by highest points
+		set entry.order as low as possible to make it first
+	*/
+	for (var i=0; i<this.numEntries; i++) {
+		if (this.data.entryList[i].id == entryID) {
+			this.data.entryList[i].order = Number.NEGATIVE_INFINITY;
+			return this.refresh();
+		}
+		else if (this.data.entryList[i].order == Number.NEGATIVE_INFINITY) {
+			// showResult was already called -- make sure to show this result rather than last result
+			this.data.entryList[i].order = 0;
+		}
+	}
+}
 HuffpostLabsPoll.prototype.refresh = function() {
 	this.init(this.data);
 }

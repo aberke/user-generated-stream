@@ -237,14 +237,14 @@ HTMLbuilder.prototype.setupSlide = function(slideIndex, entryIndex) {
 }
 HTMLbuilder.prototype.prevIndex = function(index, degree, max) {
 	/* helper function to setupNextSlides.
-		With given index of array, want index of index of element [degree] indices to the left
+		With given index of array, want index of element [degree] indices to the left
 		Parameters:
 			index (integer) -- current index
 			degree (integer) -- number of indexes back of desired result
 			max (integer) -- number of total elements in the array
 	*/
 	var newIndex = index - degree;
-	if (newIndex < 0) {
+	while (newIndex < 0) {
 		newIndex += max;
 	}
 	return newIndex;
@@ -266,25 +266,28 @@ SlideshowBuilder.prototype.init = function(container, data) {
 	HTMLbuilder.prototype.init.call(this, container, data);
 	this._container.className += (" slideshow");
 }	
-SlideshowBuilder.prototype.setupNextSlides = function(slideIndex, entryIndex) {
+SlideshowBuilder.prototype.setupNextSlides = function(slideIndex, entryIndex, all) {
 	/*
 		load in the next set of images now.  there are [this.numSlides] image elements in total that we're cyclying through
 		formation: img_-2 | img_-1 | img_0 | img_1 |img 2...
 	 				0 		 1 		 2 		 3 		4
+		only set up all the next slides if all (on SlideCntl init)
+			otherwise just set 2 to left, 2 to right (others already set!)
 	*/
-	var slideIndexLeft1 = this.prevIndex(slideIndex, 1, this.numSlides);					
-	var slideIndexLeft2 = this.prevIndex(slideIndex, 2, this.numSlides);			
-	var slideIndexRight1 = this.nextIndex(slideIndex, 1, this.numSlides);
-	var slideIndexRight2 = this.nextIndex(slideIndex, 2, this.numSlides);
-
-	var entryIndexLeft1 = this.prevIndex(entryIndex, 1, this._entryList.length);
+	if (all) {
+		var slideIndexLeft1 = this.prevIndex(slideIndex, 1, this.numSlides);
+		var entryIndexLeft1 = this.prevIndex(entryIndex, 1, this._entryList.length);
+		this.setImage(slideIndexLeft1, entryIndexLeft1);		
+		var slideIndexRight1 = this.nextIndex(slideIndex, 1, this.numSlides);
+		var entryIndexRight1 = this.nextIndex(entryIndex, 1, this._entryList.length);
+		this.setImage(slideIndexRight1, entryIndexRight1);
+	}					
+	var slideIndexLeft2 = this.prevIndex(slideIndex, 2, this.numSlides);
 	var entryIndexLeft2 = this.prevIndex(entryIndex, 2, this._entryList.length);
-	var entryIndexRight1 = this.nextIndex(entryIndex, 1, this._entryList.length);
-	var entryIndexRight2 = this.nextIndex(entryIndex, 2, this._entryList.length);
-
-	this.setImage(slideIndexLeft1, entryIndexLeft1);
 	this.setImage(slideIndexLeft2, entryIndexLeft2);
-	this.setImage(slideIndexRight1, entryIndexRight1);
+	
+	var slideIndexRight2 = this.nextIndex(slideIndex, 2, this.numSlides);
+	var entryIndexRight2 = this.nextIndex(entryIndex, 2, this._entryList.length);
 	this.setImage(slideIndexRight2, entryIndexRight2);
 }
 /* -------------------------------------------- for Slideshows - */
@@ -304,19 +307,22 @@ PollBuilder.prototype.init = function(container, data) {
 	HTMLbuilder.prototype.init.call(this, container, data);
 	this._container.className += (" poll");
 }
-PollBuilder.prototype.setupNextSlides = function(slideIndex, entryIndex) {
-	// formation: nextnextSlide | nextSlide | thisSlide | nextSlide | nextnextSlide
+PollBuilder.prototype.setupNextSlides = function(slideIndex, entryIndex, all) {
+	/* formation: nextnextSlide | nextSlide | thisSlide | nextSlide | nextnextSlide
+		only set up all the next slides if all (on SlideCntl init)
+			otherwise just set 2 to left, 2 to right (others already set!)
+	*/
 	var numEntries = this._entryList.length;
 
-	this.setImage(this.prevIndex(slideIndex, 1, this.numSlides), this.nextIndex(entryIndex, 1, numEntries));
+	if (all) {
+		this.setImage(this.prevIndex(slideIndex, 1, this.numSlides), this.nextIndex(entryIndex, 1, numEntries));
+		this.setImage(this.nextIndex(slideIndex, 1, this.numSlides), this.nextIndex(entryIndex, 1, numEntries));
+	}
 	this.setImage(this.prevIndex(slideIndex, 2, this.numSlides), this.nextIndex(entryIndex, 2, numEntries));
-	this.setImage(this.nextIndex(slideIndex, 1, this.numSlides), this.nextIndex(entryIndex, 1, numEntries));
 	this.setImage(this.nextIndex(slideIndex, 2, this.numSlides), this.nextIndex(entryIndex, 2, numEntries));
 }
 PollBuilder.prototype.complete = function(results) {
 	/* Parameter: results -- entryList sorted by upvotes */
-
-	var onclickRefresh = this._onclickPrefix + ".refresh()";
 	var html = "<div class='opp-frame complete'>";
 		html+= 		this.buildSlideInfo(true);
 
@@ -324,9 +330,10 @@ PollBuilder.prototype.complete = function(results) {
 		html+= "	<p class='results-title'>Results</p>"
 	for (var i=0; i<results.length; i++) {
 		var entry = results[i];
+		var onclickResult = (this._onclickPrefix + ".showResult('" + entry.id + "')");
 
 		html+= "	<div class='result'>";
-		html+= "		<div class='result-image-container'>";
+		html+= "		<div onclick=" + onclickResult + " class='result-image-container'>";
 		html+= "			<img height='100px' src='" + entry.img_url + "'>";
 		html+= "		</div>";
 

@@ -17,7 +17,7 @@
 (function() {
 
 	var static_domain = 'http://opp.huffingtonpost.com';
-	//var domain = 'http://12b708b.ngrok.com';
+	//var domain = 'http://b367b65.ngrok.com';
 	//var domain = 'http://127.0.0.1:3000';
 	var domain = 'http://user-generated-stream.herokuapp.com';
 
@@ -68,18 +68,18 @@
 			/* using HuffpostLabs social-network-sharing library */
 			HuffpostLabsShareTwitter(shareData.text, shareData.link, function() {
 				/* on callback, log in database the share */
-				PUT("/api/stat/" + shareData.statID + "/increment/twitter", null);
+				PUT("/api/stat/" + shareData.statID + "/increment/twitter_count", null);
 			});
 		}
 		this.OPPglobals.shareFB = function(shareData) {
 			/* using HuffpostLabs social-network-sharing library */
 			HuffpostLabsShareFB(shareData, function() {
-				PUT("/api/stat/" + shareData.statID + "/increment/facebook", null);
+				PUT("/api/stat/" + shareData.statID + "/increment/fb_count", null);
 			});
 		}
 		this.OPPglobals.shareEmail = function(shareData) {
 			/* just log it */
-			PUT("/api/stat/" + shareData.statID + "/increment/email", null);
+			PUT("/api/stat/" + shareData.statID + "/increment/email_count", null);
 		}
 		this.OPPglobals.completeCallback = function(upvotes, downvotes) {
 			/* on completion of a poll */
